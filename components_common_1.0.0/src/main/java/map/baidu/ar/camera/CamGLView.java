@@ -40,7 +40,6 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
 
     protected FlashMode flashMode = FlashMode.OFF;
 
-
     // protected OnModeChanged mOnModeChanged;
 
     protected void setupEGL(Context context) {
@@ -57,13 +56,13 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
     public CamGLView(Context context) {
         super(context);
         mContext = context;
-//        startCam();
+        //        startCam();
     }
 
     public CamGLView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-//        startCam();
+        //        startCam();
     }
 
     public void stopCam() {
@@ -85,8 +84,24 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
         Log.e(CamGLView.class.getName(), "onPause");
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//
+//
+//        this.setMeasuredDimension(parentWidth, parentHeight);
+//        super.onMeasure(MeasureSpec.makeMeasureSpec(parentWidth, MeasureSpec.EXACTLY), MeasureSpec
+//                .makeMeasureSpec(parentHeight, MeasureSpec.EXACTLY));
+//    }
+
+    protected void startCam(CamGLRender glRender) {
+        mCamera = openCamera();
+        Camera.Parameters parameters = mCamera.getParameters();
+        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        //        parameters.setPreviewSize(1920, 1080);//一般都支持  暂且简单写这个  需要获取支持列表选取
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+        mCamera.setParameters(parameters);
+        mRender = glRender;
+        setupEGL(mContext);
         int parentWidth = ScreenUtils.getScreenWidth(mContext);
         int parentHeight = ScreenUtils.getScreenHeight(mContext);
         if (parentWidth > 0 && parentHeight > 0) {
@@ -106,21 +121,6 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
                 }
             }
         });
-
-        this.setMeasuredDimension(parentWidth, parentHeight);
-        super.onMeasure(MeasureSpec.makeMeasureSpec(parentWidth, MeasureSpec.EXACTLY), MeasureSpec
-                .makeMeasureSpec(parentHeight, MeasureSpec.EXACTLY));
-    }
-
-    protected void startCam(CamGLRender glRender) {
-        mCamera = openCamera();
-        Camera.Parameters parameters=mCamera.getParameters();
-        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-//        parameters.setPreviewSize(1920, 1080);//一般都支持  暂且简单写这个  需要获取支持列表选取
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-        mCamera.setParameters(parameters);
-        mRender = glRender;
-        setupEGL(mContext);
     }
 
     protected void setupCamera(int w, int h) {
@@ -161,18 +161,18 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
         return mCamera;
     }
 
-
     public enum FlashMode {
         ON,
         OFF,
     }
+
     public void switchFlashMode() {
         flashMode = flashMode == FlashMode.OFF ? FlashMode.ON : FlashMode.OFF;
         if (mCamera == null) {
-            return ;
+            return;
         }
-        Camera.Parameters parameters=mCamera.getParameters();
-        switch (flashMode){
+        Camera.Parameters parameters = mCamera.getParameters();
+        switch (flashMode) {
             case OFF:
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 break;
@@ -204,8 +204,10 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
             Camera.Size size = getBestPreSize(ScreenUtils.getScreenHeight(mContext),
                     ScreenUtils.getScreenWidth(),
                     mSupportedPreviewSizes);
+//            mPreviewHeight = size.width;
+//            mPreviewWidth = size.height;
             parameters.setPreviewSize(size.width, size.height);
-        } else {
+        }else {
             parameters.setPreviewSize(mPreviewHeight, mPreviewWidth);
         }
         mCamera.setParameters(parameters);
@@ -234,7 +236,8 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
 
     /**
      * 获取最佳预览尺寸
-     *`
+     *
+     *
      * @param surfaceWidth
      * @param surfaceHeight
      * @param preSizeList
@@ -250,37 +253,37 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
             }
         }
 
+        double minDiff = Double.MAX_VALUE;
         // 得到与传入的宽高比最接近的size
         float reqRatio = ((float) surfaceWidth) / (float) surfaceHeight;
         float curRatio;
         float deltaRatio;
-        float deltaRatioMin = 0.1f;
         Camera.Size retSize = null;
         for (Camera.Size size : preSizeList) {
             curRatio = ((float) size.width) / (float) size.height;
             deltaRatio = Math.abs(reqRatio - curRatio);
-            if (deltaRatio < deltaRatioMin) {
-                deltaRatioMin = deltaRatio;
+            if (deltaRatio < minDiff) {
+                minDiff = deltaRatio;
                 retSize = size;
             }
         }
 
-        // 如果没找到合适的size，重新根据height找一个最接近的size
-        double minDiff = Double.MAX_VALUE;
-        if (retSize == null) {
-            minDiff = Double.MAX_VALUE;
-            for (Camera.Size size : preSizeList) {
-                if (Math.abs(size.height - surfaceHeight) < minDiff) {
-                    retSize = size;
-                    minDiff = Math.abs(size.height - surfaceHeight);
-                }
-            }
-        }
+        //        // 如果没找到合适的size，重新根据height找一个最接近的size
+        //        double minDiff = Double.MAX_VALUE;
+        //        if (retSize == null) {
+        //            minDiff = Double.MAX_VALUE;
+        //            for (Camera.Size size : preSizeList) {
+        //                if (Math.abs(size.height - surfaceHeight) < minDiff) {
+        //                    retSize = size;
+        //                    minDiff = Math.abs(size.height - surfaceHeight);
+        //                }
+        //            }
+        //        }
 
         return retSize;
     }
 
-    public void setFlashMode (FlashMode mode) {
+    public void setFlashMode(FlashMode mode) {
         this.flashMode = mode;
     }
 }
