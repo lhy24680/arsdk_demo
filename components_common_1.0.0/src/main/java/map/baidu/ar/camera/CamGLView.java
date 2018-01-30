@@ -36,11 +36,8 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
     protected AuthorityInterface authorityInterface;
     public AlertDialog mDialog;
     protected boolean mWaitForTakePhoto;
-    protected String mOutput = Environment.getExternalStorageDirectory().toString() + "/artest";
 
     protected FlashMode flashMode = FlashMode.OFF;
-
-    // protected OnModeChanged mOnModeChanged;
 
     protected void setupEGL(Context context) {
         mContext = context;
@@ -84,14 +81,14 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
         Log.e(CamGLView.class.getName(), "onPause");
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//
-//
-//        this.setMeasuredDimension(parentWidth, parentHeight);
-//        super.onMeasure(MeasureSpec.makeMeasureSpec(parentWidth, MeasureSpec.EXACTLY), MeasureSpec
-//                .makeMeasureSpec(parentHeight, MeasureSpec.EXACTLY));
-//    }
+    //    @Override
+    //    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    //
+    //
+    //        this.setMeasuredDimension(parentWidth, parentHeight);
+    //        super.onMeasure(MeasureSpec.makeMeasureSpec(parentWidth, MeasureSpec.EXACTLY), MeasureSpec
+    //                .makeMeasureSpec(parentHeight, MeasureSpec.EXACTLY));
+    //    }
 
     protected void startCam(CamGLRender glRender) {
         mCamera = openCamera();
@@ -204,10 +201,8 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
             Camera.Size size = getBestPreSize(ScreenUtils.getScreenHeight(mContext),
                     ScreenUtils.getScreenWidth(),
                     mSupportedPreviewSizes);
-//            mPreviewHeight = size.width;
-//            mPreviewWidth = size.height;
             parameters.setPreviewSize(size.width, size.height);
-        }else {
+        } else {
             parameters.setPreviewSize(mPreviewHeight, mPreviewWidth);
         }
         mCamera.setParameters(parameters);
@@ -236,7 +231,6 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
 
     /**
      * 获取最佳预览尺寸
-     *
      *
      * @param surfaceWidth
      * @param surfaceHeight
@@ -267,19 +261,6 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
                 retSize = size;
             }
         }
-
-        //        // 如果没找到合适的size，重新根据height找一个最接近的size
-        //        double minDiff = Double.MAX_VALUE;
-        //        if (retSize == null) {
-        //            minDiff = Double.MAX_VALUE;
-        //            for (Camera.Size size : preSizeList) {
-        //                if (Math.abs(size.height - surfaceHeight) < minDiff) {
-        //                    retSize = size;
-        //                    minDiff = Math.abs(size.height - surfaceHeight);
-        //                }
-        //            }
-        //        }
-
         return retSize;
     }
 
