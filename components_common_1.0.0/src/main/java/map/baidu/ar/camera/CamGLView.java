@@ -164,7 +164,7 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
     }
 
     public void switchFlashMode() {
-        flashMode = flashMode == FlashMode.OFF ? FlashMode.ON : FlashMode.OFF;
+//        flashMode = flashMode == FlashMode.OFF ? FlashMode.ON : FlashMode.OFF;
         if (mCamera == null) {
             return;
         }
