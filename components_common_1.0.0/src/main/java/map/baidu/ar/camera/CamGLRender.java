@@ -15,8 +15,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
 import map.baidu.ar.ArChangeListener;
 import map.baidu.ar.ArPageListener;
 import map.baidu.ar.model.ArInfo;
@@ -67,6 +69,7 @@ public class CamGLRender implements GLSurfaceView.Renderer {
     protected boolean shouldTakePic;
     protected ArChangeListener mArChangeListener;
     protected onDuerChangeListener onDuerChangeListenen;
+
     public String getFloorName() {
         return floorName;
     }
@@ -92,40 +95,47 @@ public class CamGLRender implements GLSurfaceView.Renderer {
     }
 
     public void setCamera(Camera camera) {
-
         mCamera = camera;
+    }
+
+    public Camera getmCamera() {
+        return mCamera;
     }
 
     /**
      * BaseAr 实时计算
-     *
      */
-    public  void setBaseArSensorState(float[] remapValue, LayoutInflater inflater, TextView messageTv, RelativeLayout
+    public void setBaseArSensorState(float[] remapValue, LayoutInflater inflater, TextView messageTv, RelativeLayout
             rlView,
-                                         ArPageListener onSelectNodeListener, ArrayList<ArInfo> arPoiList,
-                                         FragmentActivity activity) {};
+                                     ArPageListener onSelectNodeListener, ArrayList<ArInfo> arPoiList,
+                                     FragmentActivity activity) {
+    }
 
+    ;
 
     /**
-     *Indoor 调用 实时计算
+     * Indoor 调用 实时计算
      */
     public void setSensorState(float[] remapValue, final LayoutInflater inflater,
-                                        final RelativeLayout rl_camview, final ArPageListener onSelectNodeListener,
-                                        ArrayList<ArrayList<ArPoi>> arPoiList, FragmentActivity activity){};
+                               final RelativeLayout rlCamview, final ArPageListener onSelectNodeListener,
+                               ArrayList<ArrayList<ArPoi>> arPoiList, FragmentActivity activity) {
+    }
+
+    ;
 
     /**
      * Scenery 调用 实时计算
      *
      * @param remapValue           硬件返回的屏幕坐标x,y,z
      * @param inflater
-     * @param rl_camview           父view
+     * @param rlCamview           父view
      * @param onSelectNodeListener poi的点击事件
      * @param arPoiList            poi对象集合
      */
-    public void setScenerySensorState(float[] remapValue, LayoutInflater inflater, RelativeLayout rl_camview,
+    public void setScenerySensorState(float[] remapValue, LayoutInflater inflater, RelativeLayout rlCamview,
                                       ArPageListener onSelectNodeListener,
-                                      @NotNull ArrayList<ArPoiScenery> arPoiList, FragmentActivity activity){}
-
+                                      @NotNull ArrayList<ArPoiScenery> arPoiList, FragmentActivity activity) {
+    }
 
     public void setOnDuerChangeListenen(onDuerChangeListener onDuerChangeListenen) {
         this.onDuerChangeListenen = onDuerChangeListenen;
@@ -134,7 +144,6 @@ public class CamGLRender implements GLSurfaceView.Renderer {
     public void setArChangeListener(ArChangeListener arChangeListener) {
         this.mArChangeListener = arChangeListener;
     }
-
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -170,7 +179,6 @@ public class CamGLRender implements GLSurfaceView.Renderer {
     public void setCameraReadyListener(Runnable runnable) {
         mCameraReadyListener = runnable;
     }
-
 
     @Override
     public void onDrawFrame(GL10 gl) {
