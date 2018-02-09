@@ -109,9 +109,8 @@ public class CamGLRender implements GLSurfaceView.Renderer {
             rlView,
                                      ArPageListener onSelectNodeListener, ArrayList<ArInfo> arPoiList,
                                      FragmentActivity activity) {
-    }
 
-    ;
+    }
 
     /**
      * Indoor 调用 实时计算
@@ -119,9 +118,10 @@ public class CamGLRender implements GLSurfaceView.Renderer {
     public void setSensorState(float[] remapValue, final LayoutInflater inflater,
                                final RelativeLayout rlCamview, final ArPageListener onSelectNodeListener,
                                ArrayList<ArrayList<ArPoi>> arPoiList, FragmentActivity activity) {
+
     }
 
-    ;
+
 
     /**
      * Scenery 调用 实时计算

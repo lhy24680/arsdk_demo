@@ -15,7 +15,7 @@ public class LocUtil {
     public static LocationManager.LocData getCurLocation() {
         long nowTime = new Date().getTime();
         LocationManager.LocData locData = LocationManager.getInstance().getCurLocation(null);
-        
+
         if (LocationManager.getInstance().isLocationValid() && locData != null) {
             if (mLocData == null || !(nowTime - locTime < 2000
                                               && (Math.abs(locData.longitude - mLocData.longitude) > 1000
@@ -24,9 +24,10 @@ public class LocUtil {
                 locTime = nowTime;
                 mLocData = new LocationManager.LocData();
                 mLocData.latitude = locData.latitude - 0;
+                mLocData.buildingId = locData.buildingId;
                 mLocData.longitude = locData.longitude + 0;
                 mLocData.floorId = locData.floorId;
-//                mLocData.networkLocType =
+                //                mLocData.networkLocType =
             }
             return mLocData;
         } else if (mLocData != null && nowTime - locTime < 60000) {

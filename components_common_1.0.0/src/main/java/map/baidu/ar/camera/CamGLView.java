@@ -29,6 +29,8 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
     protected Camera mCamera;
     protected int mPreviewWidth;
     protected int mPreviewHeight;
+    protected int mPictureWidth;
+    protected int mPictureHeight;
     protected int mSurfaceWidth;
     protected int mSurfaceHeight;
     protected Thread matchThread;
@@ -96,6 +98,7 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
         parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
         //        parameters.setPreviewSize(1920, 1080);//一般都支持  暂且简单写这个  需要获取支持列表选取
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+        //        parameters.setPictureSize(1080, 1920);
         mCamera.setParameters(parameters);
         mRender = glRender;
         setupEGL(mContext);
@@ -127,7 +130,7 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
         try {
             Camera.Parameters parameters = mCamera.getParameters();
             setupCaptureParams(parameters, w, h);
-
+            setupPictureSizes(parameters, 1000);
         } catch (Exception e) {
             // todo 不用时release()相机
             showAlertDialog();
@@ -164,7 +167,7 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
     }
 
     public void switchFlashMode() {
-//        flashMode = flashMode == FlashMode.OFF ? FlashMode.ON : FlashMode.OFF;
+        //        flashMode = flashMode == FlashMode.OFF ? FlashMode.ON : FlashMode.OFF;
         if (mCamera == null) {
             return;
         }
@@ -206,6 +209,29 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
             parameters.setPreviewSize(mPreviewHeight, mPreviewWidth);
         }
         mCamera.setParameters(parameters);
+    }
+
+    /**
+     * 设置照片大小（传给定位sdk，他们说需要宽度最接近1000的照片尺寸）
+     *
+     * @param parameters 相机参数
+     */
+    public void setupPictureSizes(Camera.Parameters parameters, int near) {
+                mPictureWidth = 1000;
+                mPictureHeight = 0;
+                int diff = near * 10;
+                List<Camera.Size> mSupportedPictureSizes = parameters.getSupportedPictureSizes();
+                for (int i = 0; i < mSupportedPictureSizes.size(); i++) {
+                    Camera.Size size = mSupportedPictureSizes.get(i);
+                    int sDiff = Math.abs(size.height - near);
+                    if (sDiff < diff) {
+                        mPictureHeight = size.width;
+                        mPictureWidth = size.height;
+                        diff = sDiff;
+                    }
+                }
+                parameters.setPictureSize(mPictureHeight, mPictureWidth);
+                mCamera.setParameters(parameters);
     }
 
     public CamGLRender getRender() {
