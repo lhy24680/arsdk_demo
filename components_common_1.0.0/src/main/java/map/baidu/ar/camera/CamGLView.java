@@ -7,7 +7,6 @@ import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
-import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -39,7 +38,7 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
     public AlertDialog mDialog;
     protected boolean mWaitForTakePhoto;
 
-    protected FlashMode flashMode = FlashMode.OFF;
+    protected static FlashMode flashMode = FlashMode.OFF;
 
     protected void setupEGL(Context context) {
         mContext = context;
