@@ -8,6 +8,84 @@ import java.lang.reflect.Field;
  * 动态加载资源使用
  */
 public class ResourceUtil {
+
+	public static int getLayoutId(Context paramContext, String paramString) {
+		return paramContext.getResources().getIdentifier(paramString, "layout", paramContext.getPackageName());
+	}
+
+	public static int getStringId(Context paramContext, String paramString) {
+		return paramContext.getResources().getIdentifier(paramString, "string", paramContext.getPackageName());
+	}
+
+	public static int getDrawableId(Context paramContext, String paramString) {
+		return paramContext.getResources().getIdentifier(paramString, "drawable", paramContext.getPackageName());
+	}
+
+	public static int getStyleId(Context paramContext, String paramString) {
+		return paramContext.getResources().getIdentifier(paramString, "style", paramContext.getPackageName());
+	}
+
+	public static int getId(Context paramContext, String paramString) {
+		return paramContext.getResources().getIdentifier(paramString, "id", paramContext.getPackageName());
+	}
+
+	public static int getColorId(Context paramContext, String paramString) {
+		return paramContext.getResources().getIdentifier(paramString, "color", paramContext.getPackageName());
+	}
+
+	public static int getAnimId(Context paramContext, String paramString) {
+		return paramContext.getResources().getIdentifier(paramString, "anim", paramContext.getPackageName());
+	}
+
+	/**
+	 * 获取Attrs资源Id
+	 *
+	 * @param paramContext
+	 * @param paramString
+	 * @author Hanyonglu@duoku.com
+	 * @return
+	 */
+	public static int getAttrId(Context paramContext, String paramString) {
+		return paramContext.getResources().getIdentifier(paramString, "attr", paramContext.getPackageName());
+	}
+
+	/**
+	 * 获取styleable资源Id
+	 *
+	 * @param paramContext
+	 * @param paramString
+	 * @author Hanyonglu@duoku.com
+	 * @return
+	 */
+	public static int getStyleableId(Context paramContext, String paramString) {
+		return paramContext.getResources().getIdentifier(paramString, "styleable", paramContext.getPackageName());
+	}
+
+	/**
+	 * 通过反射来读取int[]类型资源Id
+	 *
+	 * @param context
+	 * @param name
+	 * @author Hanyonglu@duoku.com
+	 * @return
+	 */
+	public static final int[] getResourceDeclareStyleableIntArray(Context context, String name) {
+		try {
+			Field[] fields2 = Class.forName(context.getPackageName() + ".R$styleable").getFields();
+			for (Field f : fields2) {
+				if (f.getName().equals(name)) {
+					int[] ret = (int[]) f.get(null);
+					return ret;
+				}
+			}
+		} catch (Throwable t) {
+
+		}
+
+		return null;
+	}
+
+
 	public static int getLayoutId(Context paramContext, String paramString, String defPackageName) {
 		return paramContext.getResources().getIdentifier(paramString, "layout", defPackageName);
 	}

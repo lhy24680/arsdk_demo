@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion project.ext.COMPILE_SDK_VERSION
     buildToolsVersion project.ext.BUILD_TOOL_VERSION
+
     defaultConfig {
         applicationId "sdk.cammer.common.baidu.map.android_mapcam_sdk"
         minSdkVersion project.ext.MIN_SDK_VERSION
@@ -16,4 +16,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+dependencies {
+    compile project(':components_common_1.0.0')
+    compile fileTree(dir: 'libs', include: '*.jar')
 }

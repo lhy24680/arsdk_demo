@@ -27,9 +27,7 @@ import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.onDuerChangeListener;
 import map.baidu.ar.utils.AsyncImageLoader;
 
-/**
- * Created by xingdaming on 15/12/22.
- */
+
 public class CamGLRender implements GLSurfaceView.Renderer {
 
     private static final String TAG = CamGLRender.class.getName();

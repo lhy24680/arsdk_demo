@@ -8,12 +8,17 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Map;
 
+import android.content.Context;
+import android.location.Location;
 import map.baidu.ar.data.IMapPoiItem;
 import map.baidu.ar.detail.IMediaControllerData;
 import map.baidu.ar.exception.LocationGetFailException;
 import map.baidu.ar.topimage.HeadImage;
+import map.baidu.ar.utils.CoordinateConverter;
 import map.baidu.ar.utils.INoProGuard;
+import map.baidu.ar.utils.LocNativeUtil;
 import map.baidu.ar.utils.LocUtil;
 
 /**
@@ -52,6 +57,21 @@ public class ArPoiScenery implements IMapPoiItem, INoProGuard, IMediaControllerD
     public static int NEAR_VALUE = 20;
 
     // 获取距离
+    public double getDistance(Context context) throws LocationGetFailException {
+        Location locNaData = LocNativeUtil.getLocation(context);
+        Map<String, Double> hashMap;
+        hashMap = CoordinateConverter.convertLL2MC(locNaData
+                .getLongitude(), locNaData.getLatitude());
+        if (locNaData != null) {
+            double myX =  hashMap.get("x");
+            double myY =  hashMap.get("y");
+            return AppTools.getDistanceByMc(new Point(myX, myY), new Point(point.getPoint_x(), point.getPoint_y()));
+        }else {
+            throw new LocationGetFailException();
+        }
+    }
+
+    // 获取距离
     public double getDistance() throws LocationGetFailException {
         LocationManager.LocData locData = LocUtil.getCurLocation();
         if (locData != null) {
@@ -60,6 +80,14 @@ public class ArPoiScenery implements IMapPoiItem, INoProGuard, IMediaControllerD
             return AppTools.getDistanceByMc(new Point(myX, myY), new Point(point.getPoint_x(), point.getPoint_y()));
         } else {
             throw new LocationGetFailException();
+        }
+    }
+
+    public boolean isNear(Context context) {
+        try {
+            return getDistance(context) <= NEAR_VALUE;
+        } catch (Exception e) {
+            return false;
         }
     }
 

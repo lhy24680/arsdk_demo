@@ -4,6 +4,7 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import map.baidu.ar.model.ArPoiScenery;
 
 /**
@@ -13,7 +14,7 @@ import map.baidu.ar.model.ArPoiScenery;
 public interface IAoiInfo {
     boolean getIsInAoi(float x, float y);
 
-    boolean getIsInAoi();
+    boolean getIsInAoi(Context context);
 
     GeoPoint getNearestPoint(GeoPoint newLocation);
 

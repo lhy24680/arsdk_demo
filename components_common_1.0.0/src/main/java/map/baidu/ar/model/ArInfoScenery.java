@@ -6,11 +6,16 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Map;
 
+import android.content.Context;
+import android.location.Location;
 import map.baidu.ar.data.IAoiInfo;
 import map.baidu.ar.utils.AoiDistanceHelper;
+import map.baidu.ar.utils.CoordinateConverter;
 import map.baidu.ar.utils.INoProGuard;
 import map.baidu.ar.utils.ListUtils;
+import map.baidu.ar.utils.LocNativeUtil;
 import map.baidu.ar.utils.LocUtil;
 import map.baidu.ar.utils.callback.SafeTuple;
 import map.baidu.ar.utils.callback.Tuple;
@@ -73,16 +78,25 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard {
      * @return 用户在不在景区内
      */
     @Override
-    public boolean getIsInAoi() {
+    public boolean getIsInAoi(Context context) {
         if (aois == null || aois.size() == 0) {
             return false;
         }
         int x, y;
-        LocationManager.LocData locData = LocUtil.getCurLocation();
-        if (locData != null) {
-            x = (int) (locData.longitude);
-            y = (int) (locData.latitude);
-        } else {
+        Location locNaData = LocNativeUtil.getLocation(context);
+        Map<String, Double> hashMap;
+        hashMap = CoordinateConverter.convertLL2MC(locNaData
+                .getLongitude(), locNaData.getLatitude());
+        if (locNaData != null) {
+
+            x = hashMap.get("x").intValue();
+            y = hashMap.get("y").intValue();
+        }else{
+//        LocationManager.LocData locData = LocUtil.getCurLocation();
+//        if (locData != null) {
+//            x = (int) (locData.longitude);
+//            y = (int) (locData.latitude);
+//        } else {
 //            MToast.show(getContext(), "暂时无法获取您的位置");
             return false;
         }

@@ -12,7 +12,7 @@ android {
     buildToolsVersion project.ext.BUILD_TOOL_VERSION
     useLibrary 'org.apache.http.legacy'
 
-    defaultConfig {
+    defaultConfig { 
         minSdkVersion project.ext.MIN_SDK_VERSION
         targetSdkVersion project.ext.TARGET_SDK_VERSION
         versionCode 1
@@ -22,8 +22,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 

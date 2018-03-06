@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">android-mapcam-sdk</string>
+    <string name="app_name_demo">android_arsdk</string>
+    <string name="app_operate">AR景区</string>
 </resources>
