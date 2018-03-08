@@ -1,7 +1,5 @@
 package map.baidu.ar.utils;
 
-import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.baidu.platform.comjni.tools.AppTools;
 
 import java.util.ArrayList;
 
@@ -16,13 +14,13 @@ public class AoiDistanceHelper {
     /**
      * 将ArrayList<float[]>转换为ArrayList<ArrayList<Point>>类型，方便计算
      */
-    public static ArrayList<ArrayList<GeoPoint>> getAoiList(ArrayList<float[]> aoiListOriginal) {
-        ArrayList<ArrayList<GeoPoint>> aoiListTarget = new ArrayList<>();
+    public static ArrayList<ArrayList<Point>> getAoiList(ArrayList<float[]> aoiListOriginal) {
+        ArrayList<ArrayList<Point>> aoiListTarget = new ArrayList<>();
         for (float[] aoi : aoiListOriginal) {
             if (aoi != null) {
-                ArrayList<GeoPoint> aoiTarget = new ArrayList<>();
+                ArrayList<Point> aoiTarget = new ArrayList<>();
                 for (int i = 0; i + 1 < aoi.length; i = i + 2) {
-                    GeoPoint point = new GeoPoint(aoi[i + 1], aoi[i]);
+                    Point point = new Point(aoi[i + 1], aoi[i]);
                     aoiTarget.add(point);
                 }
                 aoiListTarget.add(aoiTarget);
@@ -39,18 +37,18 @@ public class AoiDistanceHelper {
      *
      * @return 点与面距离最近的点, 以及这个点和指定点的距离
      */
-    public static Tuple<GeoPoint, Double> getNearestPoint(GeoPoint newLocation,
-                                                          ArrayList<ArrayList<GeoPoint>> aoiList) {
-        GeoPoint nearestPoint = null;
+    public static Tuple<Point, Double> getNearestPoint(Point newLocation,
+                                                          ArrayList<ArrayList<Point>> aoiList) {
+        Point nearestPoint = null;
         double nearestDistance = -1;
-        for (ArrayList<GeoPoint> aoi : aoiList) {
+        for (ArrayList<Point> aoi : aoiList) {
             if (aoi != null) {
                 for (int i = 0; i < aoi.size(); i++) {
                     int nestIndex = aoi.size() > i + 1 ? i + 1 : 0;
-                    GeoPoint aPoint = aoi.get(i);
-                    GeoPoint bPoint = aoi.get(nestIndex);
+                    Point aPoint = aoi.get(i);
+                    Point bPoint = aoi.get(nestIndex);
                     if (aPoint != null && bPoint != null) {
-                        Tuple<GeoPoint, Double> currentNearestPoint = getNearestPoint(newLocation, aPoint, bPoint);
+                        Tuple<Point, Double> currentNearestPoint = getNearestPoint(newLocation, aPoint, bPoint);
                         if (nearestDistance == -1 || currentNearestPoint.getItem2() < nearestDistance) {
                             nearestPoint = currentNearestPoint.getItem1();
                             nearestDistance = currentNearestPoint.getItem2();
@@ -62,7 +60,7 @@ public class AoiDistanceHelper {
         return new Tuple<>(nearestPoint, nearestDistance);
     }
 
-    private static Tuple<GeoPoint, Double> getNearestPoint(GeoPoint point, GeoPoint lineA, GeoPoint lineB) {
+    private static Tuple<Point, Double> getNearestPoint(Point point, Point lineA, Point lineB) {
         double distancePA = getPointsDistance(point, lineA);
         double distanceAB = getPointsDistance(lineA, lineB);
         double distancePB = getPointsDistance(lineB, point);
@@ -80,21 +78,21 @@ public class AoiDistanceHelper {
             return new Tuple<>(lineA, distancePA);
         }
 
-        double x0 = point.getLongitude();
-        double y0 = point.getLatitude();
-        double x1 = lineA.getLongitude();
-        double y1 = lineA.getLatitude();
-        double x2 = lineB.getLongitude();
-        double y2 = lineB.getLatitude();
+        double x0 = point.getX();
+        double y0 = point.getY();
+        double x1 = lineA.getX();
+        double y1 = lineA.getY();
+        double x2 = lineB.getX();
+        double y2 = lineB.getY();
 
         double k = ((x0 - x1) * (x2 - x1) + (y0 - y1) * (y2 - y1)) / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
         double x = x1 + k * (x2 - x1);
         double y = y1 + k * (y2 - y1);
         double distance = Math.sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0));
-        return new Tuple<>(new GeoPoint(y, x), distance);
+        return new Tuple<>(new Point(y, x), distance);
     }
 
-    private static double getPointsDistance(GeoPoint point1, GeoPoint point2) {
-        return AppTools.getDistanceByMc(point1, point2);
+    private static double getPointsDistance(Point point1, Point point2) {
+        return DistanceByMcUtils.getDistanceByMc(point1, point2);
     }
 }

@@ -1,22 +1,16 @@
 package sdk.cammer.common.baidu.map.android_mapcam_sdk;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.http.Header;
 import org.json.JSONObject;
 
+import com.baidu.location.BDLocation;
 import com.baidu.mapframework.api.ComAPIManager;
-import com.baidu.mapframework.location.LocationManager;
-import com.baidu.mapframework.widget.MProgressDialog;
 import com.baidu.mapframework.widget.MToast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,15 +22,12 @@ import map.baidu.ar.http.RequestParams;
 import map.baidu.ar.http.client.ConstantHost;
 import map.baidu.ar.http.client.FFRestClient;
 import map.baidu.ar.model.ArInfoScenery;
-import map.baidu.ar.utils.CoordinateConverter;
-import map.baidu.ar.utils.LocNativeUtil;
-import map.baidu.ar.utils.LocUtil;
+import map.baidu.ar.utils.LocSdkClient;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
     private Button mArOperation;
     public static ArInfoScenery arInfo;
-    public Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +36,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_arsdk);
         mArOperation = (Button) findViewById(R.id.app_operate);
         mArOperation.setOnClickListener(this);
-        context = this;
     }
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.app_operate:
+                BDLocation location = LocSdkClient.getInstance(this).getLocationStart().getLastKnownLocation();
+                Toast.makeText(MainActivity.this, String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
                 RequestParams params = new RequestParams();
                 params.put("qt", "scope_v2_arguide");
                 params.put("uid", "62d852adf09e449a2fb17ef5");
@@ -70,28 +63,27 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                     && arResponse.getData().getAois() != null
                                     && arResponse.getData().getAois().size() > 0 && arResponse.getData().getAois()
                                     .get(0) != null && arResponse.getData().getAois().get(0).length > 0) {
-                                arInfo = arResponse.getData();
-                                arInfo.init();
-                                int x;
-                                int y;
+                                    arInfo = arResponse.getData();
+                                    arInfo.init();
+//                                int x;
+//                                int y;
                                 // 定位坐标*
-//                                LocationManager.LocData locData = LocUtil.getCurLocation();
-                                Location locNaData = LocNativeUtil.getLocation(context);
-                                Map<String, Double> hashMap;
-                                hashMap = CoordinateConverter.convertLL2MC(locNaData
-                                        .getLongitude(), locNaData.getLatitude());
-                                if (locNaData != null) {
-                                    x = (int) hashMap.get("x").intValue();
-                                    y = (int) hashMap.get("y").intValue();
+//                                Location locNaData = LocNativeUtil.getLocation(context);
+//                                Map<String, Double> hashMap;
+//                                hashMap = CoordinateConverter.convertLL2MC(locNaData
+//                                        .getLongitude(), locNaData.getLatitude());
+//                                if (locNaData != null) {
+//                                    x = (int) hashMap.get("x").intValue();
+//                                    y = (int) hashMap.get("y").intValue();
 
                                     //                                    x = (int) locNaData.getLongitude();
                                     //                                    y = (int) locNaData.getLatitude();
-                                } else {
+//                                } else {
                                     //权限处理
                                     //                                    SceneryEntity.navigateTo(comId,
                                     // ARAuthorityPage.class.getName(), null, bundle);
-                                    return;
-                                }
+//                                    return;
+//                                }
                                 //                                boolean isFirstInSceneryARPage = PreferencesUtil
                                 // .getInstance()
                                 //                                        .getValue(applicationContext,
@@ -121,10 +113,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable,
                                           JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        //                        MProgressDialog.dismiss();
                         Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
                     }
-
                 });
                 break;
             default:
@@ -141,7 +131,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         try {
             return gson.fromJson(json, clazz);
         } catch (Exception ex) {
-            // LOGGER.error(json + " 无法转换为 " + clazz.getName() + " 对象!", ex);
             return null;
         }
     }

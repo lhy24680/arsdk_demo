@@ -2,14 +2,12 @@ package map.baidu.ar.model;
 
 import android.util.Log;
 
-import com.baidu.platform.comapi.basestruct.GeoPoint;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import map.baidu.ar.utils.AoiDistanceHelper;
 import map.baidu.ar.utils.INoProGuard;
+import map.baidu.ar.utils.Point;
 import map.baidu.ar.utils.callback.Tuple;
 /**
  * Created by zhujingsi on 2017/6/6.
@@ -80,9 +78,9 @@ public class ArInfo implements INoProGuard {
         if (isInAoi) {
             return 0;
         }
-        ArrayList<ArrayList<GeoPoint>> todo = new ArrayList<>();
-        todo.add(0, (ArrayList<GeoPoint>) getGeosList());
-        Tuple<GeoPoint, Double> tuple = AoiDistanceHelper.getNearestPoint(new GeoPoint(myY, myX), todo);
+        ArrayList<ArrayList<Point>> todo = new ArrayList<>();
+        todo.add(0, (ArrayList<Point>) getGeosList());
+        Tuple<Point, Double> tuple = AoiDistanceHelper.getNearestPoint(new Point(myY, myX), todo);
         double distance = tuple.getItem2();
         int dis = (int) distance;
         if (dis <= 0) {
@@ -184,8 +182,8 @@ public class ArInfo implements INoProGuard {
         this.myY = myY;
         mAzimuth = new double[getGeosList().size()];
         for (int i = 0; i < getGeosList().size(); i++) {
-            double azimuth = Math.toDegrees(Math.atan2(getGeosList().get(i).getLatitude() - myY, getGeosList().get
-                    (i).getLongitude() - myX)) + 90;
+            double azimuth = Math.toDegrees(Math.atan2(getGeosList().get(i).getY() - myY, getGeosList().get
+                    (i).getX() - myX)) + 90;
             mAzimuth[i] = Angle.corrAngle(azimuth);
         }
         mAngle = getPoiAngle(mAzimuth);
@@ -224,9 +222,9 @@ public class ArInfo implements INoProGuard {
         return dodgeLevel;
     }
 
-    private List<GeoPoint> mGeoPoints = new ArrayList<>();
+    private List<Point> mGeoPoints = new ArrayList<>();
 
-    public List<GeoPoint> getGeosList() {
+    public List<Point> getGeosList() {
         if (mGeoPoints == null || mGeoPoints.size() < 1) {
             mGeoPoints = new ArrayList<>();
             // 服务端说一定只会返回一串坐标
@@ -235,7 +233,7 @@ public class ArInfo implements INoProGuard {
                 String[] point = geosString[j].split(",");
                 double y = Double.valueOf(point[0]);
                 double x = Double.valueOf(point[1]);
-                mGeoPoints.add(new GeoPoint(x, y));
+                mGeoPoints.add(new Point(x, y));
             }
         }
         return mGeoPoints;

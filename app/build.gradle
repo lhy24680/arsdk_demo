@@ -3,6 +3,13 @@ android {
     compileSdkVersion project.ext.COMPILE_SDK_VERSION
     buildToolsVersion project.ext.BUILD_TOOL_VERSION
 
+    sourceSets {
+        main {
+            jniLibs.srcDir('libs')
+            jni.srcDirs = []
+        }
+    }
+
     defaultConfig {
         applicationId "sdk.cammer.common.baidu.map.android_mapcam_sdk"
         minSdkVersion project.ext.MIN_SDK_VERSION

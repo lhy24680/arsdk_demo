@@ -5,15 +5,17 @@ import static android.content.Context.LOCATION_SERVICE;
 import java.util.List;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 
 /**
- * Created by kanglichen on 2018/3/6.
+ * 手机自带定位
  */
 
 public class LocNativeUtil {
@@ -22,6 +24,7 @@ public class LocNativeUtil {
     //显示位置提供器的类型
     private static String provider;
 
+    @SuppressLint("MissingPermission")
     public static Location getLocation(Context context) {
         locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
         //获取所有可用的位置提供器
@@ -33,14 +36,12 @@ public class LocNativeUtil {
             provider = LocationManager.NETWORK_PROVIDER;
         } else {
             //当前没有可用的位置提供器时用Toast提醒用户
-            //            Toast.makeText(this, "请打开GPS或者网络来确定你的位置", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(this, "请打开GPS或者网络来确定你的位置", Toast.LENGTH_LONG).show();
             return null;
         }
         //判断是否有访问位置的权限
         Location location = null;
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (!checkPermissions(context)) {
             // TODO: Consider calling
             //    Activity#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -56,6 +57,25 @@ public class LocNativeUtil {
 //            showLocation(location);
 //        }
 //        locationManager.requestLocationUpdates(provider,5*1000,1,locationListener);
+    }
+
+    /**
+     * 检查是否开启定位权限
+     *
+     * @return
+     */
+    public static boolean checkPermissions(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if ((context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                         == PackageManager.PERMISSION_GRANTED) && (context.checkSelfPermission(Manifest
+                    .permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 
     private static int checkSelfPermission(String accessFineLocation) {

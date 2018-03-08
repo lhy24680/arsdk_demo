@@ -1,14 +1,14 @@
 package map.baidu.ar.model;
 
-import com.baidu.mapframework.location.LocationManager;
-import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.baidu.platform.comapi.basestruct.Point;
-import com.baidu.platform.comjni.tools.AppTools;
+import com.baidu.location.BDLocation;
 
 import map.baidu.ar.exception.LocationGetFailException;
+import map.baidu.ar.init.SDKContext;
+import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.INoProGuard;
+import map.baidu.ar.utils.LocSdkClient;
 import map.baidu.ar.utils.LocUtil;
-
+import map.baidu.ar.utils.Point;
 
 /**
  * Created by zhujingsi on 2017/6/6.
@@ -52,11 +52,12 @@ public class ArPoi implements INoProGuard {
 
     // 获取距离
     public double getDistance() throws LocationGetFailException {
-        LocationManager.LocData locData = LocUtil.getCurLocation();
-        if (locData != null) {
-            double myX = locData.longitude;
-            double myY = locData.latitude;
-            return AppTools.getDistanceByMc(new Point(myX, myY), new Point(Double.valueOf(pt_x), Double.valueOf(pt_y)));
+        BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+                .getLastKnownLocation();
+        if (location != null) {
+            double myX = location.getLongitude();
+            double myY = location.getLatitude();
+            return  DistanceByMcUtils.getDistanceByMc(new Point(myX, myY), new Point(Double.valueOf(pt_x), Double.valueOf(pt_y)));
         } else {
             throw new LocationGetFailException();
         }
@@ -64,13 +65,14 @@ public class ArPoi implements INoProGuard {
 
     // 获取距离文本
     public String getDistanceText() {
-        LocationManager.LocData locData = LocUtil.getCurLocation();
-        if (locData == null) {
+        BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+                .getLastKnownLocation();
+        if (location == null) {
             return "";
         }
-        double myX = locData.longitude;
-        double myY = locData.latitude;
-        double mDistance = AppTools.getDistanceByMc(new Point(myX, myY),
+        double myX = location.getLongitude();
+        double myY = location.getLatitude();
+        double mDistance =  DistanceByMcUtils.getDistanceByMc(new Point(myX, myY),
                 new Point(Double.valueOf(pt_x), Double.valueOf(pt_y)));
         if (mDistance > 1000) {
             return ((int) mDistance / 100) / 10.0f + "km";
@@ -86,8 +88,8 @@ public class ArPoi implements INoProGuard {
         this.uid = uid;
     }
 
-    public GeoPoint getGeoPoint() {
-        return new GeoPoint(Double.valueOf(pt_y), Double.valueOf(pt_x));
+    public Point getGeoPoint() {
+        return new Point(Double.valueOf(pt_y), Double.valueOf(pt_x));
     }
 
     public float getWeight() {

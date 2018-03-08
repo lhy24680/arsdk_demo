@@ -9,12 +9,8 @@ import java.util.Set;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
-import com.baidu.components.api.extra.APIProxy;
 import com.baidu.mapframework.widget.MProgressDialog;
-import com.baidu.mapframework.widget.MToast;
-
 import android.content.Context;
-import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import map.baidu.ar.http.AsyncHttpClient;
@@ -256,14 +252,14 @@ public class FFRestClient {
         get(base, responseHandler);
     }
 
-    public static void getVacationListData(AsyncHttpResponseHandler responseHandler) {
-        RequestParams base = buildBaseParams();
-        base.put("qt", "vacation_list");
-        base.put("device_from", "android");
-        base.put("vacation_type", "around");
-        base.put("cityId", APIProxy.settings().getLocationCityId());
-        get(ConstantHost.MENPIAO_BASE_URL, base, responseHandler);
-    }
+//    public static void getVacationListData(AsyncHttpResponseHandler responseHandler) {
+//        RequestParams base = buildBaseParams();
+//        base.put("qt", "vacation_list");
+//        base.put("device_from", "android");
+//        base.put("vacation_type", "around");
+//        base.put("cityId", APIProxy.settings().getLocationCityId());
+//        get(ConstantHost.MENPIAO_BASE_URL, base, responseHandler);
+//    }
 
     public static void getSceneryChannnelData(Hashtable optional, AsyncHttpResponseHandler responseHandler) {
         RequestParams base = buildBaseParams();
@@ -273,15 +269,15 @@ public class FFRestClient {
         get(base, responseHandler);
     }
 
-    public static void getUserIsLocalData(JsonHttpResponseHandler responseHandler) {
-        Hashtable table = new Hashtable();
-        table.put("qt", "scope_local");
-        table.put("cuid", APIProxy.sys().getCuid());
-        table.put("c", APIProxy.settings().getLocationCityId() + "");
-        RequestParams params = new RequestParams();
-        buildOptinal(table, params);
-        get(params, responseHandler);
-    }
+//    public static void getUserIsLocalData(JsonHttpResponseHandler responseHandler) {
+//        Hashtable table = new Hashtable();
+//        table.put("qt", "scope_local");
+//        table.put("cuid", APIProxy.sys().getCuid());
+//        table.put("c", APIProxy.settings().getLocationCityId() + "");
+//        RequestParams params = new RequestParams();
+//        buildOptinal(table, params);
+//        get(params, responseHandler);
+//    }
 
 
     public static void getSceneryAroundData(Hashtable optional, AsyncHttpResponseHandler responseHandler) {

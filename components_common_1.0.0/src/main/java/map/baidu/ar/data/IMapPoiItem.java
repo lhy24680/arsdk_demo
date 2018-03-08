@@ -1,8 +1,7 @@
 package map.baidu.ar.data;
 
-import com.baidu.platform.comapi.basestruct.GeoPoint;
-
 import map.baidu.ar.exception.LocationGetFailException;
+import map.baidu.ar.utils.Point;
 
 /**
  * 底图上的Poi需要的数据
@@ -10,7 +9,7 @@ import map.baidu.ar.exception.LocationGetFailException;
  */
 public interface IMapPoiItem {
 
-    GeoPoint getGeoPoint();
+    Point getGeoPoint();
 
     String getName();
 

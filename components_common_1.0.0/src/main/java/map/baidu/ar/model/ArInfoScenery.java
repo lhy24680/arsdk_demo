@@ -1,29 +1,23 @@
 package map.baidu.ar.model;
 
-import com.baidu.mapframework.location.LocationManager;
-import com.baidu.platform.comapi.basestruct.GeoPoint;
-
-import org.jetbrains.annotations.NotNull;
+import com.baidu.location.BDLocation;
 
 import java.util.ArrayList;
-import java.util.Map;
 
-import android.content.Context;
-import android.location.Location;
 import map.baidu.ar.data.IAoiInfo;
+import map.baidu.ar.init.SDKContext;
 import map.baidu.ar.utils.AoiDistanceHelper;
-import map.baidu.ar.utils.CoordinateConverter;
 import map.baidu.ar.utils.INoProGuard;
 import map.baidu.ar.utils.ListUtils;
-import map.baidu.ar.utils.LocNativeUtil;
-import map.baidu.ar.utils.LocUtil;
+import map.baidu.ar.utils.LocSdkClient;
+import map.baidu.ar.utils.Point;
 import map.baidu.ar.utils.callback.SafeTuple;
 import map.baidu.ar.utils.callback.Tuple;
 
 /**
  * Created by zhujingsi on 2017/6/6.
  */
-public class ArInfoScenery implements IAoiInfo, INoProGuard {
+public class ArInfoScenery implements IAoiInfo, INoProGuard{
 
     private static final int FAR_DISTANCE_INTERVAL = 5000;
     // 子景点集合
@@ -78,28 +72,27 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard {
      * @return 用户在不在景区内
      */
     @Override
-    public boolean getIsInAoi(Context context) {
+    public boolean getIsInAoi() {
         if (aois == null || aois.size() == 0) {
             return false;
         }
         int x, y;
-        Location locNaData = LocNativeUtil.getLocation(context);
-        Map<String, Double> hashMap;
-        hashMap = CoordinateConverter.convertLL2MC(locNaData
-                .getLongitude(), locNaData.getLatitude());
-        if (locNaData != null) {
-
-            x = hashMap.get("x").intValue();
-            y = hashMap.get("y").intValue();
-        }else{
+        BDLocation bdLocation = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+                .getLastKnownLocation();
+        if (bdLocation != null) {
+                        x = (int) (bdLocation.getLongitude());
+                        y = (int) (bdLocation.getLatitude());
+                    } else {
+                        return false;
+                    }
 //        LocationManager.LocData locData = LocUtil.getCurLocation();
 //        if (locData != null) {
 //            x = (int) (locData.longitude);
 //            y = (int) (locData.latitude);
 //        } else {
-//            MToast.show(getContext(), "暂时无法获取您的位置");
-            return false;
-        }
+////            MToast.show(getContext(), "暂时无法获取您的位置");
+//            return false;
+//        }
         return getIsInAoi(x, y);
     }
 
@@ -120,14 +113,14 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard {
      * @return true为在附近 AOI_NEAR 米以内，false为在aoi面的 AOI_NEAR 米以外
      */
     public boolean isNearAoi(float x, float y) {
-        Tuple<GeoPoint, Double> tuple = AoiDistanceHelper.getNearestPoint(new GeoPoint(y, x),
+        Tuple<Point, Double> tuple = AoiDistanceHelper.getNearestPoint(new Point(y, x),
                 AoiDistanceHelper.getAoiList(aois));
         return tuple.getItem2() < AOI_NEAR;
     }
 
     @Override
-    public GeoPoint getNearestPoint(GeoPoint newLocation) {
-        Tuple<GeoPoint, Double> result = AoiDistanceHelper.getNearestPoint(newLocation,
+    public Point getNearestPoint(Point newLocation) {
+        Tuple<Point, Double> result = AoiDistanceHelper.getNearestPoint(newLocation,
                 AoiDistanceHelper.getAoiList(aois));
         if (result == null) {
             return null;
@@ -183,14 +176,15 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard {
         return false;
     }
 
-    private SafeTuple<GeoPoint, Boolean> mNotFarCache;
+    private SafeTuple<Point, Boolean> mNotFarCache;
 
     boolean isNotFar() {
-        LocationManager.LocData locData = LocUtil.getCurLocation();
-        if (locData == null) {
+        BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+                .getLastKnownLocation();
+        if (location == null) {
             return true;
         }
-        GeoPoint currentLocation = new GeoPoint(locData.latitude, locData.longitude);
+        Point currentLocation = new Point(location.getLatitude(), location.getLongitude());
         if (mNotFarCache != null && currentLocation.equals(mNotFarCache.getItem1())) {
             return mNotFarCache.getItem2();
         }
@@ -199,11 +193,11 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard {
         return result;
     }
 
-    private boolean isNotFarInternal(@NotNull GeoPoint currentLocation) {
-        if (getIsInAoi((float) currentLocation.getLongitude(), (float) currentLocation.getLatitude())) {
+    private boolean isNotFarInternal(Point currentLocation) {
+        if (getIsInAoi((float) currentLocation.getX(), (float) currentLocation.getY())) {
             return true;
         }
-        Tuple<GeoPoint, Double> result = AoiDistanceHelper.getNearestPoint(
+        Tuple<Point, Double> result = AoiDistanceHelper.getNearestPoint(
                 currentLocation, AoiDistanceHelper.getAoiList(getAois()));
         if (result == null || result.getItem2() == null) {
             return true;

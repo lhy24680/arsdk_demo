@@ -107,7 +107,7 @@ public class ResourceUtil {
 	}
 
 	public static int getId(Context paramContext, String paramString, String defPackageName) {
-		return ResourcesApi.getComRes().getIdentifier(paramString, "id", defPackageName);
+		return paramContext.getResources().getIdentifier(paramString, "id", defPackageName);
 	}
 
 	public static int getColorId(Context paramContext, String paramString, String defPackageName) {

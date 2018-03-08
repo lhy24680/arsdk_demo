@@ -8,12 +8,7 @@ import java.util.Date;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import org.jetbrains.annotations.NotNull;
-
-import com.baidu.mapframework.location.LocationManager;
 import com.baidu.mapframework.widget.MToast;
-import com.baidu.platform.comapi.basestruct.Point;
-import com.baidu.platform.comjni.tools.AppTools;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -33,11 +28,11 @@ import map.baidu.ar.camera.GLPOITexture;
 import map.baidu.ar.camera.POIItem;
 import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.onDuerChangeListener;
+import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.LocNativeUtil;
-import map.baidu.ar.utils.LocUtil;
 import map.baidu.ar.utils.MapScaleUtils;
+import map.baidu.ar.utils.Point;
 import map.baidu.ar.utils.ResourceUtil;
-
 
 public class SceneryCamGLRender extends CamGLRender {
 
@@ -80,7 +75,7 @@ public class SceneryCamGLRender extends CamGLRender {
     @Override
     public void setScenerySensorState(float[] remapValue, LayoutInflater inflater, RelativeLayout rl_camview,
                                       ArPageListener onSelectNodeListener,
-                                      @NotNull ArrayList<ArPoiScenery> arPoiList, FragmentActivity activity) {
+                                      ArrayList<ArPoiScenery> arPoiList, FragmentActivity activity) {
         if (mCameraWidth <= 0) {
             return;
         }
@@ -90,13 +85,8 @@ public class SceneryCamGLRender extends CamGLRender {
             if (locNaData != null) {
 
                 mX = locNaData.getLongitude();
-                mY =  locNaData.getLatitude();
-            }else{
-//            LocationManager.LocData locData = LocUtil.getCurLocation();
-//            if (locData != null) {
-//                mX = locData.longitude;
-//                mY = locData.latitude;
-//            } else {
+                mY = locNaData.getLatitude();
+            } else {
                 MToast.show(mContext, "暂时无法获取您的位置");
                 return;
             }
@@ -111,7 +101,7 @@ public class SceneryCamGLRender extends CamGLRender {
             }
             if (arPoiList.size() < 2) {
                 if (mArChangeListener != null) {
-                    mArChangeListener.levelChanged(-1, arPoiList.get(0).getDistance(mContext));
+                    mArChangeListener.levelChanged(-1, arPoiList.get(0).getDistance());
                 }
                 selectPois = new ArrayList<>();
                 selectPois.add(arPoiList.get(0));
@@ -124,7 +114,7 @@ public class SceneryCamGLRender extends CamGLRender {
                 public int compare(ArPoiScenery lhs, ArPoiScenery rhs) {
                     try {
                         // 升序
-                        if (lhs.getDistance(mContext) >= rhs.getDistance(mContext)) {
+                        if (lhs.getDistance() >= rhs.getDistance()) {
                             return 1;
                         } else {
                             return -1;
@@ -255,7 +245,7 @@ public class SceneryCamGLRender extends CamGLRender {
     private ArPoiScenery isNoPoiNear(ArrayList<ArPoiScenery> arPois) {
         for (int i = 0; i < arPois.size(); i++) {
             // 只要有一个poi展示在当前屏，则返回否
-            if (arPois.get(i).isNear(mContext)) {
+            if (arPois.get(i).isNear()) {
                 return arPois.get(i);
             }
         }
@@ -276,40 +266,40 @@ public class SceneryCamGLRender extends CamGLRender {
      * @param poiItem poi的View
      */
     private void setPOITextSize(ArPoiScenery arPoi, POIItem poiItem) throws Exception {
-        //        TextView poiItemName = (TextView) poiItem.findViewById(R.id.poi_item_name);
-        //        TextView poiDistance = (TextView) poiItem.findViewById(R.id.poi_distance);
-        //        View poiItemRl = poiItem.findViewById(R.id.poi_item_rl);
-        //        View poiNearTv = poiItem.findViewById(R.id.poi_near_tv);
-        //        int poiSize;
-        //        int poiDistanceSize;
-        //        //小于十米的时候显示在附近
-        //        if (arPoi.isNear()) {
-        //            poiNearTv.setVisibility(View.VISIBLE);
-        //            poiDistance.setVisibility(View.GONE);
-        //        } else {
-        //            poiNearTv.setVisibility(View.GONE);
-        //            poiDistance.setVisibility(View.VISIBLE);
-        //        }
-        //        //近大远小，近实远虚
-        //        if (arPoi.getDistance() < 200) {
-        //            poiSize = 14;
-        //            poiDistanceSize = 11;
-        //            poiItemRl.getBackground().mutate().setAlpha(179);
-        //        } else if (arPoi.getDistance() < 500) {
-        //            poiSize = 13;
-        //            poiDistanceSize = 10;
-        //            poiItemRl.getBackground().mutate().setAlpha(153);
-        //        } else if (arPoi.getDistance() < 1000) {
-        //            poiSize = 13;
-        //            poiDistanceSize = 10;
-        //            poiItemRl.getBackground().mutate().setAlpha(127);
-        //        } else {
-        //            poiDistanceSize = 10;
-        //            poiSize = 12;
-        //            poiItemRl.getBackground().mutate().setAlpha(102);
-        //        }
-        //        poiItemName.setTextSize(poiSize);
-        //        poiDistance.setTextSize(poiDistanceSize);
+        TextView poiItemName = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext, "poi_item_name"));
+        TextView poiDistance = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext, "poi_distance"));
+        View poiItemRl = poiItem.findViewById(ResourceUtil.getId(mContext, "poi_item_rl"));
+        View poiNearTv = poiItem.findViewById(ResourceUtil.getId(mContext, "poi_near_tv"));
+        int poiSize;
+        int poiDistanceSize;
+        //小于十米的时候显示在附近
+        if (arPoi.isNear()) {
+            poiNearTv.setVisibility(View.VISIBLE);
+            poiDistance.setVisibility(View.GONE);
+        } else {
+            poiNearTv.setVisibility(View.GONE);
+            poiDistance.setVisibility(View.VISIBLE);
+        }
+        //近大远小，近实远虚
+        if (arPoi.getDistance() < 200) {
+            poiSize = 14;
+            poiDistanceSize = 11;
+            poiItemRl.getBackground().mutate().setAlpha(179);
+        } else if (arPoi.getDistance() < 500) {
+            poiSize = 13;
+            poiDistanceSize = 10;
+            poiItemRl.getBackground().mutate().setAlpha(153);
+        } else if (arPoi.getDistance() < 1000) {
+            poiSize = 13;
+            poiDistanceSize = 10;
+            poiItemRl.getBackground().mutate().setAlpha(127);
+        } else {
+            poiDistanceSize = 10;
+            poiSize = 12;
+            poiItemRl.getBackground().mutate().setAlpha(102);
+        }
+        poiItemName.setTextSize(poiSize);
+        poiDistance.setTextSize(poiDistanceSize);
     }
 
     /**
@@ -323,56 +313,56 @@ public class SceneryCamGLRender extends CamGLRender {
      */
     private void setMargin(GLPOITexture mpoiTextture, ArrayList<POIItem> poiItems, int i, final ArPoiScenery arPoi
             , final ArPageListener onSelectNodeListener) throws Exception {
-                POIItem poiItem = poiItems.get(i);
-                TextView poi_name = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext,"poi_item_name"));
-                poi_name.setText(arPoi.getName());
-                poiItem.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onSelectNodeListener.selectItem(arPoi);
-                    }
-                });
-                TextView poi_distance = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext, "poi_distance"));
-                poi_distance.setText(arPoi.getDistanceText());
-                setPOITextSize(arPoi, poiItem);
-                RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) poiItem.getLayoutParams();
-                int x = (int) (mpoiTextture.getPointXY()[0]);
-                int y = (int) (mpoiTextture.getPointXY()[1]);
-                int width = Math.max(poiItem.getWidth(), poiItem.getVertex()[2]);
-                int height = poiItem.getHeight();
-                // 比较的长方形
-                int[] vertexs = new int[4];
-                vertexs[0] = x;
-                vertexs[1] = y;
-                vertexs[2] = width;
-                vertexs[3] = height;
-                lp.setMargins(x - width / 2, y - height / 2,
-                        Math.max(-width * 2, Math.min(0, -x + mSurfaceWidth - width * 2)),
-                        Math.max(-height * 2, Math.min(0, -y + mSurfaceHeight - height * 2)));
-                poiItem.setVertex(vertexs);
-                poiItem.setLayoutParams(lp);
-                if (onDuerChangeListenen != null) {
-                    try {
-                        if (arPoi.getDistance(mContext) < ArPoiScenery.NEAR_VALUE && !arPoi.isDuerNear()) {
-                            arPoi.setDuerNear(true);
-                        } else if (arPoi.getDistance(mContext) > ArPoiScenery.NEAR_VALUE && arPoi.isDuerNear()) {
-                            arPoi.setDuerNear(false);
-                        } else if (arPoi.getDistance(mContext) > ArPoiScenery.NEAR_VALUE) {
-                            arPoi.setDuerNear(false);
-                        }
-                    } catch (Exception e) {
-                        e.getMessage();
-                    }
-                    if (-width / 2 < x && x < mSurfaceWidth + width / 2 && -height / 2 < y && y < mSurfaceHeight +
-         height / 2) {
-                        arPoi.setShowInScreen(true);
-                    } else {
-                        arPoi.setShowInScreen(false);
-                    }
+        POIItem poiItem = poiItems.get(i);
+        TextView poi_name = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext, "poi_item_name"));
+        poi_name.setText(arPoi.getName());
+        poiItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSelectNodeListener.selectItem(arPoi);
+            }
+        });
+        TextView poi_distance = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext, "poi_distance"));
+        poi_distance.setText(arPoi.getDistanceText());
+        setPOITextSize(arPoi, poiItem);
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) poiItem.getLayoutParams();
+        int x = (int) (mpoiTextture.getPointXY()[0]);
+        int y = (int) (mpoiTextture.getPointXY()[1]);
+        int width = Math.max(poiItem.getWidth(), poiItem.getVertex()[2]);
+        int height = poiItem.getHeight();
+        // 比较的长方形
+        int[] vertexs = new int[4];
+        vertexs[0] = x;
+        vertexs[1] = y;
+        vertexs[2] = width;
+        vertexs[3] = height;
+        lp.setMargins(x - width / 2, y - height / 2,
+                Math.max(-width * 2, Math.min(0, -x + mSurfaceWidth - width * 2)),
+                Math.max(-height * 2, Math.min(0, -y + mSurfaceHeight - height * 2)));
+        poiItem.setVertex(vertexs);
+        poiItem.setLayoutParams(lp);
+        if (onDuerChangeListenen != null) {
+            try {
+                if (arPoi.getDistance() < ArPoiScenery.NEAR_VALUE && !arPoi.isDuerNear()) {
+                    arPoi.setDuerNear(true);
+                } else if (arPoi.getDistance() > ArPoiScenery.NEAR_VALUE && arPoi.isDuerNear()) {
+                    arPoi.setDuerNear(false);
+                } else if (arPoi.getDistance() > ArPoiScenery.NEAR_VALUE) {
+                    arPoi.setDuerNear(false);
                 }
-                if (x != 0 && y != 0) {
-                    poiItem.setVisibility(View.VISIBLE);
-                }
+            } catch (Exception e) {
+                e.getMessage();
+            }
+            if (-width / 2 < x && x < mSurfaceWidth + width / 2 && -height / 2 < y && y < mSurfaceHeight +
+                    height / 2) {
+                arPoi.setShowInScreen(true);
+            } else {
+                arPoi.setShowInScreen(false);
+            }
+        }
+        if (x != 0 && y != 0) {
+            poiItem.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -405,7 +395,7 @@ public class SceneryCamGLRender extends CamGLRender {
      */
     private POIItem addPoiItem(final ArPoiScenery arPoi, final int i, LayoutInflater inflater
     ) {
-        POIItem poiItemLayout = (POIItem) inflater.inflate(ResourceUtil.getLayoutId(mContext,"ar_layout_poi_item"),
+        POIItem poiItemLayout = (POIItem) inflater.inflate(ResourceUtil.getLayoutId(mContext, "ar_layout_poi_item"),
                 null);
 
         poiItemLayout.setVisibility(View.GONE);
@@ -421,7 +411,7 @@ public class SceneryCamGLRender extends CamGLRender {
      *
      * @return 排序后poi列表
      */
-    private ArrayList<ArPoiScenery> selectPoiList(@NotNull ArrayList<ArPoiScenery> arPoiList) throws Exception {
+    private ArrayList<ArPoiScenery> selectPoiList( ArrayList<ArPoiScenery> arPoiList) throws Exception {
         long now = new Date().getTime();
         // 间隔大于10秒强刷
         if (now - sortTime < 10000) {
@@ -433,7 +423,7 @@ public class SceneryCamGLRender extends CamGLRender {
                 sortTime = now;
             }
             // 重排poi用户位置移动大于3米
-            if (!(sortX == 0 && sortY == 0) && AppTools.getDistanceByMc(new Point(sortX, sortY)
+            if (!(sortX == 0 && sortY == 0) && DistanceByMcUtils.getDistanceByMc(new Point(sortX, sortY)
                     , new Point(mX, mY)) < 3) {
                 Log.e("sort", "sortX = " + sortX + "   |   sortY = " + sortY);
                 return selectPois;
@@ -455,7 +445,7 @@ public class SceneryCamGLRender extends CamGLRender {
             public int compare(ArPoiScenery lhs, ArPoiScenery rhs) {
                 try {
                     // 升序
-                    if (lhs.getDistance(mContext) >= rhs.getDistance(mContext)) {
+                    if (lhs.getDistance() >= rhs.getDistance()) {
                         return 1;
                     } else {
                         return -1;
@@ -468,7 +458,7 @@ public class SceneryCamGLRender extends CamGLRender {
 
         for (int i = 0; i < arPoiList.size(); i++) {
             // 距离500⽶以内的所有⼦景点，最多显示7个⽓泡，优先排序权衡距离和优先级
-            if (arPoiList.get(i).getDistance(mContext) <= 500 && sum < 7) {
+            if (arPoiList.get(i).getDistance() <= 500 && sum < 7) {
                 sum++;
                 arPoiList.get(i).setShowInAr(true);
                 selectPoiArray.add(arPoiList.get(i));
@@ -485,7 +475,7 @@ public class SceneryCamGLRender extends CamGLRender {
         sum = 0;
         // 如果500⽶以内的⼦景点不⾜3个，则补充2公⾥以内的⼦景点，按距离排序，补充到3个⼦景点为⽌
         for (int j = 0; j < 3; j++) {
-            if (arPoiList.size() > j && arPoiList.get(j).getDistance(mContext) <= 2000) {
+            if (arPoiList.size() > j && arPoiList.get(j).getDistance() <= 2000) {
                 sum++;
                 arPoiList.get(j).setShowInAr(true);
                 selectPoiArray.add(arPoiList.get(j));
@@ -499,7 +489,7 @@ public class SceneryCamGLRender extends CamGLRender {
         } else {
             // 如果2公⾥以内⼀个⼦景点都没有，则取景区范围内最近的1个⼦景点
             if (mArChangeListener != null) {
-                mArChangeListener.levelChanged(-1, arPoiList.get(0).getDistance(mContext));
+                mArChangeListener.levelChanged(-1, arPoiList.get(0).getDistance());
             }
             arPoiList.get(0).setShowInAr(true);
             selectPoiArray.add(arPoiList.get(0));

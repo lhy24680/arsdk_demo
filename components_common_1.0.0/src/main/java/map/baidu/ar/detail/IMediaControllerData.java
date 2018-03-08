@@ -1,9 +1,8 @@
 package map.baidu.ar.detail;
 
-import com.baidu.platform.comapi.basestruct.GeoPoint;
-
 import map.baidu.ar.exception.LocationGetFailException;
 import map.baidu.ar.model.ArPoint;
+import map.baidu.ar.utils.Point;
 
 /**
  * ArTTSMediaController 展示内容所需的数据
@@ -68,5 +67,5 @@ public interface IMediaControllerData {
      */
     ArPoint getPoint();
 
-    GeoPoint getGeoPoint();
+    Point getGeoPoint();
 }

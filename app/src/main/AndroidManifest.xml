@@ -14,20 +14,34 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <!-- 访问网络的权限 -->
+    <!-- 这个权限用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <!-- 这个权限用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    <!-- 用于读取手机当前的状态-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <!-- 访问网络，网络定位需要上网-->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 访问精确位置的权限 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <!-- 访问网络状态的权限 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- 访问WIFI网络状态的权限 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 改变WIFI网络状态的权限 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- SD卡读取权限，用户写入离线定位数据-->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
 
-    <application android:label="@string/app_name_demo"
+    <application
+            android:name="sdk.cammer.common.baidu.map.application.DemoApplication"
+            android:label="@string/app_name_demo"
                  tools:replace="android:label">
+
+        <meta-data
+                android:name="com.baidu.lbsapi.API_KEY"
+                android:value="AHcKc5Ll6RROn0mXnE07AKjw4dv03wKL" >
+        </meta-data>
 
         <activity
                 android:name="sdk.cammer.common.baidu.map.android_mapcam_sdk.MainActivity"
@@ -43,6 +57,8 @@
                 android:name="sdk.cammer.common.baidu.map.android_mapcam_sdk.SceneryArActivity"
                 android:screenOrientation="portrait" >
         </activity>
+
+        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"> </service>
     </application>
 
 </manifest>

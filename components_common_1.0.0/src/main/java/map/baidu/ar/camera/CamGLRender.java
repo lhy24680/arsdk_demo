@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
@@ -132,7 +130,7 @@ public class CamGLRender implements GLSurfaceView.Renderer {
      */
     public void setScenerySensorState(float[] remapValue, LayoutInflater inflater, RelativeLayout rlCamview,
                                       ArPageListener onSelectNodeListener,
-                                      @NotNull ArrayList<ArPoiScenery> arPoiList, FragmentActivity activity) {
+                                      ArrayList<ArPoiScenery> arPoiList, FragmentActivity activity) {
     }
 
     public void setOnDuerChangeListenen(onDuerChangeListener onDuerChangeListenen) {

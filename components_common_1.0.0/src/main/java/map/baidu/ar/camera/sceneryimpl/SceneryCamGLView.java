@@ -3,10 +3,6 @@ package map.baidu.ar.camera.sceneryimpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-
-//import com.baidu.baidumaps.common.util.ScreenUtils;
-
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -40,7 +36,7 @@ public class SceneryCamGLView extends CamGLView {
 
 
     public void setScenerySensorState(final float[] remapValue, final LayoutInflater inflater, final RelativeLayout rlView,
-                               final ArPageListener onSelectNodeListener, @NotNull final ArrayList<ArPoiScenery> arPoiList, final FragmentActivity activity) {
+                               final ArPageListener onSelectNodeListener,  final ArrayList<ArPoiScenery> arPoiList, final FragmentActivity activity) {
         Task.back(new Runnable() {
             @Override
             public void run() {

@@ -3,8 +3,6 @@ package map.baidu.ar.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -37,18 +35,16 @@ public class Task {
      *
      * @return 返回Task
      */
-    @NotNull
-    public static InnerTask back(@NotNull Runnable runnable) {
+    public static InnerTask back(Runnable runnable) {
         return new InnerTask(runnable);
     }
 
     public static class InnerTask {
-        @NotNull
         private final ArrayList<BaseTask> mTasks = new ArrayList<>();
-        @NotNull
+
         private final Executor mExecutor = new Executor(mTasks);
 
-        public InnerTask(@NotNull Runnable runnable) {
+        public InnerTask( Runnable runnable) {
             back(runnable);
         }
 
@@ -59,8 +55,8 @@ public class Task {
          *
          * @return 返回的Task
          */
-        @NotNull
-        public InnerTask ui(@NotNull Runnable runnable) {
+
+        public InnerTask ui( Runnable runnable) {
             mTasks.add(new UiTask(runnable, mExecutor));
             return this;
         }
@@ -72,8 +68,8 @@ public class Task {
          *
          * @return 返回的Task
          */
-        @NotNull
-        public InnerTask back(@NotNull Runnable runnable) {
+
+        public InnerTask back( Runnable runnable) {
             mTasks.add(new BackTask(runnable, mExecutor));
             return this;
         }
@@ -107,12 +103,12 @@ public class Task {
     }
 
     private abstract static class BaseTask {
-        @NotNull
+
         private final Runnable mRunnable;
-        @NotNull
+
         private final Executor mExecutor;
 
-        protected BaseTask(@NotNull Runnable runnable, @NotNull Executor executor) {
+        protected BaseTask( Runnable runnable,  Executor executor) {
             mRunnable = runnable;
             mExecutor = executor;
         }
@@ -140,7 +136,7 @@ public class Task {
     }
 
     private static final class BackTask extends BaseTask {
-        private BackTask(@NotNull Runnable runnable, @NotNull Executor executor) {
+        private BackTask( Runnable runnable,  Executor executor) {
             super(runnable, executor);
         }
 
@@ -151,7 +147,7 @@ public class Task {
     }
 
     private static final class UiTask extends BaseTask {
-        private UiTask(@NotNull Runnable runnable, @NotNull Executor executor) {
+        private UiTask( Runnable runnable,  Executor executor) {
             super(runnable, executor);
         }
 

@@ -20,7 +20,7 @@ import map.baidu.ar.model.ArPoi;
 import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.utils.TypeUtils;
 
-public class SceneryArActivity extends FragmentActivity implements View.OnClickListener,ArPageListener{
+public class SceneryArActivity extends FragmentActivity implements View.OnClickListener, ArPageListener {
 
     RelativeLayout camRl;
     SceneryCamGLView mCamGLView;
@@ -45,7 +45,6 @@ public class SceneryArActivity extends FragmentActivity implements View.OnClickL
         mArPoiItemRl.setVisibility(View.VISIBLE);
         initView();
     }
-
 
     @Override
     public void onPause() {
@@ -131,11 +130,10 @@ public class SceneryArActivity extends FragmentActivity implements View.OnClickL
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
-    public LayoutInflater getLayoutInflater(){
+    public LayoutInflater getLayoutInflater() {
 
         return LayoutInflater.from(SceneryArActivity.this).cloneInContext(SceneryArActivity.this);
     }
-
 
     private void initSensor() {
         if (mSensor == null) {
@@ -147,41 +145,43 @@ public class SceneryArActivity extends FragmentActivity implements View.OnClickL
     private class HoldPositionListenerImp implements SimpleSensor.OnHoldPositionListener {
         @Override
         public void onOrientationWithRemap(float[] remapValue) {
-                        if (mCamGLView != null && mInfo != null) {
-                            if (mInfo.getIsInAoi(SceneryArActivity.this) && mInfo.getSon() != null && mInfo.getSon()
-                                    .size() > 0) {
-                                // 在景区则传入子点集合
-                                mCamGLView.setScenerySensorState(remapValue, getLayoutInflater(),
-                                        mArPoiItemRl, SceneryArActivity.this, mInfo.getSon(), SceneryArActivity.this);
-                                // 在景区的时候停止不在景区的动画
-//                                if (isInAoiState != ISINAOISTATE_FALSE) {
-//                                    isInAoiState = ISINAOISTATE_FALSE;
-//                                    mDuerAnim.duerLeaveNotInAoi();
-//                                }
-//                                if (notInAoiTv != null) {
-//                                    notInAoiTv.setVisibility(View.GONE);
-//                                }
-                                mInfo.getFather().setShowInAr(false);
-                            } else {
-                                // 不在景区则传入父点
-                                ArrayList<ArPoiScenery> father = new ArrayList<>();
-                                mInfo.getFather().setShowInAr(true);
-                                father.add(mInfo.getFather());
-                                for (int i = 0; i < mInfo.getSon().size(); i++) {
-                                    mInfo.getSon().get(i).setShowInAr(false);
-                                }
-//                                if (notInAoiTv != null) {
-//                                    notInAoiTv.setVisibility(isArModel ? View.VISIBLE : View.GONE);
-//                                }
-                                mCamGLView.setScenerySensorState(remapValue,  getLayoutInflater(),
-                                        mArPoiItemRl, SceneryArActivity.this, father, SceneryArActivity.this);
-//                                if (isInAoiState != ISINAOISTATE_TRUE && isArModel && mDuerText != null && mCanSwitch) {
-//                                    // 不在景区的动画提示
-//                                    isInAoiState = ISINAOISTATE_TRUE;
-//                                    mDuerAnim.duerAnimNotInAoi(mDuerText, arrowMapIv);
-//                                }
-                            }
-                        }
+            if (mCamGLView != null && mInfo != null) {
+                if (mInfo.getIsInAoi() && mInfo.getSon() != null && mInfo.getSon()
+                        .size() > 0) {
+                    // 在景区则传入子点集合
+                    mCamGLView.setScenerySensorState(remapValue, getLayoutInflater(),
+                            mArPoiItemRl, SceneryArActivity.this, mInfo.getSon(), SceneryArActivity.this);
+                    // 在景区的时候停止不在景区的动画
+                    //                                if (isInAoiState != ISINAOISTATE_FALSE) {
+                    //                                    isInAoiState = ISINAOISTATE_FALSE;
+                    //                                    mDuerAnim.duerLeaveNotInAoi();
+                    //                                }
+                    //                                if (notInAoiTv != null) {
+                    //                                    notInAoiTv.setVisibility(View.GONE);
+                    //                                }
+                    mInfo.getFather().setShowInAr(false);
+                } else {
+                    // 不在景区则传入父点
+                    ArrayList<ArPoiScenery> father = new ArrayList<>();
+                    mInfo.getFather().setShowInAr(true);
+                    father.add(mInfo.getFather());
+                    for (int i = 0; i < mInfo.getSon().size(); i++) {
+                        mInfo.getSon().get(i).setShowInAr(false);
+                    }
+                    //                                if (notInAoiTv != null) {
+                    //                                    notInAoiTv.setVisibility(isArModel ? View.VISIBLE : View
+                    // .GONE);
+                    //                                }
+                    mCamGLView.setScenerySensorState(remapValue, getLayoutInflater(),
+                            mArPoiItemRl, SceneryArActivity.this, father, SceneryArActivity.this);
+                    //                                if (isInAoiState != ISINAOISTATE_TRUE && isArModel && mDuerText
+                    // != null && mCanSwitch) {
+                    //                                    // 不在景区的动画提示
+                    //                                    isInAoiState = ISINAOISTATE_TRUE;
+                    //                                    mDuerAnim.duerAnimNotInAoi(mDuerText, arrowMapIv);
+                    //                                }
+                }
+            }
         }
 
     }
@@ -204,6 +204,29 @@ public class SceneryArActivity extends FragmentActivity implements View.OnClickL
     @Override
     public void selectItem(ArPoiScenery arPoi) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        finishCamInternal();
+    }
+
+    private void finishCamInternal() {
+        if (mCamGLView != null) {
+            mCamGLView.stopCam();
+            camRl.removeAllViews();
+            mCamGLView = null;
+
+        }
+        if (mArPoiItemRl != null) {
+            mArPoiItemRl.removeAllViews();
+        }
+        if (mSensor != null) {
+            mSensor.stopSensor();
+        }
+        // 恢复屏幕自动锁屏
+        SceneryArActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override

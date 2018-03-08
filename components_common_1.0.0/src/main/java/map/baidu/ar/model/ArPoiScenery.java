@@ -1,9 +1,6 @@
 package map.baidu.ar.model;
 
-import com.baidu.mapframework.location.LocationManager;
-import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.baidu.platform.comapi.basestruct.Point;
-import com.baidu.platform.comjni.tools.AppTools;
+import com.baidu.location.BDLocation;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,11 +12,14 @@ import android.location.Location;
 import map.baidu.ar.data.IMapPoiItem;
 import map.baidu.ar.detail.IMediaControllerData;
 import map.baidu.ar.exception.LocationGetFailException;
+import map.baidu.ar.init.SDKContext;
 import map.baidu.ar.topimage.HeadImage;
 import map.baidu.ar.utils.CoordinateConverter;
+import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.INoProGuard;
 import map.baidu.ar.utils.LocNativeUtil;
-import map.baidu.ar.utils.LocUtil;
+import map.baidu.ar.utils.LocSdkClient;
+import map.baidu.ar.utils.Point;
 
 /**
  * Created by zhujingsi on 2017/6/6.
@@ -63,21 +63,34 @@ public class ArPoiScenery implements IMapPoiItem, INoProGuard, IMediaControllerD
         hashMap = CoordinateConverter.convertLL2MC(locNaData
                 .getLongitude(), locNaData.getLatitude());
         if (locNaData != null) {
-            double myX =  hashMap.get("x");
-            double myY =  hashMap.get("y");
-            return AppTools.getDistanceByMc(new Point(myX, myY), new Point(point.getPoint_x(), point.getPoint_y()));
-        }else {
+            double myX = hashMap.get("x");
+            double myY = hashMap.get("y");
+            //            return AppTools.getDistanceByMc(new Point(myX, myY), new Point(point.getPoint_x(), point
+            // .getPoint_y()));
+            //两点间距离 km，如果想要米的话，结果*1000就可以了
+            double d =
+                    Math.acos(Math.sin(locNaData.getLatitude()) * Math.sin(point.getPoint_y()) + Math.cos(locNaData.getLatitude()
+                    ) * Math.cos(point.getPoint_y()) * Math.cos(point.getPoint_x() - locNaData.getLongitude()))
+                            * 6371;
+            //          double d =  Math.acos(Math.sin(myX)*Math.sin(point.getPoint_x())+Math.cos(myX)*Math.cos(point
+            // .getPoint_x())*Math.cos(point.getPoint_y()-myY))*6371;
+            //          double d =  Math.acos(Math.sin(lat1)*Math.sin(lat2)+Math.cos(lat1)*Math.cos(lat2)*Math.cos
+            // (lon2-lon1))*R;
+            return d * 1000;
+
+        } else {
             throw new LocationGetFailException();
         }
     }
 
     // 获取距离
     public double getDistance() throws LocationGetFailException {
-        LocationManager.LocData locData = LocUtil.getCurLocation();
-        if (locData != null) {
-            double myX = locData.longitude;
-            double myY = locData.latitude;
-            return AppTools.getDistanceByMc(new Point(myX, myY), new Point(point.getPoint_x(), point.getPoint_y()));
+        BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+                .getLastKnownLocation();
+        if (location != null) {
+            double myX = location.getLongitude();
+            double myY = location.getLatitude();
+            return  DistanceByMcUtils.getDistanceByMc(new Point(myX, myY), new Point(point.getPoint_x(), point.getPoint_y()));
         } else {
             throw new LocationGetFailException();
         }
@@ -110,13 +123,14 @@ public class ArPoiScenery implements IMapPoiItem, INoProGuard, IMediaControllerD
 
     // 获取距离文本
     public String getDistanceText() {
-        LocationManager.LocData locData = LocUtil.getCurLocation();
-        if (locData == null) {
+        BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+                .getLastKnownLocation();
+        if (location == null) {
             return "";
         }
-        double myX = locData.longitude;
-        double myY = locData.latitude;
-        double mDistance = AppTools.getDistanceByMc(new Point(myX, myY),
+        double myX = location.getLongitude();
+        double myY = location.getLatitude();
+        double mDistance =  DistanceByMcUtils.getDistanceByMc(new Point(myX, myY),
                 new Point(point.getPoint_x(), point.getPoint_y()));
         if (mDistance > 1000) {
             return ((int) mDistance / 100) / 10.0f + "km";
@@ -149,11 +163,11 @@ public class ArPoiScenery implements IMapPoiItem, INoProGuard, IMediaControllerD
     }
 
     @Override
-    public GeoPoint getGeoPoint() {
+    public Point getGeoPoint() {
         if (point != null) {
-            return new GeoPoint(point.getPoint_y(), point.getPoint_x());
+            return new Point(point.getPoint_y(), point.getPoint_x());
         } else {
-            return new GeoPoint(0, 0);
+            return new Point(0, 0);
         }
     }
 
