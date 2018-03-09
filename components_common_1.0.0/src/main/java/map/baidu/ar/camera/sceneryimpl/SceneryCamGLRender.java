@@ -9,12 +9,9 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.baidu.location.BDLocation;
-import com.baidu.mapframework.widget.MToast;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
-import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +28,6 @@ import map.baidu.ar.init.SDKContext;
 import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.onDuerChangeListener;
 import map.baidu.ar.utils.DistanceByMcUtils;
-import map.baidu.ar.utils.LocNativeUtil;
 import map.baidu.ar.utils.LocSdkClient;
 import map.baidu.ar.utils.MapScaleUtils;
 import map.baidu.ar.utils.Point;
@@ -91,7 +87,7 @@ public class SceneryCamGLRender extends CamGLRender {
                 mX = location.getLongitude();
                 mY = location.getLatitude();
             } else {
-                MToast.show(mContext, "暂时无法获取您的位置");
+//                MToast.show(mContext, "暂时无法获取您的位置");
                 return;
             }
             // 给地图模式设值

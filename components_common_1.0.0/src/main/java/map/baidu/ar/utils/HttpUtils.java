@@ -2,8 +2,6 @@ package map.baidu.ar.utils;
 
 import android.util.Log;
 
-import com.baidu.mapframework.api.ComAPIManager;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -33,19 +31,19 @@ import java.util.List;
 
 public class HttpUtils {
 
-    public final static String NET = String.valueOf(ComAPIManager.getComAPIManager().getSystemAPI().getNetworkType());
-    public final static String RESID = ComAPIManager.getComAPIManager().getSystemAPI().getResId();
-    public final static String CHANNEL = ComAPIManager.getComAPIManager().getSystemAPI().getChannel();
-    public final static String DPI = String.valueOf(ComAPIManager.getComAPIManager().getSystemAPI().getScreenDensity());
-    public final static String CUID = ComAPIManager.getComAPIManager().getSystemAPI().getCuid();
-    public final static String OS =
-            ComAPIManager.getComAPIManager().getSystemAPI().getOsName() + ComAPIManager
-                    .getComAPIManager().getSystemAPI().getOsVersion();
-    public final static String SV = ComAPIManager.getComAPIManager().getSystemAPI().getAppVersion();
-    public final static String HTTP_PHPUI_OS =
-            "&os=" + ComAPIManager.getComAPIManager().getSystemAPI().getOsName() + ComAPIManager.getComAPIManager()
-                    .getSystemAPI().getOsVersion();
-    public final static String HTTP_PHPUI_SV = "&sv=" + ComAPIManager.getComAPIManager().getSystemAPI().getAppVersion();
+//    public final static String NET = String.valueOf(ComAPIManager.getComAPIManager().getSystemAPI().getNetworkType());
+//    public final static String RESID = ComAPIManager.getComAPIManager().getSystemAPI().getResId();
+//    public final static String CHANNEL = ComAPIManager.getComAPIManager().getSystemAPI().getChannel();
+//    public final static String DPI = String.valueOf(ComAPIManager.getComAPIManager().getSystemAPI().getScreenDensity());
+//    public final static String CUID = ComAPIManager.getComAPIManager().getSystemAPI().getCuid();
+//    public final static String OS =
+//            ComAPIManager.getComAPIManager().getSystemAPI().getOsName() + ComAPIManager
+//                    .getComAPIManager().getSystemAPI().getOsVersion();
+//    public final static String SV = ComAPIManager.getComAPIManager().getSystemAPI().getAppVersion();
+//    public final static String HTTP_PHPUI_OS =
+//            "&os=" + ComAPIManager.getComAPIManager().getSystemAPI().getOsName() + ComAPIManager.getComAPIManager()
+//                    .getSystemAPI().getOsVersion();
+//    public final static String HTTP_PHPUI_SV = "&sv=" + ComAPIManager.getComAPIManager().getSystemAPI().getAppVersion();
 
     // HTTP constant
     private static final int HTTP_TIMEOUT = 10000;
@@ -204,21 +202,21 @@ public class HttpUtils {
             }
         }
 
-        NameValuePair sv = new BasicNameValuePair("sv", SV);
-        NameValuePair os = new BasicNameValuePair("os", OS);
-        NameValuePair cuid = new BasicNameValuePair("cuid", CUID);
-        NameValuePair net = new BasicNameValuePair("net", NET);
-        NameValuePair resid = new BasicNameValuePair("resid", RESID);
-        NameValuePair channel = new BasicNameValuePair("channel", CHANNEL);
-        NameValuePair dpi = new BasicNameValuePair("dpi", DPI);
-
-        params.add(sv);
-        params.add(os);
-        params.add(cuid);
-        params.add(net);
-        params.add(resid);
-        params.add(channel);
-        params.add(dpi);
+//        NameValuePair sv = new BasicNameValuePair("sv", SV);
+//        NameValuePair os = new BasicNameValuePair("os", OS);
+//        NameValuePair cuid = new BasicNameValuePair("cuid", CUID);
+//        NameValuePair net = new BasicNameValuePair("net", NET);
+//        NameValuePair resid = new BasicNameValuePair("resid", RESID);
+//        NameValuePair channel = new BasicNameValuePair("channel", CHANNEL);
+//        NameValuePair dpi = new BasicNameValuePair("dpi", DPI);
+//
+//        params.add(sv);
+//        params.add(os);
+//        params.add(cuid);
+//        params.add(net);
+//        params.add(resid);
+//        params.add(channel);
+//        params.add(dpi);
 
         return params;
     }

@@ -1,11 +1,6 @@
 package map.baidu.ar.utils;
 
-import com.baidu.mapframework.api2.ComAPIManager;
-import com.baidu.mapframework.api2.ComAccountApi;
-
 import map.baidu.ar.model.EntityOfUser;
-
-
 /**
  * Created by xingdaming on 15/9/2.
  */
@@ -31,13 +26,13 @@ public class AccountManager {
     private static AccountManager mInstance;
     private EntityOfUser mUserInfo;
     //private EntityOfMemberCarInfo m
-    private ComAccountApi mAccountApi;
+//    private ComAccountApi mAccountApi;
     private String mBid;
     private static Boolean mbHasMobile = false;
 
     private AccountManager() {
         mUserInfo = new EntityOfUser();
-        mAccountApi = ComAPIManager.getComAPIManager().getAccountApi();
+//        mAccountApi = ComAPIManager.getComAPIManager().getAccountApi();
 
     }
 
@@ -52,9 +47,9 @@ public class AccountManager {
         if (!isLogin()) {
             mUserInfo.clear();
         } else {
-            mUserInfo.mBDUSS = mAccountApi.getBDUSS();
-            mUserInfo.mDisplayName = mAccountApi.getDisplayName();
-            mUserInfo.mUid = mAccountApi.getUid();
+//            mUserInfo.mBDUSS = mAccountApi.getBDUSS();
+//            mUserInfo.mDisplayName = mAccountApi.getDisplayName();
+//            mUserInfo.mUid = mAccountApi.getUid();
         }
         return mUserInfo;
     }
@@ -62,7 +57,7 @@ public class AccountManager {
     public boolean isLogin() {
         boolean bIsLogin = false;
 
-        bIsLogin = mAccountApi.isLogin();
+//        bIsLogin = mAccountApi.isLogin();
 
         return bIsLogin;
 

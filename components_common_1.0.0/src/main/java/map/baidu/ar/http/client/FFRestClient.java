@@ -9,7 +9,6 @@ import java.util.Set;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
-import com.baidu.mapframework.widget.MProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -62,7 +61,7 @@ public class FFRestClient {
                             JsonHttpResponseHandler clientRespose = (JsonHttpResponseHandler) responseHandler;
                             clientRespose.onFailure(statusCode, headers, throwable, errorResponse);
                         } catch (Exception e) {
-                            MProgressDialog.dismiss();
+//                            MProgressDialog.dismiss();
 //                            MToast.show(SceneryEntity.applicationContext, "网络连接异常，请稍后再试");
                             e.printStackTrace();
                         }

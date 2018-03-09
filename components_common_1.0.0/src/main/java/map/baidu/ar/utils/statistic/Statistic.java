@@ -1,7 +1,5 @@
 package map.baidu.ar.utils.statistic;
 
-import com.baidu.mapframework.statistics.ControlLogStatistics;
-
 /**
  * 简化统计接口
  * Created by 享 on 2016/8/23.
@@ -20,7 +18,7 @@ public class Statistic {
      * @return FluentInterface entity
      */
     public static StatisticEntity param(String name, String value) {
-        ControlLogStatistics.getInstance().addArg(name, value);
+//        ControlLogStatistics.getInstance().addArg(name, value);
         return ENTITY;
     }
 
@@ -34,7 +32,7 @@ public class Statistic {
      * @return FluentInterface entity
      */
     public static StatisticEntity param(String name, int value) {
-        ControlLogStatistics.getInstance().addArg(name, value);
+//        ControlLogStatistics.getInstance().addArg(name, value);
         return ENTITY;
     }
 
@@ -45,6 +43,6 @@ public class Statistic {
      * @param key 统计项参数Key
      */
     public static void key(String key) {
-        ControlLogStatistics.getInstance().addLog(key);
+//        ControlLogStatistics.getInstance().addLog(key);
     }
 }

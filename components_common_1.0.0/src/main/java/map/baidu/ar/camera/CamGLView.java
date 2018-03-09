@@ -10,11 +10,10 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.baidu.baidumaps.common.util.ScreenUtils;
-
 import java.util.List;
 
 import map.baidu.ar.AuthorityInterface;
+import map.baidu.ar.utils.ScreenUtils;
 
 /**
  * Created by xingdaming on 15/12/22.
@@ -201,7 +200,7 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
         }
         if (mPreviewHeight == 0) {
             Camera.Size size = getBestPreSize(ScreenUtils.getScreenHeight(mContext),
-                    ScreenUtils.getScreenWidth(),
+                    ScreenUtils.getScreenWidth(mContext),
                     mSupportedPreviewSizes);
             parameters.setPreviewSize(size.width, size.height);
         } else {
