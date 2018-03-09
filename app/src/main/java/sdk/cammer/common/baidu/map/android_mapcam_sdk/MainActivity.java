@@ -4,8 +4,6 @@ import org.apache.http.Header;
 import org.json.JSONObject;
 
 import com.baidu.location.BDLocation;
-import com.baidu.mapframework.api.ComAPIManager;
-import com.baidu.mapframework.widget.MToast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -38,7 +36,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mArOperation.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -63,27 +60,28 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                     && arResponse.getData().getAois() != null
                                     && arResponse.getData().getAois().size() > 0 && arResponse.getData().getAois()
                                     .get(0) != null && arResponse.getData().getAois().get(0).length > 0) {
-                                    arInfo = arResponse.getData();
-                                    arInfo.init();
-//                                int x;
-//                                int y;
+                                arInfo = arResponse.getData();
+                                arInfo.init();
+                                //                                int x;
+                                //                                int y;
                                 // 定位坐标*
-//                                Location locNaData = LocNativeUtil.getLocation(context);
-//                                Map<String, Double> hashMap;
-//                                hashMap = CoordinateConverter.convertLL2MC(locNaData
-//                                        .getLongitude(), locNaData.getLatitude());
-//                                if (locNaData != null) {
-//                                    x = (int) hashMap.get("x").intValue();
-//                                    y = (int) hashMap.get("y").intValue();
+                                //                                Location locNaData = LocNativeUtil.getLocation
+                                // (context);
+                                //                                Map<String, Double> hashMap;
+                                //                                hashMap = CoordinateConverter.convertLL2MC(locNaData
+                                //                                        .getLongitude(), locNaData.getLatitude());
+                                //                                if (locNaData != null) {
+                                //                                    x = (int) hashMap.get("x").intValue();
+                                //                                    y = (int) hashMap.get("y").intValue();
 
-                                    //                                    x = (int) locNaData.getLongitude();
-                                    //                                    y = (int) locNaData.getLatitude();
-//                                } else {
-                                    //权限处理
-                                    //                                    SceneryEntity.navigateTo(comId,
-                                    // ARAuthorityPage.class.getName(), null, bundle);
-//                                    return;
-//                                }
+                                //                                    x = (int) locNaData.getLongitude();
+                                //                                    y = (int) locNaData.getLatitude();
+                                //                                } else {
+                                //权限处理
+                                //                                    SceneryEntity.navigateTo(comId,
+                                // ARAuthorityPage.class.getName(), null, bundle);
+                                //                                    return;
+                                //                                }
                                 //                                boolean isFirstInSceneryARPage = PreferencesUtil
                                 // .getInstance()
                                 //                                        .getValue(applicationContext,
@@ -100,12 +98,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                 Intent intent = new Intent(MainActivity.this, SceneryArActivity.class);
                                 MainActivity.this.startActivity(intent);
                             } else {
-                                MToast.show(ComAPIManager.getComAPIManager().getSystemAPI().getApplicationContext(),
-                                        "数据出错，请稍后再试");
+                                Toast.makeText(getBaseContext(), "数据出错，请稍后再试", Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            MToast.show(ComAPIManager.getComAPIManager().getSystemAPI().getApplicationContext(),
-                                    "数据出错，请稍后再试");
+                            Toast.makeText(getBaseContext(), "数据出错，请稍后再试", Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -113,7 +109,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable,
                                           JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), "FFRestClient 请求网络错误 ", Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;

@@ -2,7 +2,6 @@ package sdk.cammer.common.baidu.map.android_mapcam_sdk;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;

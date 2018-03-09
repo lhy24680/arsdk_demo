@@ -8,6 +8,7 @@ import java.util.Date;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import com.baidu.location.BDLocation;
 import com.baidu.mapframework.widget.MToast;
 
 import android.content.Context;
@@ -26,10 +27,12 @@ import map.baidu.ar.camera.GLCameraTexture;
 import map.baidu.ar.camera.GLException;
 import map.baidu.ar.camera.GLPOITexture;
 import map.baidu.ar.camera.POIItem;
+import map.baidu.ar.init.SDKContext;
 import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.onDuerChangeListener;
 import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.LocNativeUtil;
+import map.baidu.ar.utils.LocSdkClient;
 import map.baidu.ar.utils.MapScaleUtils;
 import map.baidu.ar.utils.Point;
 import map.baidu.ar.utils.ResourceUtil;
@@ -81,11 +84,12 @@ public class SceneryCamGLRender extends CamGLRender {
         }
         // 定位坐标
         try {
-            Location locNaData = LocNativeUtil.getLocation(context);
-            if (locNaData != null) {
+            BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+                    .getLastKnownLocation();
+            if (location != null) {
 
-                mX = locNaData.getLongitude();
-                mY = locNaData.getLatitude();
+                mX = location.getLongitude();
+                mY = location.getLatitude();
             } else {
                 MToast.show(mContext, "暂时无法获取您的位置");
                 return;
