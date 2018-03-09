@@ -93,6 +93,6 @@ public class AoiDistanceHelper {
     }
 
     private static double getPointsDistance(Point point1, Point point2) {
-        return DistanceByMcUtils.getDistanceByMc(point1, point2);
+        return DistanceByMcUtils.getDistanceByLL(point1, point2);
     }
 }

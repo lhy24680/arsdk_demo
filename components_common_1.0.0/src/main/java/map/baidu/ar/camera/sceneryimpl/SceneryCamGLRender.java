@@ -423,7 +423,7 @@ public class SceneryCamGLRender extends CamGLRender {
                 sortTime = now;
             }
             // 重排poi用户位置移动大于3米
-            if (!(sortX == 0 && sortY == 0) && DistanceByMcUtils.getDistanceByMc(new Point(sortX, sortY)
+            if (!(sortX == 0 && sortY == 0) && DistanceByMcUtils.getDistanceByLL(new Point(sortX, sortY)
                     , new Point(mX, mY)) < 3) {
                 Log.e("sort", "sortX = " + sortX + "   |   sortY = " + sortY);
                 return selectPois;

@@ -57,7 +57,7 @@ public class ArPoi implements INoProGuard {
         if (location != null) {
             double myX = location.getLongitude();
             double myY = location.getLatitude();
-            return  DistanceByMcUtils.getDistanceByMc(new Point(myX, myY), new Point(Double.valueOf(pt_x), Double.valueOf(pt_y)));
+            return  DistanceByMcUtils.getDistanceByLL(new Point(myX, myY), new Point(Double.valueOf(pt_x), Double.valueOf(pt_y)));
         } else {
             throw new LocationGetFailException();
         }
@@ -72,7 +72,7 @@ public class ArPoi implements INoProGuard {
         }
         double myX = location.getLongitude();
         double myY = location.getLatitude();
-        double mDistance =  DistanceByMcUtils.getDistanceByMc(new Point(myX, myY),
+        double mDistance =  DistanceByMcUtils.getDistanceByLLToText(new Point(myX, myY),
                 new Point(Double.valueOf(pt_x), Double.valueOf(pt_y)));
         if (mDistance > 1000) {
             return ((int) mDistance / 100) / 10.0f + "km";

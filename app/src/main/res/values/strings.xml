@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name_demo">android_arsdk</string>
-    <string name="app_operate">AR景区</string>
+    <string name="app_operate">AR SDK 功能展示</string>
 </resources>

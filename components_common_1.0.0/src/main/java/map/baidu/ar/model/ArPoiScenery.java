@@ -57,50 +57,16 @@ public class ArPoiScenery implements IMapPoiItem, INoProGuard, IMediaControllerD
     public static int NEAR_VALUE = 20;
 
     // 获取距离
-    public double getDistance(Context context) throws LocationGetFailException {
-        Location locNaData = LocNativeUtil.getLocation(context);
-        Map<String, Double> hashMap;
-        hashMap = CoordinateConverter.convertLL2MC(locNaData
-                .getLongitude(), locNaData.getLatitude());
-        if (locNaData != null) {
-            double myX = hashMap.get("x");
-            double myY = hashMap.get("y");
-            //            return AppTools.getDistanceByMc(new Point(myX, myY), new Point(point.getPoint_x(), point
-            // .getPoint_y()));
-            //两点间距离 km，如果想要米的话，结果*1000就可以了
-            double d =
-                    Math.acos(Math.sin(locNaData.getLatitude()) * Math.sin(point.getPoint_y()) + Math.cos(locNaData.getLatitude()
-                    ) * Math.cos(point.getPoint_y()) * Math.cos(point.getPoint_x() - locNaData.getLongitude()))
-                            * 6371;
-            //          double d =  Math.acos(Math.sin(myX)*Math.sin(point.getPoint_x())+Math.cos(myX)*Math.cos(point
-            // .getPoint_x())*Math.cos(point.getPoint_y()-myY))*6371;
-            //          double d =  Math.acos(Math.sin(lat1)*Math.sin(lat2)+Math.cos(lat1)*Math.cos(lat2)*Math.cos
-            // (lon2-lon1))*R;
-            return d * 1000;
-
-        } else {
-            throw new LocationGetFailException();
-        }
-    }
-
-    // 获取距离
     public double getDistance() throws LocationGetFailException {
         BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
                 .getLastKnownLocation();
         if (location != null) {
             double myX = location.getLongitude();
             double myY = location.getLatitude();
-            return  DistanceByMcUtils.getDistanceByMc(new Point(myX, myY), new Point(point.getPoint_x(), point.getPoint_y()));
+            return  DistanceByMcUtils.getDistanceByLL(new Point(myX,myY), new Point( point
+                    .getPoint_x(),point.getPoint_y()));
         } else {
             throw new LocationGetFailException();
-        }
-    }
-
-    public boolean isNear(Context context) {
-        try {
-            return getDistance(context) <= NEAR_VALUE;
-        } catch (Exception e) {
-            return false;
         }
     }
 
@@ -130,7 +96,7 @@ public class ArPoiScenery implements IMapPoiItem, INoProGuard, IMediaControllerD
         }
         double myX = location.getLongitude();
         double myY = location.getLatitude();
-        double mDistance =  DistanceByMcUtils.getDistanceByMc(new Point(myX, myY),
+        double mDistance =  DistanceByMcUtils.getDistanceByLLToText(new Point(myX, myY),
                 new Point(point.getPoint_x(), point.getPoint_y()));
         if (mDistance > 1000) {
             return ((int) mDistance / 100) / 10.0f + "km";
