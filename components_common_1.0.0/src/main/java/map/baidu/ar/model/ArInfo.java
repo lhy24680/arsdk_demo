@@ -9,9 +9,10 @@ import map.baidu.ar.utils.AoiDistanceHelper;
 import map.baidu.ar.utils.INoProGuard;
 import map.baidu.ar.utils.Point;
 import map.baidu.ar.utils.callback.Tuple;
+
 /**
  * Created by zhujingsi on 2017/6/6.
-         */
+ */
 public class ArInfo implements INoProGuard {
 
     // 楼块儿面集合
@@ -80,7 +81,7 @@ public class ArInfo implements INoProGuard {
         }
         ArrayList<ArrayList<Point>> todo = new ArrayList<>();
         todo.add(0, (ArrayList<Point>) getGeosList());
-        Tuple<Point, Double> tuple = AoiDistanceHelper.getNearestPoint(new Point(myY, myX), todo);
+        Tuple<Point, Double> tuple = AoiDistanceHelper.getNearestPoint(new Point(myX, myY), todo);
         double distance = tuple.getItem2();
         int dis = (int) distance;
         if (dis <= 0) {
@@ -114,34 +115,34 @@ public class ArInfo implements INoProGuard {
             int y = 2;
             for (int i = 0; i < points.length - 2; i += 2) {
                 if ((points[i] > touchStartX0 && touchStartX0 > points[i + 2] && touchStartY0 > points[i + 1]
-                        && touchStartY0 > points[i + 3]) || (points[i] < touchStartX0
-                        && touchStartX0 < points[i + 2]
-                        && touchStartY0 > points[i + 1]
-                        && touchStartY0 > points[i + 3])) {
+                             && touchStartY0 > points[i + 3]) || (points[i] < touchStartX0
+                                                                          && touchStartX0 < points[i + 2]
+                                                                          && touchStartY0 > points[i + 1]
+                                                                          && touchStartY0 > points[i + 3])) {
 
                     x++;
                 }
                 if ((points[i + 1] > touchStartY0 && touchStartY0 > points[i + 3] && touchStartX0 > points[i]
-                        && touchStartX0 > points[i + 2]) || (points[i + 1] < touchStartY0
-                        && touchStartY0 < points[i + 3]
-                        && touchStartX0 > points[i]
-                        && touchStartX0 > points[i + 2])) {
+                             && touchStartX0 > points[i + 2]) || (points[i + 1] < touchStartY0
+                                                                          && touchStartY0 < points[i + 3]
+                                                                          && touchStartX0 > points[i]
+                                                                          && touchStartX0 > points[i + 2])) {
                     y++;
                 }
             }
             if ((points[0] > touchStartX0 && touchStartX0 > points[points.length - 2] && touchStartY0 > points[1]
-                    && touchStartY0 > points[points.length - 1]) || (points[0] < touchStartX0
-                    && touchStartX0 < points[points.length
+                         && touchStartY0 > points[points.length - 1]) || (points[0] < touchStartX0
+                                                                                  && touchStartX0 < points[points.length
                     - 2] && touchStartY0 > points[1]
-                    && touchStartY0 > points[points.length
+                                                                                  && touchStartY0 > points[points.length
                     - 1])) {
                 x++;
             }
             if ((points[1] > touchStartY0 && touchStartY0 > points[points.length - 1] && touchStartX0 > points[0]
-                    && touchStartX0 > points[points.length - 2]) || (points[1] < touchStartY0
-                    && touchStartY0 < points[points.length
+                         && touchStartX0 > points[points.length - 2]) || (points[1] < touchStartY0
+                                                                                  && touchStartY0 < points[points.length
                     - 1] && touchStartX0 > points[0]
-                    && touchStartX0 > points[points.length
+                                                                                  && touchStartX0 > points[points.length
                     - 2])) {
                 y++;
             }
@@ -231,9 +232,11 @@ public class ArInfo implements INoProGuard {
             String[] geosString = geos.get(0).getPts().split(";");
             for (int j = 0; j < geosString.length; j++) {
                 String[] point = geosString[j].split(",");
-                double y = Double.valueOf(point[0]);
-                double x = Double.valueOf(point[1]);
-                mGeoPoints.add(new Point(x, y));
+                if (point.length > 1) {
+                    double x = Double.valueOf(point[0]);
+                    double y = Double.valueOf(point[1]);
+                    mGeoPoints.add(new Point(x, y));
+                }
             }
         }
         return mGeoPoints;
@@ -245,9 +248,13 @@ public class ArInfo implements INoProGuard {
             String[] geosString = geos.get(0).getPts().split(";");
             mPoints = new double[geosString.length * 2];
             for (int i = 0; i < geosString.length; i++) {
-                String[] point = geosString[i].split(",");
-                mPoints[i * 2] = Double.valueOf(point[0]);
-                mPoints[i * 2 + 1] = Double.valueOf(point[1]);
+                if (geosString[i].length() > 1) {
+                    String[] point = geosString[i].split(",");
+                    if (point.length > 1) {
+                        mPoints[i * 2] = Double.valueOf(point[0]);
+                        mPoints[i * 2 + 1] = Double.valueOf(point[1]);
+                    }
+                }
             }
         }
         return mPoints;

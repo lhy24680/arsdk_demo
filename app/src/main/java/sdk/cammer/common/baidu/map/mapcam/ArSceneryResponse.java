@@ -1,9 +1,9 @@
-package sdk.cammer.common.baidu.map.android_mapcam_sdk;
+package sdk.cammer.common.baidu.map.mapcam;
 
 import map.baidu.ar.model.ArInfoScenery;
 import map.baidu.ar.utils.INoProGuard;
 
-public class ArResponse implements INoProGuard {
+public class ArSceneryResponse implements INoProGuard {
     // 错误提示语
     private String err_msg;
     // 错误号

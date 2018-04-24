@@ -26,6 +26,11 @@ public class Point {
         this.y = y;
     }
 
+    public Point(int x, int y) {
+        this.y = (double)y;
+        this.x = (double)x;
+    }
+
     public double getX() {
         return x;
     }
@@ -41,32 +46,16 @@ public class Point {
     public void setY(double y) {
         this.y = y;
     }
-    //    public String toString() {
-//        return "Point [x=" + this.getDoubleX() + ", y=" + this.getDoubleY() + "]";
-//    }
-//
-//    public int hashCode() {
-//        int prime = true;
-//        int result = 1;
-//        int result = 31 * result + this.getIntX();
-//        result = 31 * result + this.getIntY();
-//        return result;
-//    }
-//
-//    public boolean equals(Object obj) {
-//        if(this == obj) {
-//            return true;
-//        } else if(obj == null) {
-//            return false;
-//        } else if(this.getClass() != obj.getClass()) {
-//            return false;
-//        } else {
-//            com.baidu.platform.comapi.basestruct.Point other = (com.baidu.platform.comapi.basestruct.Point)obj;
-//            return this.getDoubleX() != other.getDoubleX()?false:this.getDoubleY() == other.getDoubleY();
-//        }
-//    }
-//
-//    public String toQuery() {
-//        return String.format("(%d,%d)", new Object[]{Integer.valueOf(this.getIntX()), Integer.valueOf(this.getIntY())});
-//    }
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    public String toString() {
+        return "GeoPoint: Latitude: " + this.y + ", Longitude: " + this.x;
+    }
+
+    public boolean equals(Object obj) {
+        return obj == null?false:obj.getClass() == this.getClass() && Math.abs(this.y - ((Point)obj).y) <=
+                1.0E-6D && Math.abs(this.x - ((Point)obj).x) <= 1.0E-6D;
+    }
 }

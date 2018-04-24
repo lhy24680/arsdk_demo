@@ -7,13 +7,29 @@ package map.baidu.ar.utils;
 public class DistanceByMcUtils {
 
     /**
-     * 墨卡托计算
+     * 粗略墨卡托计算
+     *
      * @param pt1
      * @param pt2
+     *
      * @return
      */
-    public static double getDistanceByMc(Point pt1, Point pt2) {
+    public static double getRoughDistanceByMc(Point pt1, Point pt2) {
         return Math.sqrt(Math.pow(pt1.x - pt2.x, 2) + Math.pow(pt1.y - pt2.y, 2));
+    }
+
+    /**
+     * 第一个参数为墨卡托，第二个参数为转经纬度
+     * 计算距离
+     *
+     * @param pt1
+     * @param pt2
+     *
+     * @return
+     */
+    public static double getDistanceByLOrl(Point pt1, Point pt2) {
+        Point point1 = CoordinateConverter.convertMC2LLpToText(pt1.getY(), pt1.getX());
+        return getDistanceByLL(point1.getX(), point1.getY(), pt2.getX(), pt2.getY());
     }
 
     /**
@@ -27,7 +43,7 @@ public class DistanceByMcUtils {
     public static double getDistanceByLL(Point pt1, Point pt2) {
         Point point1 = CoordinateConverter.convertMC2LLp(pt1.getY(), pt1.getX());
         Point point2 = CoordinateConverter.convertMC2LLp(pt2.getY(), pt2.getX());
-        return getDistanceByLL(point1.getY(),point1.getX(), point2.getY(), point2.getX());
+        return getDistanceByLL(point1.getY(), point1.getX(), point2.getY(), point2.getX());
     }
 
     /**
@@ -41,7 +57,7 @@ public class DistanceByMcUtils {
     public static double getDistanceByLLToText(Point pt1, Point pt2) {
         Point point1 = CoordinateConverter.convertMC2LLpToText(pt1.getY(), pt1.getX());
         Point point2 = CoordinateConverter.convertMC2LLpToText(pt2.getY(), pt2.getX());
-        return getDistanceByLL(point1.getY(),point1.getX(), point2.getY(), point2.getX());
+        return getDistanceByLL(point1.getY(), point1.getX(), point2.getY(), point2.getX());
     }
 
     private static double EARTH_RADIUS = 6378137;//地球半径 米
@@ -52,10 +68,12 @@ public class DistanceByMcUtils {
 
     /**
      * 用标准的球面距离计算公式
+     *
      * @param lat1
      * @param lng1
      * @param lat2
      * @param lng2
+     *
      * @return
      */
     public static double getDistanceByLL(double lat1, double lng1, double lat2, double lng2) {
@@ -67,7 +85,7 @@ public class DistanceByMcUtils {
         double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
                 Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
         s = s * EARTH_RADIUS;
-//        s = Math.round(s * 10000) / 10000;
+        //        s = Math.round(s * 10000) / 10000;
         return s;
     }
 

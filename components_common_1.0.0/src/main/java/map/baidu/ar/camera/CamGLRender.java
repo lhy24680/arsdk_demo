@@ -22,6 +22,7 @@ import map.baidu.ar.ArPageListener;
 import map.baidu.ar.model.ArInfo;
 import map.baidu.ar.model.ArPoi;
 import map.baidu.ar.model.ArPoiScenery;
+import map.baidu.ar.model.PoiInfoImpl;
 import map.baidu.ar.onDuerChangeListener;
 import map.baidu.ar.utils.AsyncImageLoader;
 
@@ -99,6 +100,15 @@ public class CamGLRender implements GLSurfaceView.Renderer {
     }
 
     /**
+     * 探索 实时计算
+     */
+    public void setFindArSensorState(float[] remapValue, LayoutInflater inflater, RelativeLayout
+            rlView, ArPageListener onSelectNodeListener, ArrayList<PoiInfoImpl> arPoiList,
+                                     FragmentActivity activity) {
+
+    }
+
+    /**
      * BaseAr 实时计算
      */
     public void setBaseArSensorState(float[] remapValue, LayoutInflater inflater, TextView messageTv, RelativeLayout
@@ -116,8 +126,6 @@ public class CamGLRender implements GLSurfaceView.Renderer {
                                ArrayList<ArrayList<ArPoi>> arPoiList, FragmentActivity activity) {
 
     }
-
-
 
     /**
      * Scenery 调用 实时计算

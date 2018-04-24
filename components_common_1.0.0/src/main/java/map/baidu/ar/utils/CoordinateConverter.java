@@ -47,7 +47,7 @@ public class CoordinateConverter {
      * @param lat
      * @return
      */
-    private static Map<String, Double> convertLL2MC(Double lng, Double lat) {
+    public static Map<String, Double> convertLL2MC(Double lng, Double lat) {
         Double[] cE = null;
         lng = getLoop(lng, -180, 180);
         lat = getRange(lat, -74, 74);

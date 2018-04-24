@@ -5,19 +5,14 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.Map;
 
-import android.content.Context;
-import android.location.Location;
 import map.baidu.ar.data.IMapPoiItem;
 import map.baidu.ar.detail.IMediaControllerData;
 import map.baidu.ar.exception.LocationGetFailException;
 import map.baidu.ar.init.SDKContext;
 import map.baidu.ar.topimage.HeadImage;
-import map.baidu.ar.utils.CoordinateConverter;
 import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.INoProGuard;
-import map.baidu.ar.utils.LocNativeUtil;
 import map.baidu.ar.utils.LocSdkClient;
 import map.baidu.ar.utils.Point;
 

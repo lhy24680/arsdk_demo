@@ -147,7 +147,7 @@ public abstract class GLPOITexture {
         float[] unitMatrix = new float[] {0, 0, mSurfaceWidth, mSurfaceHeight};
         // 算出屏幕坐标
         pointXY = BGLProjectf(0, 0, -2, modelview, mPMatrix, unitMatrix);
-        //        Log.e("pointXY", "  x = " + pointXY[0] + " y = " + pointXY[1]);
+//                Log.e("pointXY", "  x = " + pointXY[0] + " y = " + pointXY[1]);
     }
 
     /**
@@ -177,6 +177,7 @@ public abstract class GLPOITexture {
         mRotationX = (float) Math.toDegrees(x);
         mRotationY = (float) Math.toDegrees(y);
         mRotationZ = (float) Math.toDegrees(z);
+//        Log.e("mRotation", "  mRotationX = " + mRotationX + " mRotationY = " + mRotationY+ " mRotationZ = " + mRotationZ);
     }
 
     public float[] getPointXY() {

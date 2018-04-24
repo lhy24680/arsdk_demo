@@ -113,7 +113,7 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard{
      * @return true为在附近 AOI_NEAR 米以内，false为在aoi面的 AOI_NEAR 米以外
      */
     public boolean isNearAoi(float x, float y) {
-        Tuple<Point, Double> tuple = AoiDistanceHelper.getNearestPoint(new Point(y, x),
+        Tuple<Point, Double> tuple = AoiDistanceHelper.getNearestPoint(new Point(x, y),
                 AoiDistanceHelper.getAoiList(aois));
         return tuple.getItem2() < AOI_NEAR;
     }

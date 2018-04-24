@@ -1,7 +1,5 @@
 package map.baidu.ar.utils;
 
-import com.baidu.location.BDAbstractLocationListener;
-import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 
@@ -15,14 +13,14 @@ public class LocSdkClient{
 
     private static LocSdkClient mInstance = null;
     public LocationClient mLocationClient = null;
-    private MyLocationListener myListener = new MyLocationListener();
-    private BDLocation mLocation = new BDLocation();
+//    private MyLocationListener myListener = new MyLocationListener();
+//    private BDLocation mLocation = new BDLocation();
 
     private LocSdkClient(Context context) {
 
         mLocationClient = new LocationClient(context.getApplicationContext());
         //声明LocationClient类
-        mLocationClient.registerLocationListener(myListener);
+//        mLocationClient.registerLocationListener(myListener);
         //注册监听函数
 
         LocationClientOption option = new LocationClientOption();
@@ -80,9 +78,9 @@ public class LocSdkClient{
         return mLocationClient;
     }
 
-    public BDLocation getLocation(){
-        return mLocation;
-    }
+//    public BDLocation getLocation(){
+//        return mLocation;
+//    }
 
 
     public static LocSdkClient getInstance(Context context) {
@@ -97,22 +95,22 @@ public class LocSdkClient{
         return mInstance;
     }
 
-    public class MyLocationListener extends BDAbstractLocationListener {
-        @Override
-        public void onReceiveLocation(BDLocation location){
-            mLocation = location;
-            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
-            //以下只列举部分获取经纬度相关（常用）的结果信息
-            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
-            double latitude = location.getLatitude();    //获取纬度信息
-            double longitude = location.getLongitude();    //获取经度信息
-            float radius = location.getRadius();    //获取定位精度，默认值为0.0f
-
-            String coorType = location.getCoorType();
-            //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
-
-            int errorCode = location.getLocType();
-            //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
-        }
-    }
+//    public class MyLocationListener extends BDAbstractLocationListener {
+//        @Override
+//        public void onReceiveLocation(BDLocation location){
+//            mLocation = location;
+//            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
+//            //以下只列举部分获取经纬度相关（常用）的结果信息
+//            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
+//            double latitude = location.getLatitude();    //获取纬度信息
+//            double longitude = location.getLongitude();    //获取经度信息
+//            float radius = location.getRadius();    //获取定位精度，默认值为0.0f
+//
+//            String coorType = location.getCoorType();
+//            //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
+//
+//            int errorCode = location.getLocType();
+//            //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
+//        }
+//    }
 }

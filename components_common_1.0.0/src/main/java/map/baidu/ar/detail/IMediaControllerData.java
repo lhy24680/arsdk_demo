@@ -15,7 +15,7 @@ public interface IMediaControllerData {
      *
      * @return
      */
-    String getDescription();
+    String getDescription() throws LocationGetFailException;
 
     /**
      * 景点名字，一般几个字

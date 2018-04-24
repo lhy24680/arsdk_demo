@@ -89,10 +89,10 @@ public class AoiDistanceHelper {
         double x = x1 + k * (x2 - x1);
         double y = y1 + k * (y2 - y1);
         double distance = Math.sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0));
-        return new Tuple<>(new Point(y, x), distance);
+        return new Tuple<>(new Point(x, y), distance);
     }
 
     private static double getPointsDistance(Point point1, Point point2) {
-        return DistanceByMcUtils.getDistanceByLL(point1, point2);
+        return DistanceByMcUtils.getDistanceByLLToText(point1, point2);
     }
 }
