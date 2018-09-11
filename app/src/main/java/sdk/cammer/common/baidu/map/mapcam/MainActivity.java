@@ -18,7 +18,6 @@ import com.baidu.mapapi.search.poi.PoiNearbySearchOption;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.poi.PoiSortType;
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -28,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -152,7 +152,7 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
                 }
                 RequestParams ps = new RequestParams();
                 String locString = x + "," + y;
-                ps.put("loc", Base64.encodeBase64String(locString.getBytes()));
+                ps.put("loc", Base64.encodeToString(locString.getBytes(), Base64.NO_WRAP));
                 FFRestClient.get(ConstantHost.AR_BUILDING_URL, ps, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
