@@ -5,10 +5,6 @@ import java.util.List;
 
 /**
  * 常用List操作
- * <p>
- * <b><font color="red">注意线程安全！</font></b>
- *
- * @author yaohaitong
  */
 public class ListUtils {
 

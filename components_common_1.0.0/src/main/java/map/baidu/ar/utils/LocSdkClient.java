@@ -6,7 +6,7 @@ import com.baidu.location.LocationClientOption;
 import android.content.Context;
 
 /**
- * Created by kanglichen on 2018/3/7.
+ * 定位sdk 坐标获取工具类
  */
 
 public class LocSdkClient{

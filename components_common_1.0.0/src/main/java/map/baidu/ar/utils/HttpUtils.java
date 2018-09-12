@@ -29,21 +29,28 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Http 操作工具类
+ */
 public class HttpUtils {
 
-//    public final static String NET = String.valueOf(ComAPIManager.getComAPIManager().getSystemAPI().getNetworkType());
-//    public final static String RESID = ComAPIManager.getComAPIManager().getSystemAPI().getResId();
-//    public final static String CHANNEL = ComAPIManager.getComAPIManager().getSystemAPI().getChannel();
-//    public final static String DPI = String.valueOf(ComAPIManager.getComAPIManager().getSystemAPI().getScreenDensity());
-//    public final static String CUID = ComAPIManager.getComAPIManager().getSystemAPI().getCuid();
-//    public final static String OS =
-//            ComAPIManager.getComAPIManager().getSystemAPI().getOsName() + ComAPIManager
-//                    .getComAPIManager().getSystemAPI().getOsVersion();
-//    public final static String SV = ComAPIManager.getComAPIManager().getSystemAPI().getAppVersion();
-//    public final static String HTTP_PHPUI_OS =
-//            "&os=" + ComAPIManager.getComAPIManager().getSystemAPI().getOsName() + ComAPIManager.getComAPIManager()
-//                    .getSystemAPI().getOsVersion();
-//    public final static String HTTP_PHPUI_SV = "&sv=" + ComAPIManager.getComAPIManager().getSystemAPI().getAppVersion();
+    //    public final static String NET = String.valueOf(ComAPIManager.getComAPIManager().getSystemAPI()
+    // .getNetworkType());
+    //    public final static String RESID = ComAPIManager.getComAPIManager().getSystemAPI().getResId();
+    //    public final static String CHANNEL = ComAPIManager.getComAPIManager().getSystemAPI().getChannel();
+    //    public final static String DPI = String.valueOf(ComAPIManager.getComAPIManager().getSystemAPI()
+    // .getScreenDensity());
+    //    public final static String CUID = ComAPIManager.getComAPIManager().getSystemAPI().getCuid();
+    //    public final static String OS =
+    //            ComAPIManager.getComAPIManager().getSystemAPI().getOsName() + ComAPIManager
+    //                    .getComAPIManager().getSystemAPI().getOsVersion();
+    //    public final static String SV = ComAPIManager.getComAPIManager().getSystemAPI().getAppVersion();
+    //    public final static String HTTP_PHPUI_OS =
+    //            "&os=" + ComAPIManager.getComAPIManager().getSystemAPI().getOsName() + ComAPIManager
+    // .getComAPIManager()
+    //                    .getSystemAPI().getOsVersion();
+    //    public final static String HTTP_PHPUI_SV = "&sv=" + ComAPIManager.getComAPIManager().getSystemAPI()
+    // .getAppVersion();
 
     // HTTP constant
     private static final int HTTP_TIMEOUT = 10000;
@@ -126,9 +133,8 @@ public class HttpUtils {
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            return bytes;
         }
+        return bytes;
     }
 
     public static String doHttpGet(String url, NameValuePair... nameValuePairs) {
@@ -157,9 +163,8 @@ public class HttpUtils {
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            return strTmp;
         }
+        return strTmp;
     }
 
     public static String doHttpPost(String url, NameValuePair... nameValuePairs) {
@@ -202,21 +207,21 @@ public class HttpUtils {
             }
         }
 
-//        NameValuePair sv = new BasicNameValuePair("sv", SV);
-//        NameValuePair os = new BasicNameValuePair("os", OS);
-//        NameValuePair cuid = new BasicNameValuePair("cuid", CUID);
-//        NameValuePair net = new BasicNameValuePair("net", NET);
-//        NameValuePair resid = new BasicNameValuePair("resid", RESID);
-//        NameValuePair channel = new BasicNameValuePair("channel", CHANNEL);
-//        NameValuePair dpi = new BasicNameValuePair("dpi", DPI);
-//
-//        params.add(sv);
-//        params.add(os);
-//        params.add(cuid);
-//        params.add(net);
-//        params.add(resid);
-//        params.add(channel);
-//        params.add(dpi);
+        //        NameValuePair sv = new BasicNameValuePair("sv", SV);
+        //        NameValuePair os = new BasicNameValuePair("os", OS);
+        //        NameValuePair cuid = new BasicNameValuePair("cuid", CUID);
+        //        NameValuePair net = new BasicNameValuePair("net", NET);
+        //        NameValuePair resid = new BasicNameValuePair("resid", RESID);
+        //        NameValuePair channel = new BasicNameValuePair("channel", CHANNEL);
+        //        NameValuePair dpi = new BasicNameValuePair("dpi", DPI);
+        //
+        //        params.add(sv);
+        //        params.add(os);
+        //        params.add(cuid);
+        //        params.add(net);
+        //        params.add(resid);
+        //        params.add(channel);
+        //        params.add(dpi);
 
         return params;
     }
@@ -253,27 +258,27 @@ public class HttpUtils {
         return httpget;
     }
 
-    private static void localCookieStore(AbstractHttpClient client) {
-
-        HttpClientParams.setCookiePolicy(client.getParams(), CookiePolicy.BROWSER_COMPATIBILITY);
-
-        Boolean hasBduss = AccountManager.getInstance().isLogin();
-        if (hasBduss) {
-            final CookieStore cookieStore = new BasicCookieStore();
-            BasicClientCookie cookie =
-                    new BasicClientCookie("BDUSS", AccountManager.getInstance().getUserInfo().mBDUSS);
-            cookie.setVersion(0);
-            cookie.setDomain(".baidu.com");
-            cookie.setPath("/");
-            cookieStore.addCookie(cookie);
-            client.setCookieStore(cookieStore);
-        }
-    }
+    //    private static void localCookieStore(AbstractHttpClient client) {
+    //
+    //        HttpClientParams.setCookiePolicy(client.getParams(), CookiePolicy.BROWSER_COMPATIBILITY);
+    //
+    //        Boolean hasBduss = AccountManager.getInstance().isLogin();
+    //        if (hasBduss) {
+    //            final CookieStore cookieStore = new BasicCookieStore();
+    //            BasicClientCookie cookie =
+    //                    new BasicClientCookie("BDUSS", AccountManager.getInstance().getUserInfo().mBDUSS);
+    //            cookie.setVersion(0);
+    //            cookie.setDomain(".baidu.com");
+    //            cookie.setPath("/");
+    //            cookieStore.addCookie(cookie);
+    //            client.setCookieStore(cookieStore);
+    //        }
+    //    }
 
     private static HttpResponse executeHttpRequest(HttpRequestBase httpRequest) throws IOException {
         try {
             HttpClient client = new DefaultHttpClient();
-            localCookieStore((AbstractHttpClient) client);
+            //            localCookieStore((AbstractHttpClient) client);
             HttpResponse httpResponse = client.execute(httpRequest);
             return httpResponse;
         } catch (IOException e) {

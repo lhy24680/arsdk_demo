@@ -12,6 +12,9 @@ import map.baidu.ar.logic.IAsyncImageLoader;
 import map.baidu.ar.utils.cache.FileCache;
 import map.baidu.ar.utils.cache.LRUCache;
 
+/**
+ * 异步图片加载
+ */
 public class AsyncImageLoader {
 
     private LRUCache mLRUCache;
@@ -104,9 +107,9 @@ public class AsyncImageLoader {
          */
         private Bitmap HttpGetBitmap(String httpURL) {
 
-            if (httpURL.equals("") || httpURL == null || httpURL.equals("NULL")) {
-                return null;
-            }
+//            if (httpURL.equals("") || httpURL == null || httpURL.equals("NULL")) {
+//                return null;
+//            }
 
             //find the file named httpURL hash str
             File file = mFileCache.getFile(httpURL);

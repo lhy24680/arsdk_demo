@@ -5,7 +5,7 @@ import android.content.Context;
 import java.io.File;
 
 /**
- * Android file cache by xingdaming
+ * Android file cache
  */
 public class FileCache {
 

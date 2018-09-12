@@ -1,7 +1,7 @@
 package map.baidu.ar;
 
 /**
- * Created by zhujingsi on 2017/6/13.
+ * Ar 数据变化接口
  */
 
 public interface ArChangeListener {

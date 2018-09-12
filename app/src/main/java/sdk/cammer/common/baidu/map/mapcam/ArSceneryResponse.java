@@ -3,6 +3,9 @@ package sdk.cammer.common.baidu.map.mapcam;
 import map.baidu.ar.model.ArInfoScenery;
 import map.baidu.ar.utils.INoProGuard;
 
+/**
+ * Ar景区返回数据解析
+ */
 public class ArSceneryResponse implements INoProGuard {
     // 错误提示语
     private String err_msg;

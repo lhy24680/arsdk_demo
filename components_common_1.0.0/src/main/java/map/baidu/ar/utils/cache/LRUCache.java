@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
 /**
- * Android internal memory cache by xingdaming
+ * Android internal memory cache
  */
 public class LRUCache {
 

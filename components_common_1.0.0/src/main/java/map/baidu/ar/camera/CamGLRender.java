@@ -23,7 +23,6 @@ import map.baidu.ar.model.ArInfo;
 import map.baidu.ar.model.ArPoi;
 import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.model.PoiInfoImpl;
-import map.baidu.ar.onDuerChangeListener;
 import map.baidu.ar.utils.AsyncImageLoader;
 
 
@@ -65,8 +64,6 @@ public class CamGLRender implements GLSurfaceView.Renderer {
     protected int height;
     protected boolean shouldTakePic;
     protected ArChangeListener mArChangeListener;
-    protected onDuerChangeListener onDuerChangeListenen;
-
     public String getFloorName() {
         return floorName;
     }
@@ -139,10 +136,6 @@ public class CamGLRender implements GLSurfaceView.Renderer {
     public void setScenerySensorState(float[] remapValue, LayoutInflater inflater, RelativeLayout rlCamview,
                                       ArPageListener onSelectNodeListener,
                                       ArrayList<ArPoiScenery> arPoiList, FragmentActivity activity) {
-    }
-
-    public void setOnDuerChangeListenen(onDuerChangeListener onDuerChangeListenen) {
-        this.onDuerChangeListenen = onDuerChangeListenen;
     }
 
     public void setArChangeListener(ArChangeListener arChangeListener) {

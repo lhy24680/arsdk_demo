@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 
+/**
+ * 权限申请
+ */
 public class PermissionsChecker {
     private final Context mContext;
 

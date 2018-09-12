@@ -10,20 +10,19 @@ import android.os.Message;
 
 /**
  * 异步框架
- * Created by 享 on 2016/3/11.
  */
 public class Task {
 
-    private static HandlerThread mBackThread;
+    private static HandlerThread mBackThread = null;
 
-    static HandlerThread getBackThread() {
+    static synchronized HandlerThread getBackThread() {
         if (mBackThread == null) {
-            synchronized (Task.class) {
+//            synchronized (Task.class) {
                 if (mBackThread == null) {
                     mBackThread = new HandlerThread("BackgroundTask");
                     mBackThread.start();
                 }
-            }
+//            }
         }
         return mBackThread;
     }

@@ -12,7 +12,6 @@ import android.util.Log;
 
 import java.util.List;
 
-import map.baidu.ar.AuthorityInterface;
 import map.baidu.ar.utils.ScreenUtils;
 
 /**
@@ -33,7 +32,6 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
     protected int mSurfaceHeight;
     protected Thread matchThread;
     protected Runnable matchRunnable;
-    protected AuthorityInterface authorityInterface;
     public AlertDialog mDialog;
     protected boolean mWaitForTakePhoto;
 
@@ -152,7 +150,9 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
             showAlertDialog();
         }
         try {
-            mCamera.autoFocus(null);
+            if (mCamera != null) {
+                mCamera.autoFocus(null);
+            }
         } catch (Exception e) {
             e.getMessage();
         }
@@ -215,21 +215,21 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
      * @param parameters 相机参数
      */
     public void setupPictureSizes(Camera.Parameters parameters, int near) {
-                mPictureWidth = 1000;
-                mPictureHeight = 0;
-                int diff = near * 10;
-                List<Camera.Size> mSupportedPictureSizes = parameters.getSupportedPictureSizes();
-                for (int i = 0; i < mSupportedPictureSizes.size(); i++) {
-                    Camera.Size size = mSupportedPictureSizes.get(i);
-                    int sDiff = Math.abs(size.height - near);
-                    if (sDiff < diff) {
-                        mPictureHeight = size.width;
-                        mPictureWidth = size.height;
-                        diff = sDiff;
-                    }
-                }
-                parameters.setPictureSize(mPictureHeight, mPictureWidth);
-                mCamera.setParameters(parameters);
+        mPictureWidth = 1000;
+        mPictureHeight = 0;
+        int diff = near * 10;
+        List<Camera.Size> mSupportedPictureSizes = parameters.getSupportedPictureSizes();
+        for (int i = 0; i < mSupportedPictureSizes.size(); i++) {
+            Camera.Size size = mSupportedPictureSizes.get(i);
+            int sDiff = Math.abs(size.height - near);
+            if (sDiff < diff) {
+                mPictureHeight = size.width;
+                mPictureWidth = size.height;
+                diff = sDiff;
+            }
+        }
+        parameters.setPictureSize(mPictureHeight, mPictureWidth);
+        mCamera.setParameters(parameters);
     }
 
     public CamGLRender getRender() {
@@ -243,10 +243,6 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
 
     public Dialog getmDialog() {
         return mDialog;
-    }
-
-    public void setAuthorityInterface(AuthorityInterface authorityInterface) {
-        this.authorityInterface = authorityInterface;
     }
 
     public FlashMode getFlashMode() {

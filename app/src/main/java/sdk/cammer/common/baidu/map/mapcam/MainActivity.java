@@ -42,6 +42,9 @@ import map.baidu.ar.model.ArInfoScenery;
 import map.baidu.ar.model.PoiInfoImpl;
 import map.baidu.ar.utils.LocSdkClient;
 
+/**
+ * ArSdk主页面 Activity
+ */
 public class MainActivity extends Activity implements View.OnClickListener, OnGetPoiSearchResultListener {
 
     private Button mArOperation;
@@ -98,7 +101,7 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
                                 .valueOf(location.getLatitude()), Toast.LENGTH_SHORT).show();
                 RequestParams params = new RequestParams();
                 params.put("qt", "scope_v2_arguide");
-                params.put("uid", "62d852adf09e449a2fb17ef5");
+                params.put("uid", "2fd2beabe34a80517adbd220");
                 params.put("ver", 2);
                 FFRestClient.get(ConstantHost.SCOPE_URL, params, new JsonHttpResponseHandler() {
                     @Override

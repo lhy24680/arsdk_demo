@@ -1,9 +1,5 @@
 package map.baidu.ar.utils.callback;
 
-/**
- * Created by 享 on 2016/12/30.
- */
-
 public class SafeTuple<T, V> {
     private final T mItem1;
     private final V mItem2;

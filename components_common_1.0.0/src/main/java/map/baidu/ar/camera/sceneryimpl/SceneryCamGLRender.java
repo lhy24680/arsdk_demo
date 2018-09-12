@@ -26,7 +26,6 @@ import map.baidu.ar.camera.GLPOITexture;
 import map.baidu.ar.camera.POIItem;
 import map.baidu.ar.init.SDKContext;
 import map.baidu.ar.model.ArPoiScenery;
-import map.baidu.ar.onDuerChangeListener;
 import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.LocSdkClient;
 import map.baidu.ar.utils.MapScaleUtils;
@@ -40,7 +39,7 @@ public class SceneryCamGLRender extends CamGLRender {
     // 显示出来的item
     private ArrayList<POIItem> mPoiItems = new ArrayList<>();
 
-    private onDuerChangeListener onDuerChangeListenen;
+//    private onDuerChangeListener onDuerChangeListenen;
     private boolean noPoiInSreen = false;
     private int mMapLevelDistance = 0;
     private ArPoiScenery mNearestPoi = null;
@@ -58,9 +57,9 @@ public class SceneryCamGLRender extends CamGLRender {
         this.context = context;
     }
 
-    public void setOnDuerChangeListenen(onDuerChangeListener onDuerChangeListenen) {
-        this.onDuerChangeListenen = onDuerChangeListenen;
-    }
+//    public void setOnDuerChangeListenen(onDuerChangeListener onDuerChangeListenen) {
+//        this.onDuerChangeListenen = onDuerChangeListenen;
+//    }
 
     /**
      * 实时计算
@@ -206,21 +205,21 @@ public class SceneryCamGLRender extends CamGLRender {
         ArPoiScenery nearestPoi = isNoPoiNear(selectPois);
         if (nearestPoi != null && (mNearestPoi == null || !mNearestPoi.getUid().equals(nearestPoi.getUid()))) {
             mNearestPoi = nearestPoi;
-            onDuerChangeListenen.nearPoiChanged(nearestPoi);
+//            onDuerChangeListenen.nearPoiChanged(nearestPoi);
         } else if (nearestPoi == null && mNearestPoi != null) {
             mNearestPoi = null;
-            onDuerChangeListenen.nearPoiChanged(null);
+//            onDuerChangeListenen.nearPoiChanged(null);
         } else if (nearestPoi == null && mPoiItems.size() > 1 && mPoiItems.get(0).getVertex() != null
                 && mPoiItems.get(0).getVertex().length > 2 && !(mPoiItems.get(0).getVertex()[0] == 0
                                                                         && mPoiItems.get(0).getVertex()[1] == 0)) {
             boolean noPoiInSreen = isNoPoiInScreen(selectPois);
             // 当前没有poi在屏幕内，且之前有poi在屏幕内
-            if (noPoiInSreen && !this.noPoiInSreen && onDuerChangeListenen != null) {
-                onDuerChangeListenen.noPoiInScreenChanged(noPoiInSreen);
-                this.noPoiInSreen = noPoiInSreen;
-                //            } else if (!noPoiInSreen && this.noPoiInSreen && onDuerChangeListenen != null) {
-                //                onDuerChangeListenen.noPoiInScreenChanged(noPoiInSreen);
-            }
+//            if (noPoiInSreen && !this.noPoiInSreen && onDuerChangeListenen != null) {
+//                onDuerChangeListenen.noPoiInScreenChanged(noPoiInSreen);
+//                this.noPoiInSreen = noPoiInSreen;
+//                //            } else if (!noPoiInSreen && this.noPoiInSreen && onDuerChangeListenen != null) {
+//                //                onDuerChangeListenen.noPoiInScreenChanged(noPoiInSreen);
+//            }
             //            this.noPoiInSreen = noPoiInSreen;
         }
     }
@@ -341,25 +340,25 @@ public class SceneryCamGLRender extends CamGLRender {
                 Math.max(-height * 2, Math.min(0, -y + mSurfaceHeight - height * 2)));
         poiItem.setVertex(vertexs);
         poiItem.setLayoutParams(lp);
-        if (onDuerChangeListenen != null) {
-            try {
-                if (arPoi.getDistance() < ArPoiScenery.NEAR_VALUE && !arPoi.isDuerNear()) {
-                    arPoi.setDuerNear(true);
-                } else if (arPoi.getDistance() > ArPoiScenery.NEAR_VALUE && arPoi.isDuerNear()) {
-                    arPoi.setDuerNear(false);
-                } else if (arPoi.getDistance() > ArPoiScenery.NEAR_VALUE) {
-                    arPoi.setDuerNear(false);
-                }
-            } catch (Exception e) {
-                e.getMessage();
-            }
-            if (-width / 2 < x && x < mSurfaceWidth + width / 2 && -height / 2 < y && y < mSurfaceHeight +
-                    height / 2) {
-                arPoi.setShowInScreen(true);
-            } else {
-                arPoi.setShowInScreen(false);
-            }
-        }
+//        if (onDuerChangeListenen != null) {
+//            try {
+//                if (arPoi.getDistance() < ArPoiScenery.NEAR_VALUE && !arPoi.isDuerNear()) {
+//                    arPoi.setDuerNear(true);
+//                } else if (arPoi.getDistance() > ArPoiScenery.NEAR_VALUE && arPoi.isDuerNear()) {
+//                    arPoi.setDuerNear(false);
+//                } else if (arPoi.getDistance() > ArPoiScenery.NEAR_VALUE) {
+//                    arPoi.setDuerNear(false);
+//                }
+//            } catch (Exception e) {
+//                e.getMessage();
+//            }
+//            if (-width / 2 < x && x < mSurfaceWidth + width / 2 && -height / 2 < y && y < mSurfaceHeight +
+//                    height / 2) {
+//                arPoi.setShowInScreen(true);
+//            } else {
+//                arPoi.setShowInScreen(false);
+//            }
+//        }
         if (x != 0 && y != 0) {
             poiItem.setVisibility(View.VISIBLE);
         }

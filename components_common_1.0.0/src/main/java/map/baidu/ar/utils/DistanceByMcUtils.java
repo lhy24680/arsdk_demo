@@ -1,6 +1,7 @@
 package map.baidu.ar.utils;
 
 /**
+ * 距离计算
  * Created by kanglichen on 2018/3/7.
  */
 

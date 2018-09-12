@@ -16,6 +16,9 @@ import map.baidu.ar.camera.find.FindArCamGLView;
 import map.baidu.ar.model.PoiInfoImpl;
 import map.baidu.ar.utils.TypeUtils;
 
+/**
+ * Ar探索 Activity
+ */
 public class FindArActivity extends FragmentActivity implements ArPageListener {
 
     private RelativeLayout camRl;
@@ -64,12 +67,6 @@ public class FindArActivity extends FragmentActivity implements ArPageListener {
     @Override
     public void onPause() {
         super.onPause();
-        finishCamInternal();
-        if (mCamGLView != null) {
-            if (mCamGLView.getmDialog() != null) {
-                mCamGLView.getmDialog().dismiss();
-            }
-        }
     }
 
     private void initSensor() {
@@ -132,5 +129,10 @@ public class FindArActivity extends FragmentActivity implements ArPageListener {
     public void onDestroy() {
         super.onDestroy();
         finishCamInternal();
+        if (mCamGLView != null) {
+            if (mCamGLView.getmDialog() != null) {
+                mCamGLView.getmDialog().dismiss();
+            }
+        }
     }
 }

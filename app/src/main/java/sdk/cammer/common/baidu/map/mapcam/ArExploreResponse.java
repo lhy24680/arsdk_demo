@@ -6,7 +6,7 @@ import map.baidu.ar.model.ArInfo;
 import map.baidu.ar.utils.INoProGuard;
 
 /**
- * Created by zhujingsi on 2017/6/12.
+ * Ar探索返回数据解析
  */
 
 public class ArExploreResponse implements INoProGuard {

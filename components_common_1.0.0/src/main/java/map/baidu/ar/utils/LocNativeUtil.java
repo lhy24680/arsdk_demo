@@ -15,7 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 /**
- * 手机自带定位
+ * 手机自带定位工具类
  */
 
 public class LocNativeUtil {

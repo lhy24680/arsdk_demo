@@ -15,6 +15,9 @@ import map.baidu.ar.camera.explore.BaseArCamGLView;
 import map.baidu.ar.model.ArInfo;
 import map.baidu.ar.utils.TypeUtils;
 
+/**
+ * Ar识楼 Activity
+ */
 public class ExploreArActivity extends FragmentActivity implements ArPageListener {
 
     private RelativeLayout camRl;
@@ -65,12 +68,8 @@ public class ExploreArActivity extends FragmentActivity implements ArPageListene
     @Override
     public void onPause() {
         super.onPause();
-        finishCamInternal();
-        if (mCamGLView != null) {
-            if (mCamGLView.getmDialog() != null) {
-                mCamGLView.getmDialog().dismiss();
-            }
-        }
+//        finishCamInternal();
+
     }
 
     private void initSensor() {
@@ -139,5 +138,10 @@ public class ExploreArActivity extends FragmentActivity implements ArPageListene
     public void onDestroy() {
         super.onDestroy();
         finishCamInternal();
+        if (mCamGLView != null) {
+            if (mCamGLView.getmDialog() != null) {
+                mCamGLView.getmDialog().dismiss();
+            }
+        }
     }
 }

@@ -2,7 +2,6 @@ package map.baidu.ar.utils.callback;
 
 /**
  * Tuple对象
- * Created by 享 on 2016/11/23.
  */
 public class Tuple<T, V> {
     private final T mItem1;

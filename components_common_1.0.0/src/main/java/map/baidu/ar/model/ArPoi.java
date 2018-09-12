@@ -7,7 +7,6 @@ import map.baidu.ar.init.SDKContext;
 import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.INoProGuard;
 import map.baidu.ar.utils.LocSdkClient;
-import map.baidu.ar.utils.LocUtil;
 import map.baidu.ar.utils.Point;
 
 /**

@@ -17,6 +17,9 @@ import map.baidu.ar.model.ArInfoScenery;
 import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.utils.TypeUtils;
 
+/**
+ * Ar景区 Activity
+ */
 public class SceneryArActivity extends FragmentActivity implements ArPageListener {
 
     RelativeLayout camRl;
@@ -44,11 +47,6 @@ public class SceneryArActivity extends FragmentActivity implements ArPageListene
     @Override
     public void onPause() {
         super.onPause();
-        if (mCamGLView != null) {
-            if (mCamGLView.mDialog != null) {
-                mCamGLView.mDialog.dismiss();
-            }
-        }
     }
 
     private void initView() {
@@ -132,6 +130,11 @@ public class SceneryArActivity extends FragmentActivity implements ArPageListene
     public void onDestroy() {
         super.onDestroy();
         finishCamInternal();
+        if (mCamGLView != null) {
+            if (mCamGLView.getmDialog() != null) {
+                mCamGLView.getmDialog().dismiss();
+            }
+        }
     }
 
     private void finishCamInternal() {

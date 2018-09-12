@@ -7,8 +7,6 @@ import map.baidu.ar.utils.callback.Tuple;
 
 /**
  * 计算点与Aoi距离最近的点
- * <p>
- * Created by lixiang34 on 2017/6/16.
  */
 public class AoiDistanceHelper {
     /**

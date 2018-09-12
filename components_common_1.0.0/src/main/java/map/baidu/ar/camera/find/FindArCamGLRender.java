@@ -31,11 +31,9 @@ import map.baidu.ar.camera.POIItem;
 import map.baidu.ar.init.SDKContext;
 import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.model.PoiInfoImpl;
-import map.baidu.ar.onDuerChangeListener;
 import map.baidu.ar.utils.CoordinateConverter;
 import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.LocSdkClient;
-import map.baidu.ar.utils.MapScaleUtils;
 import map.baidu.ar.utils.Point;
 import map.baidu.ar.utils.ResourceUtil;
 
@@ -48,7 +46,6 @@ public class FindArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
     // 显示出来的item
     private ArrayList<POIItem> mPoiItems = new ArrayList<>();
 
-    private onDuerChangeListener onDuerChangeListenen;
     private boolean noPoiInSreen = false;
     private int mMapLevelDistance = 0;
     private ArPoiScenery mNearestPoi = null;
@@ -64,10 +61,6 @@ public class FindArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
     public FindArCamGLRender(Context context, SurfaceTexture.OnFrameAvailableListener listener) {
         super(context, listener);
         this.context = context;
-    }
-
-    public void setOnDuerChangeListenen(onDuerChangeListener onDuerChangeListenen) {
-        this.onDuerChangeListenen = onDuerChangeListenen;
     }
 
     /**
@@ -102,7 +95,8 @@ public class FindArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
                 selectPois = new ArrayList<>();
                 selectPois.add(arPoiList.get(0));
             } else {
-                selectPois = selectPoiList(arPoiList);
+//                selectPois = selectPoiList(arPoiList);
+                selectPois = arPoiList;
             }
             Collections.sort(selectPois, new Comparator<PoiInfoImpl>() {
                 @Override
@@ -340,7 +334,7 @@ public class FindArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
                 Math.max(-height * 2, Math.min(0, -y + mSurfaceHeight - height * 2)));
         poiItem.setVertex(vertexs);
         poiItem.setLayoutParams(lp);
-        if (onDuerChangeListenen != null) {
+//        if (onDuerChangeListenen != null) {
             //            try {
             //                if (arPoi.getDistance() < ArPoiScenery.NEAR_VALUE && !arPoi.isDuerNear()) {
             //                    arPoi.setDuerNear(true);
@@ -352,12 +346,12 @@ public class FindArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
             //            } catch (Exception e) {
             //                e.getMessage();
             //            }
-            if (-width / 2 < x && x < mSurfaceWidth + width / 2 && -height / 2 < y && y < mSurfaceHeight + height / 2) {
-                arPoi.setShowInScreen(true);
-            } else {
-                arPoi.setShowInScreen(false);
-            }
-        }
+//            if (-width / 2 < x && x < mSurfaceWidth + width / 2 && -height / 2 < y && y < mSurfaceHeight + height / 2) {
+//                arPoi.setShowInScreen(true);
+//            } else {
+//                arPoi.setShowInScreen(false);
+//            }
+//        }
         if (x != 0 && y != 0) {
             poiItem.setVisibility(View.VISIBLE);
         }
@@ -455,43 +449,43 @@ public class FindArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
 
         for (int i = 0; i < arPoiList.size(); i++) {
             // 距离500⽶以内的所有⼦景点，最多显示7个⽓泡，优先排序权衡距离和优先级
-            if (arPoiList.get(i).getDistance() <= 500 && sum < 7) {
-                sum++;
+//            if (arPoiList.get(i).getDistance() <= 500 && sum < 7) {
+//                sum++;
                 arPoiList.get(i).setShowInAr(true);
                 selectPoiArray.add(arPoiList.get(i));
-            } else {
-                arPoiList.get(i).setShowInAr(false);
-            }
+//            } else {
+//                arPoiList.get(i).setShowInAr(false);
+//            }
         }
-        if (sum >= 3) {
-            if (mMapLevelDistance != MapScaleUtils.SCALE_500M && mArChangeListener != null) {
-                mArChangeListener.levelChanged(MapScaleUtils.SCALE_500M, 500);
-            }
+//        if (sum >= 3) {
+//            if (mMapLevelDistance != MapScaleUtils.SCALE_500M && mArChangeListener != null) {
+//                mArChangeListener.levelChanged(MapScaleUtils.SCALE_500M, 500);
+//            }
             return selectPoiArray;
-        }
-        sum = 0;
-        // 如果500⽶以内的⼦景点不⾜3个，则补充2公⾥以内的⼦景点，按距离排序，补充到3个⼦景点为⽌
-        for (int j = 0; j < 3; j++) {
-            if (arPoiList.size() > j && arPoiList.get(j).getDistance() <= 2000) {
-                sum++;
-                arPoiList.get(j).setShowInAr(true);
-                selectPoiArray.add(arPoiList.get(j));
-            }
-        }
-        if (sum > 1) {
-            if (mMapLevelDistance != MapScaleUtils.SCALE_2KM && mArChangeListener != null) {
-                mArChangeListener.levelChanged(MapScaleUtils.SCALE_2KM, 2000);
-            }
-            return selectPoiArray;
-        } else {
-            // 如果2公⾥以内⼀个⼦景点都没有，则取景区范围内最近的1个⼦景点
-            if (mArChangeListener != null) {
-                mArChangeListener.levelChanged(-1, arPoiList.get(0).getDistance());
-            }
-            arPoiList.get(0).setShowInAr(true);
-            selectPoiArray.add(arPoiList.get(0));
-            return selectPoiArray;
-        }
+//        }
+//        sum = 0;
+//        // 如果500⽶以内的⼦景点不⾜3个，则补充2公⾥以内的⼦景点，按距离排序，补充到3个⼦景点为⽌
+//        for (int j = 0; j < 3; j++) {
+//            if (arPoiList.size() > j && arPoiList.get(j).getDistance() <= 2000) {
+//                sum++;
+//                arPoiList.get(j).setShowInAr(true);
+//                selectPoiArray.add(arPoiList.get(j));
+//            }
+//        }
+//        if (sum > 1) {
+//            if (mMapLevelDistance != MapScaleUtils.SCALE_2KM && mArChangeListener != null) {
+//                mArChangeListener.levelChanged(MapScaleUtils.SCALE_2KM, 2000);
+//            }
+//            return selectPoiArray;
+//        } else {
+//            // 如果2公⾥以内⼀个⼦景点都没有，则取景区范围内最近的1个⼦景点
+//            if (mArChangeListener != null) {
+//                mArChangeListener.levelChanged(-1, arPoiList.get(0).getDistance());
+//            }
+//            arPoiList.get(0).setShowInAr(true);
+//            selectPoiArray.add(arPoiList.get(0));
+//            return selectPoiArray;
+//        }
     }
 
     public void setmBitmapReadyCallbacks(BitmapReadyCallbacks mBitmapReadyCallbacks) {

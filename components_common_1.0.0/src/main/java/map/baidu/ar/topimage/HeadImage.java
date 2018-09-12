@@ -4,10 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import map.baidu.ar.utils.INoProGuard;
 
-/**
- * Created by zhujingsi on 2017/6/6.
- */
-
 public class HeadImage implements INoProGuard {
     // 内容
     private String content;

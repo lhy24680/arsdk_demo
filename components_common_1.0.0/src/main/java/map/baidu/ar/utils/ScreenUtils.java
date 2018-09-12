@@ -10,6 +10,9 @@ import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
 
+/**
+ *  Screen工具类
+ */
 public class ScreenUtils {
     private static Display defaultDisplay;
     private static float mDensity = 0.0F;
