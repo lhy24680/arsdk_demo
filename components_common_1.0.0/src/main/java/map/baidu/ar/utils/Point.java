@@ -1,9 +1,7 @@
 package map.baidu.ar.utils;
 
 /**
- * 
  * 用于记录表示坐标系中的某一点坐标
- *
  */
 public class Point {
 
@@ -17,7 +15,6 @@ public class Point {
     public double y;
 
     /**
-     * 
      * @param x 经度lng(墨卡托横坐标)
      * @param y 纬度lat(墨卡托纵坐标)
      */
@@ -27,8 +24,8 @@ public class Point {
     }
 
     public Point(int x, int y) {
-        this.y = (double)y;
-        this.x = (double)x;
+        this.y = (double) y;
+        this.x = (double) x;
     }
 
     public double getX() {
@@ -46,6 +43,7 @@ public class Point {
     public void setY(double y) {
         this.y = y;
     }
+
     public int hashCode() {
         return this.toString().hashCode();
     }
@@ -55,7 +53,7 @@ public class Point {
     }
 
     public boolean equals(Object obj) {
-        return obj == null?false:obj.getClass() == this.getClass() && Math.abs(this.y - ((Point)obj).y) <=
-                1.0E-6D && Math.abs(this.x - ((Point)obj).x) <= 1.0E-6D;
+        return obj == null ? false : obj.getClass() == this.getClass() && Math.abs(this.y - ((Point) obj).y) <= 1.0E-6D
+                && Math.abs(this.x - ((Point) obj).x) <= 1.0E-6D;
     }
 }

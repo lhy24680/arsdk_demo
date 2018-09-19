@@ -13,36 +13,52 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
+import map.baidu.ar.init.ArSdkManager;
 
 /**
  * 手机自带定位工具类
  */
 
 public class LocNativeUtil {
-    //通过LocationManager来获取位置
+
+    private static LocNativeUtil mInstance = null;
+    // 通过LocationManager来获取位置
     private static LocationManager locationManager;
-    //显示位置提供器的类型
+    // 显示位置提供器的类型
     private static String provider;
+    // 判断是否有访问位置的权限
+    Location location = null;
+
+    public static synchronized LocNativeUtil getInstance(Context context) {
+        if (mInstance == null) {
+            mInstance = new LocNativeUtil(context);
+        }
+        return mInstance;
+    }
+
+    private LocNativeUtil(Context context) {
+        if (locationManager == null || provider == null) {
+            locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+            // 获取所有可用的位置提供器
+            List<String> providerList = locationManager.getProviders(true);
+            if (providerList.contains(LocationManager.GPS_PROVIDER)) {
+                // 当前位置提供器为GPS
+                provider = LocationManager.GPS_PROVIDER;
+            } else if (providerList.contains(LocationManager.NETWORK_PROVIDER)) {
+                provider = LocationManager.NETWORK_PROVIDER;
+            } else {
+                // 当前没有可用的位置提供器时用Toast提醒用户
+                Toast.makeText(context, "请打开GPS或者网络来确定你的位置", Toast.LENGTH_LONG).show();
+                //                return null;
+            }
+        }
+    }
 
     @SuppressLint("MissingPermission")
-    public static Location getLocation(Context context) {
-        locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-        //获取所有可用的位置提供器
-        List<String> providerList = locationManager.getProviders(true);
-        if (providerList.contains(LocationManager.GPS_PROVIDER)) {
-            //当前位置提供器为GPS
-            provider = LocationManager.GPS_PROVIDER;
-        } else if (providerList.contains(LocationManager.NETWORK_PROVIDER)) {
-            provider = LocationManager.NETWORK_PROVIDER;
-        } else {
-            //当前没有可用的位置提供器时用Toast提醒用户
-//                        Toast.makeText(this, "请打开GPS或者网络来确定你的位置", Toast.LENGTH_LONG).show();
-            return null;
-        }
-        //判断是否有访问位置的权限
-        Location location = null;
-        if (!checkPermissions(context)) {
-            // TODO: Consider calling
+    public Location getLocation() {
+
+        if (!checkPermissions(ArSdkManager.getInstance().getAppContext())) {
             //    Activity#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -53,10 +69,10 @@ public class LocNativeUtil {
         }
         location = locationManager.getLastKnownLocation(provider);
         return location;
-//        if (location != null) {
-//            showLocation(location);
-//        }
-//        locationManager.requestLocationUpdates(provider,5*1000,1,locationListener);
+        //        if (location != null) {
+        //            showLocation(location);
+        //        }
+        //        locationManager.requestLocationUpdates(provider,5*1000,1,locationListener);
     }
 
     /**
@@ -64,11 +80,12 @@ public class LocNativeUtil {
      *
      * @return
      */
-    public static boolean checkPermissions(Context context) {
+    public boolean checkPermissions(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if ((context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                         == PackageManager.PERMISSION_GRANTED) && (context.checkSelfPermission(Manifest
-                    .permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+                         == PackageManager.PERMISSION_GRANTED) && (
+                    context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED)) {
                 return true;
             } else {
                 return false;
@@ -82,7 +99,7 @@ public class LocNativeUtil {
         return 0;
     }
 
-    LocationListener locationListener=new LocationListener() {
+    LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             showLocation(location);
@@ -104,11 +121,9 @@ public class LocNativeUtil {
         }
     };
 
-
-
-    private void showLocation(Location location){
-        String currentPosition="latitude is "+location.getLatitude()+"\n" +
-                "longitudeude is"+location.getLongitude();
+    private void showLocation(Location location) {
+        String currentPosition =
+                "latitude is " + location.getLatitude() + "\n" + "longitudeude is" + location.getLongitude();
     }
 
 }

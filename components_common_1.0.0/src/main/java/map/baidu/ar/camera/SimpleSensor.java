@@ -7,14 +7,19 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 /**
- * Created by xingdaming on 15/12/22.
+ * 传感器操作类
  */
 public class SimpleSensor implements SensorEventListener {
 
     private boolean[] values;
 
+    /**
+     * 位置定位监听
+     */
     public interface OnHoldPositionListener {
-
+        /**
+         * 重映射位置
+         */
         void onOrientationWithRemap(float[] remapValue);
 
     }
@@ -45,38 +50,38 @@ public class SimpleSensor implements SensorEventListener {
 
     float[] accelerometerValues = new float[3];
     float[] magneticFieldValues = new float[3];
-//    private float[] values = new float[3];
-//    private float[] r = new float[9];
-//    private float[] geomagnetic = new float[3];//用来保存地磁传感器的值
+    //    private float[] values = new float[3];
+    //    private float[] r = new float[9];
+    //    private float[] geomagnetic = new float[3];//用来保存地磁传感器的值
 
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-                if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-                    float inOrientationMatrix[] = new float[16];
-                    float outOrientationMatrix[] = new float[16];
-                    SensorManager.getRotationMatrixFromVector(inOrientationMatrix, event.values);
-                    float orientationRemap[] = new float[3];
-                    SensorManager.remapCoordinateSystem(inOrientationMatrix, SensorManager.AXIS_X, SensorManager
-         .AXIS_MINUS_Z,
-                            outOrientationMatrix);
-                    SensorManager.getOrientation(outOrientationMatrix, orientationRemap);
-                    if (mListener != null) {
-                        mListener.onOrientationWithRemap(orientationRemap);
-                    }
-                }
-//        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-//            geomagnetic = event.values;
-//        }
-//        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-//            // r从这里返回
-//            SensorManager.getRotationMatrix(r, null, event.values, geomagnetic);
-//            //values从这里返回
-//            SensorManager.getOrientation(r, values);
-//            if (mListener != null) {
-//                mListener.onOrientationWithRemap(values);
-//            }
-//        }
+        if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+            float[] inOrientationMatrix = new float[16];
+            float[] outOrientationMatrix = new float[16];
+            SensorManager.getRotationMatrixFromVector(inOrientationMatrix, event.values);
+            float[] orientationRemap = new float[3];
+            SensorManager.remapCoordinateSystem(inOrientationMatrix, SensorManager.AXIS_X, SensorManager
+                            .AXIS_MINUS_Z,
+                    outOrientationMatrix);
+            SensorManager.getOrientation(outOrientationMatrix, orientationRemap);
+            if (mListener != null) {
+                mListener.onOrientationWithRemap(orientationRemap);
+            }
+        }
+        //        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+        //            geomagnetic = event.values;
+        //        }
+        //        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        //            // r从这里返回
+        //            SensorManager.getRotationMatrix(r, null, event.values, geomagnetic);
+        //            //values从这里返回
+        //            SensorManager.getOrientation(r, values);
+        //            if (mListener != null) {
+        //                mListener.onOrientationWithRemap(values);
+        //            }
+        //        }
     }
 
     @Override

@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import map.baidu.ar.utils.INoProGuard;
 
 
-/**
- * Created by zhujingsi on 2017/6/6.
- */
-
 public class BubbleA implements INoProGuard {
     // 气泡颜色
     private int color;
@@ -19,7 +15,7 @@ public class BubbleA implements INoProGuard {
     // 泡泡名称
     private String title;
     // 星级，100为满级
-    private int star_level;
+    private int starLevel;
     // 气泡名称，PM要求去掉括号里的内容
     private String name;
     // pio标记
@@ -27,7 +23,7 @@ public class BubbleA implements INoProGuard {
     // 楼层信息
     private String floor;
     // 右上角tag（是否是新店／新品）
-    private ArrayList<String> special_tag;
+    private ArrayList<String> specialTag;
 
     public int getColor() {
         return color;
@@ -77,12 +73,12 @@ public class BubbleA implements INoProGuard {
         this.name = name;
     }
 
-    public int getStar_level() {
-        return star_level;
+    public int getStarLevel() {
+        return starLevel;
     }
 
-    public void setStar_level(int star_level) {
-        this.star_level = star_level;
+    public void setStarLevel(int starLevel) {
+        this.starLevel = starLevel;
     }
 
     public String getFloor() {
@@ -93,11 +89,11 @@ public class BubbleA implements INoProGuard {
         this.floor = floor;
     }
 
-    public ArrayList<String> getSpecial_tag() {
-        return special_tag;
+    public ArrayList<String> getSpecialTag() {
+        return specialTag;
     }
 
-    public void setSpecial_tag(ArrayList<String> special_tag) {
-        this.special_tag = special_tag;
+    public void setSpecialTag(ArrayList<String> specialTag) {
+        this.specialTag = specialTag;
     }
 }

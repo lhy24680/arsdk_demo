@@ -1,11 +1,6 @@
 package map.baidu.ar.model;
 
-
 import map.baidu.ar.utils.INoProGuard;
-
-/**
- * Created by zhujingsi on 2017/6/6.
- */
 
 public class BubbleList implements INoProGuard {
     // 普通气泡

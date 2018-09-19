@@ -15,7 +15,7 @@ import java.util.List;
 import map.baidu.ar.utils.ScreenUtils;
 
 /**
- * Created by xingdaming on 15/12/22.
+ * 相机视图基类
  */
 public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.OnFrameAvailableListener {
 
@@ -60,6 +60,9 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
         //        startCam();
     }
 
+    /**
+     * 关闭相机
+     */
     public void stopCam() {
         if (mCamera != null) {
             try {
@@ -88,6 +91,9 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
     //                .makeMeasureSpec(parentHeight, MeasureSpec.EXACTLY));
     //    }
 
+    /**
+     * 开启相机
+     */
     protected void startCam(CamGLRender glRender) {
         mCamera = openCamera();
         Camera.Parameters parameters = mCamera.getParameters();
@@ -119,6 +125,9 @@ public abstract class CamGLView extends GLSurfaceView implements SurfaceTexture.
         });
     }
 
+    /**
+     * 设置相机宽高
+     */
     protected void setupCamera(int w, int h) {
         if (mCamera == null) {
             return;

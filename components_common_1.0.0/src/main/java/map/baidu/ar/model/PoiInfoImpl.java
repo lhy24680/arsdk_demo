@@ -6,7 +6,7 @@ import com.baidu.mapapi.search.core.PoiInfo;
 import map.baidu.ar.data.IMapPoiItem;
 import map.baidu.ar.detail.IMediaControllerData;
 import map.baidu.ar.exception.LocationGetFailException;
-import map.baidu.ar.init.SDKContext;
+import map.baidu.ar.init.ArSdkManager;
 import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.INoProGuard;
 import map.baidu.ar.utils.LocSdkClient;
@@ -91,7 +91,7 @@ public class PoiInfoImpl implements IMapPoiItem, INoProGuard, IMediaControllerDa
 
     @Override
     public double getDistance() throws LocationGetFailException {
-        BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+        BDLocation location = LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
                 .getLastKnownLocation();
         if (location != null) {
             double myX = location.getLongitude();

@@ -5,7 +5,6 @@ import map.baidu.ar.utils.Point;
 
 /**
  * 底图上的Poi需要的数据
- * Created by 享 on 2016/11/23.
  */
 public interface IMapPoiItem {
 

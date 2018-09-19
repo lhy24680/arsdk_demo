@@ -9,6 +9,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.baidu.location.BDLocation;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
@@ -24,7 +25,7 @@ import map.baidu.ar.camera.GLCameraTexture;
 import map.baidu.ar.camera.GLException;
 import map.baidu.ar.camera.GLPOITexture;
 import map.baidu.ar.camera.POIItem;
-import map.baidu.ar.init.SDKContext;
+import map.baidu.ar.init.ArSdkManager;
 import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.LocSdkClient;
@@ -39,7 +40,7 @@ public class SceneryCamGLRender extends CamGLRender {
     // 显示出来的item
     private ArrayList<POIItem> mPoiItems = new ArrayList<>();
 
-//    private onDuerChangeListener onDuerChangeListenen;
+    //    private onDuerChangeListener onDuerChangeListenen;
     private boolean noPoiInSreen = false;
     private int mMapLevelDistance = 0;
     private ArPoiScenery mNearestPoi = null;
@@ -57,21 +58,21 @@ public class SceneryCamGLRender extends CamGLRender {
         this.context = context;
     }
 
-//    public void setOnDuerChangeListenen(onDuerChangeListener onDuerChangeListenen) {
-//        this.onDuerChangeListenen = onDuerChangeListenen;
-//    }
+    //    public void setOnDuerChangeListenen(onDuerChangeListener onDuerChangeListenen) {
+    //        this.onDuerChangeListenen = onDuerChangeListenen;
+    //    }
 
     /**
      * 实时计算
      *
      * @param remapValue           硬件返回的屏幕坐标x,y,z
      * @param inflater
-     * @param rl_camview           父view
+     * @param rlCamview            父view
      * @param onSelectNodeListener poi的点击事件
      * @param arPoiList            poi对象集合
      */
     @Override
-    public void setScenerySensorState(float[] remapValue, LayoutInflater inflater, RelativeLayout rl_camview,
+    public void setScenerySensorState(float[] remapValue, LayoutInflater inflater, RelativeLayout rlCamview,
                                       ArPageListener onSelectNodeListener,
                                       ArrayList<ArPoiScenery> arPoiList, FragmentActivity activity) {
         if (mCameraWidth <= 0) {
@@ -79,14 +80,15 @@ public class SceneryCamGLRender extends CamGLRender {
         }
         // 定位坐标
         try {
-            BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
-                    .getLastKnownLocation();
+            BDLocation location =
+                    LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
+                            .getLastKnownLocation();
             if (location != null) {
 
                 mX = location.getLongitude();
                 mY = location.getLatitude();
             } else {
-//                MToast.show(mContext, "暂时无法获取您的位置");
+                //                MToast.show(mContext, "暂时无法获取您的位置");
                 return;
             }
             // 给地图模式设值
@@ -124,7 +126,7 @@ public class SceneryCamGLRender extends CamGLRender {
                 }
             });
             for (int i = 0; i < selectPois.size(); i++) {
-                moveItem(i, remapValue, rl_camview, onSelectNodeListener, inflater, selectPois, activity);
+                moveItem(i, remapValue, rlCamview, onSelectNodeListener, inflater, selectPois, activity);
             }
             // 将不需要显示的poi隐藏
             for (int j = 0; j < mPoiItems.size(); j++) {
@@ -176,7 +178,7 @@ public class SceneryCamGLRender extends CamGLRender {
         }
     }
 
-    private void moveItem(final int i, float[] remapValue, final RelativeLayout rl_camview,
+    private void moveItem(final int i, float[] remapValue, final RelativeLayout rlCamview,
                           final ArPageListener onSelectNodeListener,
                           final LayoutInflater inflater, final ArrayList<ArPoiScenery> selectPois,
                           FragmentActivity activity) {
@@ -194,7 +196,7 @@ public class SceneryCamGLRender extends CamGLRender {
             public void run() {
                 try {
                     if (mPoiItems.size() < i + 1) {
-                        rl_camview.addView(addPoiItem(selectPois.get(i), i, inflater));
+                        rlCamview.addView(addPoiItem(selectPois.get(i), i, inflater));
                     }
                     setMargin(itemGLPoi, mPoiItems, i, selectPois.get(i), onSelectNodeListener);
                 } catch (Exception e) {
@@ -205,21 +207,22 @@ public class SceneryCamGLRender extends CamGLRender {
         ArPoiScenery nearestPoi = isNoPoiNear(selectPois);
         if (nearestPoi != null && (mNearestPoi == null || !mNearestPoi.getUid().equals(nearestPoi.getUid()))) {
             mNearestPoi = nearestPoi;
-//            onDuerChangeListenen.nearPoiChanged(nearestPoi);
+            //            onDuerChangeListenen.nearPoiChanged(nearestPoi);
         } else if (nearestPoi == null && mNearestPoi != null) {
             mNearestPoi = null;
-//            onDuerChangeListenen.nearPoiChanged(null);
+            //            onDuerChangeListenen.nearPoiChanged(null);
         } else if (nearestPoi == null && mPoiItems.size() > 1 && mPoiItems.get(0).getVertex() != null
                 && mPoiItems.get(0).getVertex().length > 2 && !(mPoiItems.get(0).getVertex()[0] == 0
                                                                         && mPoiItems.get(0).getVertex()[1] == 0)) {
             boolean noPoiInSreen = isNoPoiInScreen(selectPois);
             // 当前没有poi在屏幕内，且之前有poi在屏幕内
-//            if (noPoiInSreen && !this.noPoiInSreen && onDuerChangeListenen != null) {
-//                onDuerChangeListenen.noPoiInScreenChanged(noPoiInSreen);
-//                this.noPoiInSreen = noPoiInSreen;
-//                //            } else if (!noPoiInSreen && this.noPoiInSreen && onDuerChangeListenen != null) {
-//                //                onDuerChangeListenen.noPoiInScreenChanged(noPoiInSreen);
-//            }
+            //            if (noPoiInSreen && !this.noPoiInSreen && onDuerChangeListenen != null) {
+            //                onDuerChangeListenen.noPoiInScreenChanged(noPoiInSreen);
+            //                this.noPoiInSreen = noPoiInSreen;
+            //                //            } else if (!noPoiInSreen && this.noPoiInSreen && onDuerChangeListenen !=
+            // null) {
+            //                //                onDuerChangeListenen.noPoiInScreenChanged(noPoiInSreen);
+            //            }
             //            this.noPoiInSreen = noPoiInSreen;
         }
     }
@@ -271,7 +274,7 @@ public class SceneryCamGLRender extends CamGLRender {
         View poiNearTv = poiItem.findViewById(ResourceUtil.getId(mContext, "poi_near_tv"));
         int poiSize;
         int poiDistanceSize;
-        //小于十米的时候显示在附近
+        // 小于十米的时候显示在附近
         if (arPoi.isNear()) {
             poiNearTv.setVisibility(View.VISIBLE);
             poiDistance.setVisibility(View.GONE);
@@ -279,7 +282,7 @@ public class SceneryCamGLRender extends CamGLRender {
             poiNearTv.setVisibility(View.GONE);
             poiDistance.setVisibility(View.VISIBLE);
         }
-        //近大远小，近实远虚
+        // 近大远小，近实远虚
         if (arPoi.getDistance() < 200) {
             poiSize = 14;
             poiDistanceSize = 11;
@@ -310,19 +313,19 @@ public class SceneryCamGLRender extends CamGLRender {
      * @param arPoi                poi对象的属性
      * @param onSelectNodeListener poi的点击事件监听
      */
-    private void setMargin(GLPOITexture mpoiTextture, ArrayList<POIItem> poiItems, int i, final ArPoiScenery arPoi
-            , final ArPageListener onSelectNodeListener) throws Exception {
+    private void setMargin(GLPOITexture mpoiTextture, ArrayList<POIItem> poiItems, int i, final ArPoiScenery arPoi,
+                           final ArPageListener onSelectNodeListener) throws Exception {
         POIItem poiItem = poiItems.get(i);
-        TextView poi_name = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext, "poi_item_name"));
-        poi_name.setText(arPoi.getName());
+        TextView poiName = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext, "poi_item_name"));
+        poiName.setText(arPoi.getName());
         poiItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onSelectNodeListener.selectItem(arPoi);
             }
         });
-        TextView poi_distance = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext, "poi_distance"));
-        poi_distance.setText(arPoi.getDistanceText());
+        TextView poiDistance = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext, "poi_distance"));
+        poiDistance.setText(arPoi.getDistanceText());
         setPOITextSize(arPoi, poiItem);
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) poiItem.getLayoutParams();
         int x = (int) (mpoiTextture.getPointXY()[0]);
@@ -340,25 +343,25 @@ public class SceneryCamGLRender extends CamGLRender {
                 Math.max(-height * 2, Math.min(0, -y + mSurfaceHeight - height * 2)));
         poiItem.setVertex(vertexs);
         poiItem.setLayoutParams(lp);
-//        if (onDuerChangeListenen != null) {
-//            try {
-//                if (arPoi.getDistance() < ArPoiScenery.NEAR_VALUE && !arPoi.isDuerNear()) {
-//                    arPoi.setDuerNear(true);
-//                } else if (arPoi.getDistance() > ArPoiScenery.NEAR_VALUE && arPoi.isDuerNear()) {
-//                    arPoi.setDuerNear(false);
-//                } else if (arPoi.getDistance() > ArPoiScenery.NEAR_VALUE) {
-//                    arPoi.setDuerNear(false);
-//                }
-//            } catch (Exception e) {
-//                e.getMessage();
-//            }
-//            if (-width / 2 < x && x < mSurfaceWidth + width / 2 && -height / 2 < y && y < mSurfaceHeight +
-//                    height / 2) {
-//                arPoi.setShowInScreen(true);
-//            } else {
-//                arPoi.setShowInScreen(false);
-//            }
-//        }
+        //        if (onDuerChangeListenen != null) {
+        //            try {
+        //                if (arPoi.getDistance() < ArPoiScenery.NEAR_VALUE && !arPoi.isDuerNear()) {
+        //                    arPoi.setDuerNear(true);
+        //                } else if (arPoi.getDistance() > ArPoiScenery.NEAR_VALUE && arPoi.isDuerNear()) {
+        //                    arPoi.setDuerNear(false);
+        //                } else if (arPoi.getDistance() > ArPoiScenery.NEAR_VALUE) {
+        //                    arPoi.setDuerNear(false);
+        //                }
+        //            } catch (Exception e) {
+        //                e.getMessage();
+        //            }
+        //            if (-width / 2 < x && x < mSurfaceWidth + width / 2 && -height / 2 < y && y < mSurfaceHeight +
+        //                    height / 2) {
+        //                arPoi.setShowInScreen(true);
+        //            } else {
+        //                arPoi.setShowInScreen(false);
+        //            }
+        //        }
         if (x != 0 && y != 0) {
             poiItem.setVisibility(View.VISIBLE);
         }
@@ -410,7 +413,7 @@ public class SceneryCamGLRender extends CamGLRender {
      *
      * @return 排序后poi列表
      */
-    private ArrayList<ArPoiScenery> selectPoiList( ArrayList<ArPoiScenery> arPoiList) throws Exception {
+    private ArrayList<ArPoiScenery> selectPoiList(ArrayList<ArPoiScenery> arPoiList) throws Exception {
         long now = new Date().getTime();
         // 间隔大于10秒强刷
         if (now - sortTime < 10000) {
@@ -422,8 +425,8 @@ public class SceneryCamGLRender extends CamGLRender {
                 sortTime = now;
             }
             // 重排poi用户位置移动大于3米
-            if (!(sortX == 0 && sortY == 0) && DistanceByMcUtils.getDistanceByLL(new Point(sortX, sortY)
-                    , new Point(mX, mY)) < 3) {
+            if (!(sortX == 0 && sortY == 0)
+                    && DistanceByMcUtils.getDistanceByLL(new Point(sortX, sortY), new Point(mX, mY)) < 3) {
                 Log.e("sort", "sortX = " + sortX + "   |   sortY = " + sortY);
                 return selectPois;
             } else {

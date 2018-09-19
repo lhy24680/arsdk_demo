@@ -2,10 +2,6 @@ package map.baidu.ar.model;
 
 import map.baidu.ar.utils.INoProGuard;
 
-/**
- * Created by daju on 2018/1/9.
- */
-
 public class Angle implements INoProGuard {
     public static double ANGLE_ERROR = 9999;
     private double mAngleA = 9999;
@@ -35,7 +31,6 @@ public class Angle implements INoProGuard {
     }
 
     public Angle() {
-
     }
 
     public double getAngleA() {

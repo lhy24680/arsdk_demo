@@ -1,11 +1,11 @@
 package map.baidu.ar;
 
 /**
- * Ar 页面改变接口
+ * Ar 页面监听接口
  */
 public interface ArPageListener<T> {
     /**
-     * 没有poi在屏幕显示
+     * 是否有poi在屏幕显示
      */
     void noPoiInScreen(boolean isNoPoiInScreen);
     /**

@@ -18,10 +18,12 @@ import map.baidu.ar.http.JsonHttpResponseHandler;
 import map.baidu.ar.http.PersistentCookieStore;
 import map.baidu.ar.http.RequestParams;
 
+/**
+ * 网络请求
+ */
 public class FFRestClient {
 
     // 设置超时
-
     private static final int TIMEOUT = 10 * 1000;
 
     private static AsyncHttpClient client = new AsyncHttpClient();
@@ -44,6 +46,13 @@ public class FFRestClient {
         }
     }
 
+    /**
+     * 获取数据
+     *
+     * @param url             连接服务端地址
+     * @param params          请求参数
+     * @param responseHandler 结果响应
+     */
     public static void get(String url, RequestParams params, final AsyncHttpResponseHandler responseHandler) {
         if (TextUtils.isEmpty(url)) {
             url = ConstantHost.BASE_URL;
@@ -51,7 +60,8 @@ public class FFRestClient {
         client.get(url, params, new JsonHttpResponseHandler() {
 
             @Override
-            public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
+            public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable,
+                                  final JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
 
                 restHandler.post(new Runnable() {
@@ -61,8 +71,8 @@ public class FFRestClient {
                             JsonHttpResponseHandler clientRespose = (JsonHttpResponseHandler) responseHandler;
                             clientRespose.onFailure(statusCode, headers, throwable, errorResponse);
                         } catch (Exception e) {
-//                            MProgressDialog.dismiss();
-//                            MToast.show(SceneryEntity.applicationContext, "网络连接异常，请稍后再试");
+                            //                            MProgressDialog.dismiss();
+                            //                            MToast.show(SceneryEntity.applicationContext, "网络连接异常，请稍后再试");
                             e.printStackTrace();
                         }
                     }
@@ -79,7 +89,7 @@ public class FFRestClient {
                     dispatchOnSuccess(responseHandler, statusCode, headers, response);
 
                 } catch (Exception e) {
-                   e.printStackTrace();
+                    e.printStackTrace();
                 }
 
             }
@@ -90,42 +100,43 @@ public class FFRestClient {
         get(null, params, responseHandler);
     }
 
-    public static void post(String url, String qt, RequestParams params, final AsyncHttpResponseHandler responseHandler) {
+    public static void post(String url, String qt, RequestParams params,
+                            final AsyncHttpResponseHandler responseHandler) {
 
         if (TextUtils.isEmpty(url)) {
             url = ConstantHost.BASE_URL;
         }
-//        Uri.Builder builder = new Uri.Builder();
-//        if (!TextUtils.isEmpty(qt)) {
-//            builder.appendQueryParameter("qt", qt);
-//        }
-//        /*
-//         * 来源统计开始
-//		 */
-//        if (!TextUtils.isEmpty(UniversalSourceFromParameter.getInstance().getResId())) {
-//            builder.appendQueryParameter(UniversalSourceFromParameter.KEY_RES_ID, UniversalSourceFromParameter.getInstance().getResId());
-//        }
-//        if (!TextUtils.isEmpty(UniversalSourceFromParameter.getInstance().getQid())) {
-//            builder.appendQueryParameter(UniversalSourceFromParameter.KEY_QID, UniversalSourceFromParameter.getInstance().getQid());
-//        }
-//        if (!TextUtils.isEmpty(UniversalSourceFromParameter.getInstance().getSrcFrom())) {
-//            builder.appendQueryParameter(UniversalSourceFromParameter.KEY_SRC_FROM, UniversalSourceFromParameter.getInstance().getSrcFrom());
-//        }
-////        builder.appendQueryParameter("travel_mode", StatisticHelper.getGl);
-//
-//        String myUrl = url + builder.build().toString();
+        //        Uri.Builder builder = new Uri.Builder();
+        //        if (!TextUtils.isEmpty(qt)) {
+        //            builder.appendQueryParameter("qt", qt);
+        //        }
+        //        来源统计开始
+        //        if (!TextUtils.isEmpty(UniversalSourceFromParameter.getInstance().getResId())) {
+        //            builder.appendQueryParameter(UniversalSourceFromParameter.KEY_RES_ID,
+        // UniversalSourceFromParameter.getInstance().getResId());
+        //        }
+        //        if (!TextUtils.isEmpty(UniversalSourceFromParameter.getInstance().getQid())) {
+        //            builder.appendQueryParameter(UniversalSourceFromParameter.KEY_QID, UniversalSourceFromParameter
+        // .getInstance().getQid());
+        //        }
+        //        if (!TextUtils.isEmpty(UniversalSourceFromParameter.getInstance().getSrcFrom())) {
+        //            builder.appendQueryParameter(UniversalSourceFromParameter.KEY_SRC_FROM,
+        // UniversalSourceFromParameter.getInstance().getSrcFrom());
+        //        }
+        ////        builder.appendQueryParameter("travel_mode", StatisticHelper.getGl);
+        //
+        //        String myUrl = url + builder.build().toString();
 
         client.post(url, params, new JsonHttpResponseHandler() {
 
             @Override
-            public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
+            public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable,
+                                  final JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
 
                 restHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        // TODO Auto-generated method stub
-
                         try {
                             JsonHttpResponseHandler clientRespose = (JsonHttpResponseHandler) responseHandler;
 
@@ -157,56 +168,6 @@ public class FFRestClient {
 
     public static RequestParams buildBaseParams() {
         RequestParams base = new RequestParams();
-//        if (!TextUtils.isEmpty(SceneryCommonParams.getCityId())) {
-//            base.put("c", SceneryCommonParams.getCityId());
-//        }
-//        if (!TextUtils.isEmpty(SceneryCommonParams.getBaiduMocLng())) {
-//            base.put("nb_x", SceneryCommonParams.getBaiduMocLng());
-//        }
-//        if (!TextUtils.isEmpty(SceneryCommonParams.getBaiduMocLat())) {
-//            base.put("nb_y", SceneryCommonParams.getBaiduMocLat());
-//        }
-//        if (!TextUtils.isEmpty(ComAPIManager.getComAPIManager().getSystemAPI().getChannel())) {
-//            base.put("channel", ComAPIManager.getComAPIManager().getSystemAPI().getChannel());
-//        }
-//        if (!TextUtils.isEmpty(ComAPIManager.getComAPIManager().getSystemAPI().getResId())) {
-//            base.put("resid", ComAPIManager.getComAPIManager().getSystemAPI().getResId());
-//        }
-//        if (!TextUtils.isEmpty(ComAPIManager.getComAPIManager().getSystemAPI().getAppVersion())) {
-//            base.put("sv", ComAPIManager.getComAPIManager().getSystemAPI().getAppVersion());
-//        }
-//        if (!TextUtils.isEmpty(ComAPIManager.getComAPIManager().getSystemAPI().getDeviceName())) {
-//            base.put("mb", ComAPIManager.getComAPIManager().getSystemAPI().getDeviceName());
-//        }
-//        if (!TextUtils.isEmpty(APIProxy.sys().getCuid())) {
-//            base.put("cuid", APIProxy.sys().getCuid());
-//        }
-//        if (!TextUtils.isEmpty(APIProxy.sys().getOsName())) {
-//            base.put("os", APIProxy.sys().getOsName());
-//        }
-//        if (!TextUtils.isEmpty(SceneryUtil.getComponentVersion())) {
-//            base.put("cversion", SceneryUtil.getComponentVersion());
-//        }
-//
-//		/*
-//         * 来源统计开始
-//		 */
-//        if (!TextUtils.isEmpty(UniversalSourceFromParameter.getInstance().getResId())) {
-//            base.put(UniversalSourceFromParameter.KEY_RES_ID, UniversalSourceFromParameter.getInstance().getResId());
-//        }
-//        if (!TextUtils.isEmpty(UniversalSourceFromParameter.getInstance().getQid())) {
-//            base.put(UniversalSourceFromParameter.KEY_QID, UniversalSourceFromParameter.getInstance().getQid());
-//        }
-//        if (!TextUtils.isEmpty(UniversalSourceFromParameter.getInstance().getSrcFrom())) {
-//            base.put(UniversalSourceFromParameter.KEY_SRC_FROM, UniversalSourceFromParameter.getInstance().getSrcFrom());
-//        }
-//        base.put("travel_mode", StatisticHelper.getGlobalTravelMode());
-//        base.put("isLocal_status", StatisticHelper.isLocal_status);
-//        /*
-//         * 来源统计结束
-//		 */
-//        base.put("da_trd", "scope");
-//        base.put("da_model", "plugin_scenery");
         return base;
 
     }
@@ -220,15 +181,14 @@ public class FFRestClient {
         }
     }
 
-    private static void dispatchOnSuccess(final AsyncHttpResponseHandler responseHandler, final int statusCode, final Header[] headers, final JSONObject response) {
+    private static void dispatchOnSuccess(final AsyncHttpResponseHandler responseHandler, final int statusCode,
+                                          final Header[] headers, final JSONObject response) {
         // if (Util.responseSuc(response)) {
 
         restHandler.post(new Runnable() {
             @Override
             public void run() {
-                // TODO Auto-generated method stub
-
-				/* try { */
+                /* try { */
                 if (responseHandler != null) {
                     JsonHttpResponseHandler clientRespose = (JsonHttpResponseHandler) responseHandler;
 
@@ -236,9 +196,9 @@ public class FFRestClient {
                 }
                 /*
                  * } catch (Exception e) { LogUtils.e("ss",e);
-				 * 
-				 * }
-				 */
+                 *
+                 * }
+                 */
             }
         });
 
@@ -251,14 +211,14 @@ public class FFRestClient {
         get(base, responseHandler);
     }
 
-//    public static void getVacationListData(AsyncHttpResponseHandler responseHandler) {
-//        RequestParams base = buildBaseParams();
-//        base.put("qt", "vacation_list");
-//        base.put("device_from", "android");
-//        base.put("vacation_type", "around");
-//        base.put("cityId", APIProxy.settings().getLocationCityId());
-//        get(ConstantHost.MENPIAO_BASE_URL, base, responseHandler);
-//    }
+    //    public static void getVacationListData(AsyncHttpResponseHandler responseHandler) {
+    //        RequestParams base = buildBaseParams();
+    //        base.put("qt", "vacation_list");
+    //        base.put("device_from", "android");
+    //        base.put("vacation_type", "around");
+    //        base.put("cityId", APIProxy.settings().getLocationCityId());
+    //        get(ConstantHost.MENPIAO_BASE_URL, base, responseHandler);
+    //    }
 
     public static void getSceneryChannnelData(Hashtable optional, AsyncHttpResponseHandler responseHandler) {
         RequestParams base = buildBaseParams();
@@ -268,16 +228,15 @@ public class FFRestClient {
         get(base, responseHandler);
     }
 
-//    public static void getUserIsLocalData(JsonHttpResponseHandler responseHandler) {
-//        Hashtable table = new Hashtable();
-//        table.put("qt", "scope_local");
-//        table.put("cuid", APIProxy.sys().getCuid());
-//        table.put("c", APIProxy.settings().getLocationCityId() + "");
-//        RequestParams params = new RequestParams();
-//        buildOptinal(table, params);
-//        get(params, responseHandler);
-//    }
-
+    //    public static void getUserIsLocalData(JsonHttpResponseHandler responseHandler) {
+    //        Hashtable table = new Hashtable();
+    //        table.put("qt", "scope_local");
+    //        table.put("cuid", APIProxy.sys().getCuid());
+    //        table.put("c", APIProxy.settings().getLocationCityId() + "");
+    //        RequestParams params = new RequestParams();
+    //        buildOptinal(table, params);
+    //        get(params, responseHandler);
+    //    }
 
     public static void getSceneryAroundData(Hashtable optional, AsyncHttpResponseHandler responseHandler) {
         RequestParams base = buildBaseParams();
@@ -317,8 +276,8 @@ public class FFRestClient {
     public static void getOrderInputData(Hashtable optional, AsyncHttpResponseHandler responseHandler) {
         RequestParams base = buildBaseParams();
         base.put("qt", "order_input");
-//        base.put("isLocal_status", StatisticHelper.isLocal_status);
-//        base.put("travel_mode", StatisticHelper.getGlobalTravelMode());
+        //        base.put("isLocal_status", StatisticHelper.isLocal_status);
+        //        base.put("travel_mode", StatisticHelper.getGlobalTravelMode());
         buildOptinal(optional, base);
         get(base, responseHandler);
     }
@@ -326,13 +285,13 @@ public class FFRestClient {
     public static void postOrderData(Hashtable optional, AsyncHttpResponseHandler responseHandler) {
         RequestParams base = buildBaseParams();
         buildOptinal(optional, base);
-        post(null,"order_create", base, responseHandler);
+        post(null, "order_create", base, responseHandler);
     }
 
     public static void postPriceCalculate(Hashtable optional, AsyncHttpResponseHandler responseHandler) {
         RequestParams base = buildBaseParams();
         buildOptinal(optional, base);
-        post(null,"order_calculate", base, responseHandler);
+        post(null, "order_calculate", base, responseHandler);
     }
 
     public static void getOrderPay(Hashtable optional, AsyncHttpResponseHandler responseHandler) {
@@ -363,15 +322,16 @@ public class FFRestClient {
         get(base, responseHandler);
     }
 
-    public static void postPic(Hashtable optional, AsyncHttpResponseHandler responseHandler, File picFile, String contentType) {
+    public static void postPic(Hashtable optional, AsyncHttpResponseHandler responseHandler, File picFile,
+                               String contentType) {
         RequestParams base = buildBaseParams();
         buildOptinal(optional, base);
         try {
             base.put("picData", picFile, contentType);
         } catch (FileNotFoundException e) {
-//            LogUtils.e("scenery", e);
+            //            LogUtils.e("scenery", e);
         }
-        post(null,"scope_addugclive", base, responseHandler);
+        post(null, "scope_addugclive", base, responseHandler);
     }
 
     public static void getRefundInfo(Hashtable optional, AsyncHttpResponseHandler responseHandler) {
@@ -384,8 +344,9 @@ public class FFRestClient {
     public static void postRefundInfo(Hashtable optional, AsyncHttpResponseHandler responseHandler) {
         RequestParams base = buildBaseParams();
         buildOptinal(optional, base);
-        post(null,"order_apply_refund", base, responseHandler);
+        post(null, "order_apply_refund", base, responseHandler);
     }
+
     public static void getFEHttp(String url, JSONObject jsonObject, AsyncHttpResponseHandler responseHandler) {
         RequestParams base = buildBaseParams();
         Iterator<?> it = jsonObject.keys();

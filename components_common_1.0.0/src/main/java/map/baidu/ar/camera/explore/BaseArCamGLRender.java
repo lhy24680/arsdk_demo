@@ -20,7 +20,7 @@ import map.baidu.ar.camera.CamGLRender;
 import map.baidu.ar.camera.GLException;
 import map.baidu.ar.camera.GLPOITexture;
 import map.baidu.ar.camera.POIItem;
-import map.baidu.ar.init.SDKContext;
+import map.baidu.ar.init.ArSdkManager;
 import map.baidu.ar.model.Angle;
 import map.baidu.ar.model.ArInfo;
 import map.baidu.ar.utils.DistanceByMcUtils;
@@ -89,7 +89,7 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
         }
 
         BDLocation locData =
-                LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+                LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
                         .getLastKnownLocation();
         // 定位坐标
         //        try {
@@ -97,7 +97,7 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
             mX = locData.getLongitude();
             mY = locData.getLatitude();
         } else {
-//            MToast.show(mContext, "暂时无法获取您的位置");
+            //            MToast.show(mContext, "暂时无法获取您的位置");
             return;
         }
         if (selectPois == null) {
@@ -132,13 +132,14 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
                     int y = (int) (mpoiTextture.getPointXY()[1]);
                     if (width == 0 || height == 0) {
                         width =
-                                (int) ResourceUtil.getDimension(mContext,ResourceUtil.getDimenId(mContext,"ar_poi_width"));
-                        height = (int) ResourceUtil.getDimension(mContext,ResourceUtil.getDimenId(mContext,
+                                (int) ResourceUtil
+                                        .getDimension(mContext, ResourceUtil.getDimenId(mContext, "ar_poi_width"));
+                        height = (int) ResourceUtil.getDimension(mContext, ResourceUtil.getDimenId(mContext,
                                 "ar_poi_height"));
                     }
                     if (!mpoiTextture.getArInfo().isShowInAr() || !(-width < x && x < mSurfaceWidth + width
-                                                                           && -height < y
-                                                                           && y < mSurfaceHeight + height)) {
+                                                                            && -height < y
+                                                                            && y < mSurfaceHeight + height)) {
                         continue;
                     }
                     if (mPoiItems.size() <= j) {
@@ -147,7 +148,6 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
                     setMargin(mpoiTextture, mPoiItems.get(j), mOnSelectNodeListener, j);
                     j++;
                 }
-//                mRlCamview.setVisibility(View.VISIBLE);  //new klc 可删除
                 for (int k = j; k < mPoiItems.size(); k++) {
                     mPoiItems.get(k).setVisibility(View.GONE);
                 }
@@ -166,7 +166,7 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
         // 给GL模型设值
         double screenPoint = Angle.corrAngle(-Math.toDegrees(remapValue[0]));
         itemGLPoi.setAzimuth(arPoi.getmAzimuth(new Angle(screenPoint - 20, screenPoint + 20)));
-//        Log.e("moveItem", " screenPoint = " + screenPoint);
+        //        Log.e("moveItem", " screenPoint = " + screenPoint);
         itemGLPoi.setmAzimuthX(arPoi.getmAzimuthX());
         itemGLPoi.setSensorState(remapValue[1], remapValue[0], remapValue[2]);
         mPoiList.get(k).setArInfo(arPoi);
@@ -192,11 +192,11 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
      */
     private void setPOITextSize(double distance, POIItem poiItem) throws Exception {
         if (padding == 0) {
-            padding = (int) ResourceUtil.getDimension(mContext,ResourceUtil.getDimenId(mContext,
+            padding = (int) ResourceUtil.getDimension(mContext, ResourceUtil.getDimenId(mContext,
                     "ar_poi_item_padding"));
         }
-        if(textWidth == 0){
-            textWidth = (int) ResourceUtil.getDimension(mContext,ResourceUtil.getDimenId(mContext,
+        if (textWidth == 0) {
+            textWidth = (int) ResourceUtil.getDimension(mContext, ResourceUtil.getDimenId(mContext,
                     "ar_poi_item_text_width"));
         }
         TextView poiItemName = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext, "poi_item_name"));
@@ -239,9 +239,6 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
         poiItemRl.setPadding(repadding, repadding, repadding, repadding);
     }
 
-
-
-
     /**
      * 通过GLPOITexture计算出的屏幕坐标 ，对item进行边距设置
      *
@@ -252,9 +249,7 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
     private void setMargin(final GLPOITexture mpoiTextture, final POIItem poiItem,
                            final ArPageListener onSelectNodeListener, int j) {
         if (mpoiTextture == null || mpoiTextture.getArInfo() == null) {
-            if (poiItem != null) {
-                poiItem.setVisibility(View.GONE);
-            }
+            poiItem.setVisibility(View.GONE);
             return;
         }
         final ArInfo arInfo = mpoiTextture.getArInfo();
@@ -263,7 +258,7 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
         int width = Math.max(poiItem.getWidth(), poiItem.getVertex()[2]);
         int height = poiItem.getHeight();
         if (!arInfo.isShowInAr() || !(-width < x && x < mSurfaceWidth + width
-                && -height < y && y < mSurfaceHeight + height)) {
+                                              && -height < y && y < mSurfaceHeight + height)) {
             poiItem.setVisibility(View.GONE);
             return;
         }
@@ -292,9 +287,7 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
             setPOITextSize(arInfo.getDistance(mX, mY), poiItem);
         } catch (Exception e) {
             e.getMessage();
-            if (poiItem != null) {
-                poiItem.setVisibility(View.GONE);
-            }
+            poiItem.setVisibility(View.GONE);
         }
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) poiItem.getLayoutParams();
 
@@ -311,7 +304,9 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
         // .getVertex
         //                ()[3],)
 
-        //        if (width != 0 && height != 0 && -width < x && x < mSurfaceWidth && -height < y && y < mSurfaceHeight
+        //        if (width != 0 && height != 0 && -width < x && x < mSurfaceWidth && -height < y && y <
+        // mSurfaceHeight
+
         //                && i > 0) {
         //            // 取前面一个方形的4个角
         //
@@ -333,7 +328,6 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
         mpoiTextture.setShowInScreen(width, height);
         poiItem.setVertex(vertexs);
         poiItem.setLayoutParams(lp);
-
     }
 
     private boolean isNoPoiInScreen(ArrayList<GLPOITexture> arPois) {

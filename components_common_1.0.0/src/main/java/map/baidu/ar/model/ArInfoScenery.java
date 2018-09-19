@@ -5,7 +5,7 @@ import com.baidu.location.BDLocation;
 import java.util.ArrayList;
 
 import map.baidu.ar.data.IAoiInfo;
-import map.baidu.ar.init.SDKContext;
+import map.baidu.ar.init.ArSdkManager;
 import map.baidu.ar.utils.AoiDistanceHelper;
 import map.baidu.ar.utils.INoProGuard;
 import map.baidu.ar.utils.ListUtils;
@@ -15,9 +15,9 @@ import map.baidu.ar.utils.callback.SafeTuple;
 import map.baidu.ar.utils.callback.Tuple;
 
 /**
- * Created by zhujingsi on 2017/6/6.
+ * Ar景区 info
  */
-public class ArInfoScenery implements IAoiInfo, INoProGuard{
+public class ArInfoScenery implements IAoiInfo, INoProGuard {
 
     private static final int FAR_DISTANCE_INTERVAL = 5000;
     // 子景点集合
@@ -27,7 +27,6 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard{
     // aoi面
     private ArrayList<float[]> aois;
     private static final double AOI_NEAR = 100;
-
 
     public ArPoiScenery getFather() {
         return father;
@@ -55,7 +54,6 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard{
         }
     }
 
-
     @Override
     public ArrayList<ArPoiScenery> getSon() {
         return son;
@@ -64,7 +62,6 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard{
     public void setSon(ArrayList<ArPoiScenery> son) {
         this.son = son;
     }
-
 
     /**
      * 判断用户在不在景区内
@@ -76,23 +73,24 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard{
         if (aois == null || aois.size() == 0) {
             return false;
         }
-        int x, y;
-        BDLocation bdLocation = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+        int x;
+        int y;
+        BDLocation bdLocation = LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
                 .getLastKnownLocation();
         if (bdLocation != null) {
-                        x = (int) (bdLocation.getLongitude());
-                        y = (int) (bdLocation.getLatitude());
-                    } else {
-                        return false;
-                    }
-//        LocationManager.LocData locData = LocUtil.getCurLocation();
-//        if (locData != null) {
-//            x = (int) (locData.longitude);
-//            y = (int) (locData.latitude);
-//        } else {
-////            MToast.show(getContext(), "暂时无法获取您的位置");
-//            return false;
-//        }
+            x = (int) (bdLocation.getLongitude());
+            y = (int) (bdLocation.getLatitude());
+        } else {
+            return false;
+        }
+        //        LocationManager.LocData locData = LocUtil.getCurLocation();
+        //        if (locData != null) {
+        //            x = (int) (locData.longitude);
+        //            y = (int) (locData.latitude);
+        //        } else {
+        //           MToast.show(getContext(), "暂时无法获取您的位置");
+        //            return false;
+        //        }
         return getIsInAoi(x, y);
     }
 
@@ -134,6 +132,7 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard{
      * @param points       坐标点集合
      * @param touchStartX0 点击的x轴坐标值
      * @param touchStartY0 点击
+     *
      * @return
      */
     private boolean isInView(float[] points, float touchStartX0, float touchStartY0) {
@@ -142,29 +141,35 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard{
             int y = 2;
             for (int i = 0; i < points.length - 2; i += 2) {
                 if ((points[i] > touchStartX0 && touchStartX0 > points[i + 2] && touchStartY0 > points[i + 1]
-                        && touchStartY0 > points[i + 3]) || (points[i] < touchStartX0
-                        && touchStartX0 < points[i + 2] && touchStartY0 > points[i + 1]
-                        && touchStartY0 > points[i + 3])) {
+                             && touchStartY0 > points[i + 3]) || (points[i] < touchStartX0
+                                                                          && touchStartX0 < points[i + 2]
+                                                                          && touchStartY0 > points[i + 1]
+                                                                          && touchStartY0 > points[i + 3])) {
 
                     x++;
                 }
                 if ((points[i + 1] > touchStartY0 && touchStartY0 > points[i + 3] && touchStartX0 > points[i]
-                        && touchStartX0 > points[i + 2]) || (points[i + 1] < touchStartY0
-                        && touchStartY0 < points[i + 3] && touchStartX0 > points[i]
-                        && touchStartX0 > points[i + 2])) {
+                             && touchStartX0 > points[i + 2]) || (points[i + 1] < touchStartY0
+                                                                          && touchStartY0 < points[i + 3]
+                                                                          && touchStartX0 > points[i]
+                                                                          && touchStartX0 > points[i + 2])) {
                     y++;
                 }
             }
             if ((points[0] > touchStartX0 && touchStartX0 > points[points.length - 2] && touchStartY0 > points[1]
-                    && touchStartY0 > points[points.length - 1]) || (points[0] < touchStartX0
-                    && touchStartX0 < points[points.length - 2] && touchStartY0 > points[1]
-                    && touchStartY0 > points[points.length - 1])) {
+                         && touchStartY0 > points[points.length - 1]) || (points[0] < touchStartX0
+                                                                                  && touchStartX0 < points[points.length
+                    - 2] && touchStartY0 > points[1]
+                                                                                  && touchStartY0 > points[points.length
+                    - 1])) {
                 x++;
             }
             if ((points[1] > touchStartY0 && touchStartY0 > points[points.length - 1] && touchStartX0 > points[0]
-                    && touchStartX0 > points[points.length - 2]) || (points[1] < touchStartY0
-                    && touchStartY0 < points[points.length - 1] && touchStartX0 > points[0]
-                    && touchStartX0 > points[points.length - 2])) {
+                         && touchStartX0 > points[points.length - 2]) || (points[1] < touchStartY0
+                                                                                  && touchStartY0 < points[points.length
+                    - 1] && touchStartX0 > points[0]
+                                                                                  && touchStartX0 > points[points.length
+                    - 2])) {
                 y++;
             }
             if (1 == x % 2 && 1 == y % 2) {
@@ -179,7 +184,7 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard{
     private SafeTuple<Point, Boolean> mNotFarCache;
 
     boolean isNotFar() {
-        BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+        BDLocation location = LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
                 .getLastKnownLocation();
         if (location == null) {
             return true;

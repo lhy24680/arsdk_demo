@@ -13,6 +13,7 @@ import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiDetailSearchResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiNearbySearchOption;
 import com.baidu.mapapi.search.poi.PoiResult;
@@ -37,7 +38,7 @@ import map.baidu.ar.http.JsonHttpResponseHandler;
 import map.baidu.ar.http.RequestParams;
 import map.baidu.ar.http.client.ConstantHost;
 import map.baidu.ar.http.client.FFRestClient;
-import map.baidu.ar.init.SDKContext;
+import map.baidu.ar.init.ArSdkManager;
 import map.baidu.ar.model.ArInfoScenery;
 import map.baidu.ar.model.PoiInfoImpl;
 import map.baidu.ar.utils.LocSdkClient;
@@ -56,7 +57,7 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
     public static List<PoiInfoImpl> poiInfos; // 探索
     private PoiSearch mPoiSearch = null;
     private LatLng center = new LatLng(40.047854, 116.313459);
-    int radius = 500;//500米半径
+    int radius = 500; //500米半径
     private int loadIndex = 0;
 
     @Override
@@ -101,7 +102,7 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
                                 .valueOf(location.getLatitude()), Toast.LENGTH_SHORT).show();
                 RequestParams params = new RequestParams();
                 params.put("qt", "scope_v2_arguide");
-                params.put("uid", "2fd2beabe34a80517adbd220");
+                params.put("uid", "2a7a25ecf9cf13636d3e1bad"); // 更换不同景区的uid，进入相应景区ar视图
                 params.put("ver", 2);
                 FFRestClient.get(ConstantHost.SCOPE_URL, params, new JsonHttpResponseHandler() {
                     @Override
@@ -142,7 +143,7 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
             // 识楼功能
             case R.id.app_explore:
                 BDLocation loc =
-                        LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+                        LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
                                 .getLastKnownLocation();
                 int x;
                 int y;
@@ -261,6 +262,11 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
             Toast.makeText(this, result.getName() + ": " + result.getAddress(), Toast.LENGTH_SHORT)
                     .show();
         }
+    }
+
+    @Override
+    public void onGetPoiDetailResult(PoiDetailSearchResult poiDetailSearchResult) {
+
     }
 
     @Override

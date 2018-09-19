@@ -25,7 +25,9 @@ import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.model.PoiInfoImpl;
 import map.baidu.ar.utils.AsyncImageLoader;
 
-
+/**
+ * 相机渲染基类
+ */
 public class CamGLRender implements GLSurfaceView.Renderer {
 
     private static final String TAG = CamGLRender.class.getName();
@@ -40,9 +42,7 @@ public class CamGLRender implements GLSurfaceView.Renderer {
     protected GLCameraTexture mGLCameraTexture;
     // 丢到模型里算出世界坐标转换屏幕坐标的textture
     protected ArrayList<GLPOITexture> mPoiList = new ArrayList<>();
-
     protected SurfaceTexture mSurfaceTexture;
-
     protected Camera mCamera;
     protected int mSurfaceWidth;
     protected int mSurfaceHeight;
@@ -64,6 +64,7 @@ public class CamGLRender implements GLSurfaceView.Renderer {
     protected int height;
     protected boolean shouldTakePic;
     protected ArChangeListener mArChangeListener;
+
     public String getFloorName() {
         return floorName;
     }
@@ -129,7 +130,7 @@ public class CamGLRender implements GLSurfaceView.Renderer {
      *
      * @param remapValue           硬件返回的屏幕坐标x,y,z
      * @param inflater
-     * @param rlCamview           父view
+     * @param rlCamview            父view
      * @param onSelectNodeListener poi的点击事件
      * @param arPoiList            poi对象集合
      */

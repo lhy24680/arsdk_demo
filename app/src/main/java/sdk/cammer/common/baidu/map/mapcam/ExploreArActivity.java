@@ -39,7 +39,7 @@ public class ExploreArActivity extends FragmentActivity implements ArPageListene
     }
 
     private void initView() {
-        mMessageTv = (TextView)  findViewById(R.id.ar_page_message);
+        mMessageTv = (TextView) findViewById(R.id.ar_page_message);
         camRl = (RelativeLayout) findViewById(R.id.cam_rl);
         mCamGLView = (BaseArCamGLView) LayoutInflater.from(this).inflate(R.layout.layout_explore_cam_view, null);
         mCamGLView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -68,7 +68,7 @@ public class ExploreArActivity extends FragmentActivity implements ArPageListene
     @Override
     public void onPause() {
         super.onPause();
-//        finishCamInternal();
+        //        finishCamInternal();
 
     }
 
@@ -79,17 +79,21 @@ public class ExploreArActivity extends FragmentActivity implements ArPageListene
         mSensor.startSensor();
     }
 
+    /**
+     * 传感器位置监听类
+     */
     private class HoldPositionListenerImp implements SimpleSensor.OnHoldPositionListener {
         @Override
         public void onOrientationWithRemap(float[] remapValue) {
-            if (mCamGLView != null && mArPoiItemRl != null && arExploreResponse != null ) {
+            if (mCamGLView != null && mArPoiItemRl != null && arExploreResponse != null) {
                 if (arExploreResponse.getBuildings() == null) {
                     mArPoiItemRl.setVisibility(View.GONE);
-//                    mMessageTv.setText("附近没有可识别的楼宇");
+                    //                    mMessageTv.setText("附近没有可识别的楼宇");
                 } else {
                     // 在景区则传入子点集合
                     mCamGLView.setBaseArSensorState(remapValue, getLayoutInflater(), mMessageTv,
-                            mArPoiItemRl, ExploreArActivity.this, arExploreResponse.getBuildings(), ExploreArActivity.this);
+                            mArPoiItemRl, ExploreArActivity.this, arExploreResponse.getBuildings(),
+                            ExploreArActivity.this);
                     mArPoiItemRl.setVisibility(View.VISIBLE);
                 }
             }
@@ -132,7 +136,6 @@ public class ExploreArActivity extends FragmentActivity implements ArPageListene
     @Override
     public void noPoiInScreen(boolean isNoPoiInScreen) {
     }
-
 
     @Override
     public void onDestroy() {

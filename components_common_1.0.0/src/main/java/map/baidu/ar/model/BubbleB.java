@@ -3,10 +3,6 @@ package map.baidu.ar.model;
 
 import map.baidu.ar.utils.INoProGuard;
 
-/**
- * Created by zhujingsi on 2017/6/6.
- */
-
 public class BubbleB implements INoProGuard {
     // 文本
     private String content;

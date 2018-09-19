@@ -1,21 +1,3 @@
-/*
-    Android Asynchronous Http Client
-    Copyright (c) 2011 James Smith <james@loopj.com>
-    http://loopj.com
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
-
 package map.baidu.ar.http;
 
 import java.io.IOException;
@@ -43,7 +25,8 @@ public class AsyncHttpRequest implements Runnable {
     private boolean cancelIsNotified = false;
     private boolean isFinished = false;
 
-    public AsyncHttpRequest(AbstractHttpClient client, HttpContext context, HttpUriRequest request, ResponseHandlerInterface responseHandler) {
+    public AsyncHttpRequest(AbstractHttpClient client, HttpContext context, HttpUriRequest request,
+                            ResponseHandlerInterface responseHandler) {
         this.client = client;
         this.context = context;
         this.request = request;
@@ -112,8 +95,10 @@ public class AsyncHttpRequest implements Runnable {
                     makeRequest();
                     return;
                 } catch (UnknownHostException e) {
-                    // switching between WI-FI and mobile data networks can cause a retry which then results in an UnknownHostException
-                    // while the WI-FI is initialising. The retry logic will be invoked here, if this is NOT the first retry
+                    // switching between WI-FI and mobile data networks can cause a retry which then results in an
+                    // UnknownHostException
+                    // while the WI-FI is initialising. The retry logic will be invoked here, if this is NOT the
+                    // first retry
                     // (to assist in genuine cases of unknown host) which seems better than outright failure
                     cause = new IOException("UnknownHostException exception: " + e.getMessage());
                     retry = (executionCount > 0) && retryHandler.retryRequest(cause, ++executionCount, context);
@@ -155,8 +140,9 @@ public class AsyncHttpRequest implements Runnable {
     private synchronized void sendCancelNotification() {
         if (!isFinished && isCancelled && !cancelIsNotified) {
             cancelIsNotified = true;
-            if (responseHandler != null)
+            if (responseHandler != null) {
                 responseHandler.sendCancelMessage();
+            }
         }
     }
 

@@ -6,7 +6,7 @@ import android.opengl.Matrix;
 import static android.opengl.GLES11Ext.GL_TEXTURE_EXTERNAL_OES;
 
 /**
- * Created by xingdaming on 15/12/28.
+ * 相机配置
  */
 public class GLCameraTexture {
 
@@ -41,15 +41,15 @@ public class GLCameraTexture {
 
         mTexture = -1;
 
-        float ViewRatio = (float) mSurfaceWidth / mSurfaceHeight;
-        float CamRatio = (float) mCameraWidth / mCameraHeight;
+        float viewRatio = (float) mSurfaceWidth / mSurfaceHeight;
+        float camRatio = (float) mCameraWidth / mCameraHeight;
 
         float left = -1.0f;
         float right = 1.0f;
         float bottom = -1.0f;
         float top = 1.0f;
 
-        float ratio = CamRatio / ViewRatio;
+        float ratio = camRatio / viewRatio;
 
         if (ratio >= 1.0) {
             left = -1.0f / ratio;

@@ -3,7 +3,6 @@ apply plugin: 'com.android.library'
 dependencies {
     compile fileTree(dir: 'com_libs', include: ['*.jar'])
     provided fileTree(dir: 'libs', include: ['*.jar'])
-
 }
 
 android {
@@ -18,6 +17,11 @@ android {
         versionName "1.0"
 
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
 
     buildTypes {
         release {

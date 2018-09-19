@@ -1,21 +1,3 @@
-/*
-    Android Asynchronous Http Client
-    Copyright (c) 2011 James Smith <james@loopj.com>
-    http://loopj.com
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
-
 package map.baidu.ar.http;
 
 import java.io.IOException;
@@ -79,8 +61,8 @@ import android.util.Log;
  * </pre>
  */
 public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterface {
-    private static final String LOG_TAG = "AsyncHttpResponseHandler";
 
+    private static String LOG_TAG = "AsyncHttpResponseHandler";
     protected static final int SUCCESS_MESSAGE = 0;
     protected static final int FAILURE_MESSAGE = 1;
     protected static final int START_MESSAGE = 2;
@@ -153,7 +135,6 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
             // Create a handler on current thread to submit tasks
             handler = new ResponderHandler(this);
         } else if (value && handler != null) {
-            // TODO: Consider adding a flag to remove all queued messages.
             handler = null;
         }
 
@@ -164,6 +145,7 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
      * Sets the charset for the response string. If not set, the default is UTF-8.
      *
      * @param charset to be used for the response string.
+     *
      * @see <a href="http://docs.oracle.com/javase/7/docs/api/java/nio/charset/Charset.html">Charset</a>
      */
     public void setCharset(final String charset) {
@@ -189,7 +171,8 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
      * @param totalSize    total size of file
      */
     public void onProgress(int bytesWritten, int totalSize) {
-        Log.v(LOG_TAG, String.format("Progress %d from %d (%2.0f%%)", bytesWritten, totalSize, (totalSize > 0) ? (bytesWritten * 1.0 / totalSize) * 100 : -1));
+        Log.v(LOG_TAG, String.format("Progress %d from %d (%2.0f%%)", bytesWritten, totalSize,
+                (totalSize > 0) ? (bytesWritten * 1.0 / totalSize) * 100 : -1));
     }
 
     /**
@@ -237,31 +220,31 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
         Log.d(LOG_TAG, "Request got cancelled");
     }
 
-    final public void sendProgressMessage(int bytesWritten, int bytesTotal) {
-        sendMessage(obtainMessage(PROGRESS_MESSAGE, new Object[]{bytesWritten, bytesTotal}));
+    public void sendProgressMessage(int bytesWritten, int bytesTotal) {
+        sendMessage(obtainMessage(PROGRESS_MESSAGE, new Object[] {bytesWritten, bytesTotal}));
     }
 
-    final public void sendSuccessMessage(int statusCode, Header[] headers, byte[] responseBytes) {
-        sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, headers, responseBytes}));
+    public void sendSuccessMessage(int statusCode, Header[] headers, byte[] responseBytes) {
+        sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[] {statusCode, headers, responseBytes}));
     }
 
-    final public void sendFailureMessage(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
-        sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[]{statusCode, headers, responseBody, throwable}));
+    public void sendFailureMessage(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
+        sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[] {statusCode, headers, responseBody, throwable}));
     }
 
-    final public void sendStartMessage() {
+    public void sendStartMessage() {
         sendMessage(obtainMessage(START_MESSAGE, null));
     }
 
-    final public void sendFinishMessage() {
+    public void sendFinishMessage() {
         sendMessage(obtainMessage(FINISH_MESSAGE, null));
     }
 
-    final public void sendRetryMessage(int retryNo) {
-        sendMessage(obtainMessage(RETRY_MESSAGE, new Object[]{retryNo}));
+    public void sendRetryMessage(int retryNo) {
+        sendMessage(obtainMessage(RETRY_MESSAGE, new Object[] {retryNo}));
     }
 
-    final public void sendCancelMessage() {
+    public void sendCancelMessage() {
         sendMessage(obtainMessage(CANCEL_MESSAGE, null));
     }
 
@@ -281,9 +264,11 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
             case FAILURE_MESSAGE:
                 response = (Object[]) message.obj;
                 if (response != null && response.length >= 4) {
-                    onFailure((Integer) response[0], (Header[]) response[1], (byte[]) response[2], (Throwable) response[3]);
-                } else {
-                    Log.e(LOG_TAG, "FAILURE_MESSAGE didn't got enough params");
+                    onFailure((Integer) response[0], (Header[]) response[1], (byte[]) response[2],
+                            (Throwable) response[3]);
+                    //                } else {
+                    //                    //                    Log.e(LOG_TAG, "FAILURE_MESSAGE didn't got enough
+                    // params");
                 }
                 break;
             case START_MESSAGE:
@@ -306,13 +291,16 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
                 break;
             case RETRY_MESSAGE:
                 response = (Object[]) message.obj;
-                if (response != null && response.length == 1)
+                if (response != null && response.length == 1) {
                     onRetry((Integer) response[0]);
-                else
+                } else {
                     Log.e(LOG_TAG, "RETRY_MESSAGE didn't get enough params");
+                }
                 break;
             case CANCEL_MESSAGE:
                 onCancel();
+                break;
+            default:
                 break;
         }
     }
@@ -347,6 +335,7 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
      *
      * @param responseMessageId   constant to identify Handler message
      * @param responseMessageData object to be passed to message receiver
+     *
      * @return Message instance, should not be null
      */
     protected Message obtainMessage(int responseMessageId, Object responseMessageData) {
@@ -373,7 +362,8 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
             // additional cancellation check as getResponseData() can take non-zero time to process
             if (!Thread.currentThread().isInterrupted()) {
                 if (status.getStatusCode() >= 300) {
-                    sendFailureMessage(status.getStatusCode(), response.getAllHeaders(), responseBody, new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()));
+                    sendFailureMessage(status.getStatusCode(), response.getAllHeaders(), responseBody,
+                            new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()));
                 } else {
                     sendSuccessMessage(status.getStatusCode(), response.getAllHeaders(), responseBody);
                 }
@@ -385,7 +375,9 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
      * Returns byte array of response HttpEntity contents
      *
      * @param entity can be null
+     *
      * @return response entity body or null
+     *
      * @throws IOException if reading entity or creating byte array failed
      */
     byte[] getResponseData(HttpEntity entity) throws IOException {
@@ -402,7 +394,8 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
                     ByteArrayBuffer buffer = new ByteArrayBuffer(buffersize);
                     try {
                         byte[] tmp = new byte[BUFFER_SIZE];
-                        int l, count = 0;
+                        int l = 0;
+                        int count = 0;
                         // do not send messages if request has been cancelled
                         while ((l = instream.read(tmp)) != -1 && !Thread.currentThread().isInterrupted()) {
                             count += l;

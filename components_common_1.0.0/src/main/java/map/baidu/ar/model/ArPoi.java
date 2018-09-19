@@ -3,23 +3,19 @@ package map.baidu.ar.model;
 import com.baidu.location.BDLocation;
 
 import map.baidu.ar.exception.LocationGetFailException;
-import map.baidu.ar.init.SDKContext;
+import map.baidu.ar.init.ArSdkManager;
 import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.INoProGuard;
 import map.baidu.ar.utils.LocSdkClient;
 import map.baidu.ar.utils.Point;
 
-/**
- * Created by zhujingsi on 2017/6/6.
- */
-
 public class ArPoi implements INoProGuard {
     // 必传
     private String uid;
     // 坐标x
-    private String pt_x;
+    private String ptX;
     // 坐标y
-    private String pt_y;
+    private String ptY;
     // 权重
     private int rank;
 
@@ -51,12 +47,13 @@ public class ArPoi implements INoProGuard {
 
     // 获取距离
     public double getDistance() throws LocationGetFailException {
-        BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+        BDLocation location = LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
                 .getLastKnownLocation();
         if (location != null) {
             double myX = location.getLongitude();
             double myY = location.getLatitude();
-            return  DistanceByMcUtils.getDistanceByLL(new Point(myX, myY), new Point(Double.valueOf(pt_x), Double.valueOf(pt_y)));
+            return DistanceByMcUtils.getDistanceByLL(new Point(myX, myY), new Point(Double.valueOf(ptX), Double
+                    .valueOf(ptY)));
         } else {
             throw new LocationGetFailException();
         }
@@ -64,15 +61,15 @@ public class ArPoi implements INoProGuard {
 
     // 获取距离文本
     public String getDistanceText() {
-        BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+        BDLocation location = LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
                 .getLastKnownLocation();
         if (location == null) {
             return "";
         }
         double myX = location.getLongitude();
         double myY = location.getLatitude();
-        double mDistance =  DistanceByMcUtils.getDistanceByLLToText(new Point(myX, myY),
-                new Point(Double.valueOf(pt_x), Double.valueOf(pt_y)));
+        double mDistance = DistanceByMcUtils.getDistanceByLLToText(new Point(myX, myY),
+                new Point(Double.valueOf(ptX), Double.valueOf(ptY)));
         if (mDistance > 1000) {
             return ((int) mDistance / 100) / 10.0f + "km";
         }
@@ -88,7 +85,7 @@ public class ArPoi implements INoProGuard {
     }
 
     public Point getGeoPoint() {
-        return new Point(Double.valueOf(pt_y), Double.valueOf(pt_x));
+        return new Point(Double.valueOf(ptY), Double.valueOf(ptX));
     }
 
     public float getWeight() {
@@ -123,7 +120,7 @@ public class ArPoi implements INoProGuard {
      */
     public boolean withinMeters(int myX, int myY, int n) {
         double azimuth =
-                Math.toDegrees(Math.atan2(Math.abs(Double.valueOf(pt_y) - myY), Math.abs(Double.valueOf(pt_x) - myX)));
+                Math.toDegrees(Math.atan2(Math.abs(Double.valueOf(ptY) - myY), Math.abs(Double.valueOf(ptX) - myX)));
         if (azimuth < n) {
             return true;
         } else {
@@ -166,20 +163,20 @@ public class ArPoi implements INoProGuard {
         isDuerNear = duerNear;
     }
 
-    public double getPt_x() {
-        return Double.valueOf(pt_x);
+    public double getPtX() {
+        return Double.valueOf(ptX);
     }
 
-    public void setPt_x(String pt_x) {
-        this.pt_x = pt_x;
+    public void setPtX(String ptX) {
+        this.ptX = ptX;
     }
 
-    public double getPt_y() {
-        return Double.valueOf(pt_y);
+    public double getPtY() {
+        return Double.valueOf(ptY);
     }
 
-    public void setPt_y(String pt_y) {
-        this.pt_y = pt_y;
+    public void setPtY(String ptY) {
+        this.ptY = ptY;
     }
 
     public int getRank() {
@@ -231,7 +228,7 @@ public class ArPoi implements INoProGuard {
     }
 
     public void setmAzimuth(double myX, double myY) {
-        double azimuth = Math.toDegrees(Math.atan2(getPt_y() - myY, getPt_x() - myX)) + 90;
+        double azimuth = Math.toDegrees(Math.atan2(getPtY() - myY, getPtX() - myX)) + 90;
         mAzimuth = (float) azimuth;
     }
 
@@ -251,7 +248,7 @@ public class ArPoi implements INoProGuard {
                 dodgeLevel = -1;
                 return true;
             } else {
-                dodgeLevel = - 999;
+                dodgeLevel = -999;
                 return false;
             }
         }
@@ -260,7 +257,7 @@ public class ArPoi implements INoProGuard {
             dodgeLevel = reFloor / Math.abs(reFloor);
             return true;
         } else {
-            dodgeLevel = - 999;
+            dodgeLevel = -999;
             return false;
         }
     }
@@ -272,6 +269,5 @@ public class ArPoi implements INoProGuard {
     public void resetDodgeLevel() {
         dodgeLevel = 0;
     }
-
 
 }

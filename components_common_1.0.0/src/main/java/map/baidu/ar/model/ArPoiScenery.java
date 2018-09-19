@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import map.baidu.ar.data.IMapPoiItem;
 import map.baidu.ar.detail.IMediaControllerData;
 import map.baidu.ar.exception.LocationGetFailException;
-import map.baidu.ar.init.SDKContext;
+import map.baidu.ar.init.ArSdkManager;
 import map.baidu.ar.topimage.HeadImage;
 import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.INoProGuard;
@@ -53,13 +53,13 @@ public class ArPoiScenery implements IMapPoiItem, INoProGuard, IMediaControllerD
 
     // 获取距离
     public double getDistance() throws LocationGetFailException {
-        BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+        BDLocation location = LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
                 .getLastKnownLocation();
         if (location != null) {
             double myX = location.getLongitude();
             double myY = location.getLatitude();
-            return  DistanceByMcUtils.getDistanceByLL(new Point(myX,myY), new Point( point
-                    .getPoint_x(),point.getPoint_y()));
+            return DistanceByMcUtils.getDistanceByLL(new Point(myX, myY), new Point(point
+                    .getPoint_x(), point.getPoint_y()));
         } else {
             throw new LocationGetFailException();
         }
@@ -84,14 +84,14 @@ public class ArPoiScenery implements IMapPoiItem, INoProGuard, IMediaControllerD
 
     // 获取距离文本
     public String getDistanceText() {
-        BDLocation location = LocSdkClient.getInstance(SDKContext.getInstance().getAppContext()).getLocationStart()
+        BDLocation location = LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
                 .getLastKnownLocation();
         if (location == null) {
             return "";
         }
         double myX = location.getLongitude();
         double myY = location.getLatitude();
-        double mDistance =  DistanceByMcUtils.getDistanceByLLToText(new Point(myX, myY),
+        double mDistance = DistanceByMcUtils.getDistanceByLLToText(new Point(myX, myY),
                 new Point(point.getPoint_x(), point.getPoint_y()));
         if (mDistance > 1000) {
             return ((int) mDistance / 100) / 10.0f + "km";

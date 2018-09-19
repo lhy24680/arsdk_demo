@@ -3,10 +3,6 @@ package map.baidu.ar.model;
 
 import map.baidu.ar.utils.INoProGuard;
 
-/**
- * Created by zhujingsi on 2017/6/6.
- */
-
 public class ArGeo implements INoProGuard {
     // 楼块儿坐标集合
     private String pts;

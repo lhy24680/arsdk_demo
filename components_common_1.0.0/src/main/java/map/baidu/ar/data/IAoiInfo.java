@@ -6,7 +6,7 @@ import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.utils.Point;
 
 /**
- * Created by lixiang34 on 2017/6/15.
+ * Aoi面信息
  */
 
 public interface IAoiInfo {

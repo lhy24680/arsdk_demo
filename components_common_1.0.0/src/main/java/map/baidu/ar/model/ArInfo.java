@@ -11,7 +11,7 @@ import map.baidu.ar.utils.Point;
 import map.baidu.ar.utils.callback.Tuple;
 
 /**
- * Created by zhujingsi on 2017/6/6.
+ * Ar识楼 Info
  */
 public class ArInfo implements INoProGuard {
 

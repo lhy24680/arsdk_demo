@@ -57,7 +57,6 @@ public class HttpUtils {
     private static final String HTTP_GET = "GET";
 
     private HttpUtils() {
-        // TODO Auto-generated constructor stub
     }
 
     public interface IAsyHttpCallBack {
@@ -288,7 +287,8 @@ public class HttpUtils {
     }
 
     //预留方法
-    /*public static Bitmap getBitmap(String url) {
+    /*
+    public static Bitmap getBitmap(String url) {
         URL imgUrl = null;
         Bitmap bitmap = null;
         try {
@@ -305,7 +305,8 @@ public class HttpUtils {
             Log.e("", e.getMessage(), e);
         }
         return bitmap;
-    }*/
+    }
+    */
 
     public static void getBytesToFile(String url_path, File file) {
 
@@ -328,7 +329,8 @@ public class HttpUtils {
         return;
     }
 
-    /*private static String changeInputStream(InputStream inputStream,
+    /*
+    private static String changeInputStream(InputStream inputStream,
                                             String encode) {
 
         String jsonString = null;
@@ -351,6 +353,7 @@ public class HttpUtils {
         }
 
         return jsonString;
-    }*/
+    }
+    */
 
 }
