@@ -1,15 +1,13 @@
 package map.baidu.ar.model;
 
-import com.baidu.location.BDLocation;
-
 import java.util.ArrayList;
 
 import map.baidu.ar.data.IAoiInfo;
 import map.baidu.ar.init.ArSdkManager;
 import map.baidu.ar.utils.AoiDistanceHelper;
+import map.baidu.ar.utils.ArBDLocation;
 import map.baidu.ar.utils.INoProGuard;
 import map.baidu.ar.utils.ListUtils;
-import map.baidu.ar.utils.LocSdkClient;
 import map.baidu.ar.utils.Point;
 import map.baidu.ar.utils.callback.SafeTuple;
 import map.baidu.ar.utils.callback.Tuple;
@@ -73,13 +71,12 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard {
         if (aois == null || aois.size() == 0) {
             return false;
         }
-        int x;
-        int y;
-        BDLocation bdLocation = LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
-                .getLastKnownLocation();
+        float x;
+        float y;
+        ArBDLocation bdLocation = ArSdkManager.listener.onGetBDLocation();
         if (bdLocation != null) {
-            x = (int) (bdLocation.getLongitude());
-            y = (int) (bdLocation.getLatitude());
+            x = (float) bdLocation.getLongitude();
+            y = (float) bdLocation.getLatitude();
         } else {
             return false;
         }
@@ -184,8 +181,7 @@ public class ArInfoScenery implements IAoiInfo, INoProGuard {
     private SafeTuple<Point, Boolean> mNotFarCache;
 
     boolean isNotFar() {
-        BDLocation location = LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
-                .getLastKnownLocation();
+        ArBDLocation location = ArSdkManager.listener.onGetBDLocation();
         if (location == null) {
             return true;
         }

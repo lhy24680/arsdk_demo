@@ -9,8 +9,6 @@ import java.util.Map;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.baidu.location.BDLocation;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
@@ -31,9 +29,9 @@ import map.baidu.ar.camera.POIItem;
 import map.baidu.ar.init.ArSdkManager;
 import map.baidu.ar.model.ArPoiScenery;
 import map.baidu.ar.model.PoiInfoImpl;
+import map.baidu.ar.utils.ArBDLocation;
 import map.baidu.ar.utils.CoordinateConverter;
 import map.baidu.ar.utils.DistanceByMcUtils;
-import map.baidu.ar.utils.LocSdkClient;
 import map.baidu.ar.utils.Point;
 import map.baidu.ar.utils.ResourceUtil;
 
@@ -81,9 +79,7 @@ public class FindArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
         }
         // 定位坐标
         try {
-            BDLocation location =
-                    LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
-                            .getLastKnownLocation();
+            ArBDLocation location = ArSdkManager.listener.onGetBDLocation();
             if (location != null) {
 
                 mX = location.getLongitude();
@@ -148,7 +144,7 @@ public class FindArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
             return;
         }
         try {
-            for (int i = 0; mPoiList.size() < 7; i++) {
+            for (int i = 0; mPoiList.size() < 15; i++) {
                 GLPOITexture poi = newPOI();
                 mPoiList.add(poi);
             }
@@ -317,7 +313,8 @@ public class FindArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
             }
         });
         TextView poiDistance = (TextView) poiItem.findViewById(ResourceUtil.getId(mContext, "poi_distance"));
-        poiDistance.setText((int) arPoi.getDistance() + "m");
+//        poiDistance.setText((int) arPoi.getDistance() + "m");
+        poiDistance.setText(arPoi.getDistanceText());
         setPOITextSize(arPoi, poiItem);
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) poiItem.getLayoutParams();
         int x = (int) (mpoiTextture.getPointXY()[0]);

@@ -1,5 +1,6 @@
 package sdk.cammer.common.baidu.map.application;
 
+import com.baidu.location.BDLocation;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
@@ -7,6 +8,8 @@ import android.app.Application;
 import android.widget.Toast;
 import map.baidu.ar.init.ArSdkManager;
 import map.baidu.ar.init.MKGeneralListener;
+import map.baidu.ar.utils.ArBDLocation;
+import sdk.cammer.common.baidu.map.utils.LocSdkClient;
 
 /**
  * Ar sdk application
@@ -46,6 +49,20 @@ public class DemoApplication extends Application {
                 Toast.makeText(DemoApplication.getInstance().getApplicationContext(), "key认证成功", Toast.LENGTH_LONG)
                         .show();
             }
+        }
+
+        @Override
+        public ArBDLocation onGetBDLocation() {
+            BDLocation location =
+                    LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
+                            .getLastKnownLocation();
+            ArBDLocation arBDLocation = new ArBDLocation();
+            if (location == null) {
+                return null;
+            }
+            arBDLocation.setLongitude(location.getLongitude());
+            arBDLocation.setLatitude(location.getLatitude());
+            return arBDLocation;
         }
     }
 

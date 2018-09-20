@@ -1,12 +1,10 @@
 package map.baidu.ar.model;
 
-import com.baidu.location.BDLocation;
-
 import map.baidu.ar.exception.LocationGetFailException;
 import map.baidu.ar.init.ArSdkManager;
+import map.baidu.ar.utils.ArBDLocation;
 import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.INoProGuard;
-import map.baidu.ar.utils.LocSdkClient;
 import map.baidu.ar.utils.Point;
 
 public class ArPoi implements INoProGuard {
@@ -47,8 +45,7 @@ public class ArPoi implements INoProGuard {
 
     // 获取距离
     public double getDistance() throws LocationGetFailException {
-        BDLocation location = LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
-                .getLastKnownLocation();
+        ArBDLocation location = ArSdkManager.listener.onGetBDLocation();
         if (location != null) {
             double myX = location.getLongitude();
             double myY = location.getLatitude();
@@ -61,8 +58,7 @@ public class ArPoi implements INoProGuard {
 
     // 获取距离文本
     public String getDistanceText() {
-        BDLocation location = LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
-                .getLastKnownLocation();
+        ArBDLocation location = ArSdkManager.listener.onGetBDLocation();
         if (location == null) {
             return "";
         }

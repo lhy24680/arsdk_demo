@@ -3,6 +3,8 @@
  */
 package map.baidu.ar.init;
 
+import map.baidu.ar.utils.ArBDLocation;
+
 /**
  * <p>
  * 一般事件通知接口<br>
@@ -17,4 +19,10 @@ public interface MKGeneralListener {
      * @param iError 授权验证码，iError为 300时表示验证失败。
      */
     public void onGetPermissionState(int iError);
+
+    /**
+     * 获取本地坐标
+     * @return ArBDLocation
+     */
+    public ArBDLocation onGetBDLocation();
 }

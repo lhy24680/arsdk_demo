@@ -5,7 +5,6 @@ import com.baidu.lbsapi.auth.LBSAuthManagerListener;
 
 import android.app.Application;
 import android.content.Context;
-import map.baidu.ar.utils.LocSdkClient;
 
 /**
  * ArSdkManager 调度管理类
@@ -15,6 +14,7 @@ public class ArSdkManager {
     private Context appContext;
     private String appKey;
     private static boolean isIllegalARSDKUser = true;
+    public static MKGeneralListener listener;
 
     private ArSdkManager() {
     }
@@ -46,11 +46,12 @@ public class ArSdkManager {
     /**
      * 初始化
      *
-     * @param listener 注册回调事件
+     * @param lis 注册回调事件
      *
      * @return true 执行成功
      */
-    public static boolean initApplication(final Application mContext, final MKGeneralListener listener) {
+    public static boolean initApplication(final Application mContext, final MKGeneralListener lis) {
+        listener = lis;
         LBSAuthManager auth = LBSAuthManager.getInstance(mContext);
         // TODO 确定鉴权 传递"lbs_arsdk" 值
         auth.authenticate(true, "lbs_arsdk", null, new LBSAuthManagerListener() {
@@ -58,7 +59,6 @@ public class ArSdkManager {
             public void onAuthResult(int status, String message) {
                 if (status == 0) {
                     ArSdkManager.getInstance().setAppContext(mContext.getApplicationContext());
-                    LocSdkClient.getInstance(mContext);
                     isIllegalARSDKUser = true;
                     listener.onGetPermissionState(status);
                 } else {

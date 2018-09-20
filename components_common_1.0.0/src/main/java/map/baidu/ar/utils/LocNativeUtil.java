@@ -55,19 +55,25 @@ public class LocNativeUtil {
         }
     }
 
+    private long oldTime = 0;
+
     @SuppressLint("MissingPermission")
     public Location getLocation() {
-
-        if (!checkPermissions(ArSdkManager.getInstance().getAppContext())) {
-            //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
-            return null;
+        // 预防多次调用 每隔十秒请求一次
+        Long nowTime = System.currentTimeMillis();
+        if (nowTime - oldTime > 10000) {
+            oldTime = nowTime;
+            if (!checkPermissions(ArSdkManager.getInstance().getAppContext())) {
+                //    Activity#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for Activity#requestPermissions for more details.
+                return null;
+            }
+            location = locationManager.getLastKnownLocation(provider);
         }
-        location = locationManager.getLastKnownLocation(provider);
         return location;
         //        if (location != null) {
         //            showLocation(location);

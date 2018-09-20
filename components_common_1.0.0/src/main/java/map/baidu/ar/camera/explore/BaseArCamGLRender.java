@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
-import com.baidu.location.BDLocation;
-
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
@@ -23,15 +21,12 @@ import map.baidu.ar.camera.POIItem;
 import map.baidu.ar.init.ArSdkManager;
 import map.baidu.ar.model.Angle;
 import map.baidu.ar.model.ArInfo;
+import map.baidu.ar.utils.ArBDLocation;
 import map.baidu.ar.utils.DistanceByMcUtils;
-import map.baidu.ar.utils.LocSdkClient;
 import map.baidu.ar.utils.Point;
 import map.baidu.ar.utils.ResourceUtil;
 import map.baidu.ar.utils.Task;
 
-/**
- * Created by xingdaming on 15/12/22.
- */
 public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Renderer {
 
     private static final String TAG = BaseArCamGLRender.class.getName();
@@ -87,17 +82,12 @@ public class BaseArCamGLRender extends CamGLRender implements GLSurfaceView.Rend
         if (mCameraWidth <= 0) {
             return;
         }
-
-        BDLocation locData =
-                LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
-                        .getLastKnownLocation();
+        ArBDLocation locData = ArSdkManager.listener.onGetBDLocation();
         // 定位坐标
-        //        try {
         if (locData != null) {
             mX = locData.getLongitude();
             mY = locData.getLatitude();
         } else {
-            //            MToast.show(mContext, "暂时无法获取您的位置");
             return;
         }
         if (selectPois == null) {

@@ -1,18 +1,17 @@
-/*
- * Copyright (C) 2018 Baidu, Inc. All Rights Reserved.
- */
 package map.baidu.ar.utils;
 
 import android.location.Location;
 
+/**
+ * 坐标类
+ */
 public class ArBDLocation {
-    Double xLongitude; // 经度
-    Double xLatitude; // 纬度
-    Double xMLongitude; // 墨卡托经度
-    Double xMLatitude; // 墨卡托纬度
+    double xLongitude; // 经度
+    double xLatitude; // 纬度
+    double xMLongitude; // 墨卡托经度
+    double xMLatitude; // 墨卡托纬度
 
     public ArBDLocation() {
-
     }
 
     public ArBDLocation(Location location) {
@@ -22,11 +21,19 @@ public class ArBDLocation {
         xMLatitude = CoordinateConverter.convertLL2MC(xLongitude, xLatitude).get("y");
     }
 
-    public Double getLongitude() {
+    public double getLongitude() {
         return xMLongitude;
     }
 
-    public Double getLatitude() {
+    public double getLatitude() {
         return xMLatitude;
+    }
+
+    public void setLatitude(double lat) {
+        this.xMLatitude = lat;
+    }
+
+    public void setLongitude(double lon) {
+        this.xMLongitude = lon;
     }
 }

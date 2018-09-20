@@ -28,11 +28,34 @@
             android:layout_height="wrap_content"
     />
 
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <EditText
+                android:id="@+id/custom_category" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="自定义单点测试数据"/>
+        <Button
+                android:id="@+id/app_custom"
+                android:text="@string/app_custom"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+        />
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/app_more_custompoint"
+            android:text="@string/app_custom_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="horizontal">
         <EditText
                 android:id="@+id/category" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-        android:text="航天"/>
+                android:text="航天"/>
         <Button
                 android:id="@+id/app_find"
                 android:text="@string/app_find"
