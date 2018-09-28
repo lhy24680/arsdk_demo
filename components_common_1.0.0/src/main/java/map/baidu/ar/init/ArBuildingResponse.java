@@ -1,4 +1,7 @@
-package sdk.cammer.common.baidu.map.mapcam;
+/*
+ * Copyright (C) 2018 Baidu, Inc. All Rights Reserved.
+ */
+package map.baidu.ar.init;
 
 import java.util.ArrayList;
 
@@ -6,10 +9,10 @@ import map.baidu.ar.model.ArInfo;
 import map.baidu.ar.utils.INoProGuard;
 
 /**
- * Ar探索返回数据解析
+ * Ar返回数据解析
  */
 
-public class ArExploreResponse implements INoProGuard {
+public class ArBuildingResponse implements INoProGuard {
     // 错误提示语
     private String errstr;
     // 错误号

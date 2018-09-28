@@ -41,7 +41,7 @@ public class SceneryGLPOITexture extends GLPOITexture{
         // 屏幕大小投射的参数
         float[] unitMatrix = new float[]{0, 0, mSurfaceWidth, mSurfaceHeight};
         // 算出屏幕坐标
-        pointXY = BGLProjectf(0, 0, -2, modelview, mPMatrix, unitMatrix);
+        pointXY = bGLProjectf(0, 0, -2, modelview, mPMatrix, unitMatrix);
         Log.e("pointXY", "  x = " + pointXY[0] + " y = " + pointXY[1]);
     }
 
@@ -79,7 +79,7 @@ public class SceneryGLPOITexture extends GLPOITexture{
      * @param viewport   屏幕坐标转换
      * @return
      */
-    public float[] BGLProjectf(float objx, float objy, float objz, float[] modelview, float[] projection,
+    public float[] bGLProjectf(float objx, float objy, float objz, float[] modelview, float[] projection,
                                float[] viewport) {
         float[] window_value = new float[3];
         window_value[0] = -9999;

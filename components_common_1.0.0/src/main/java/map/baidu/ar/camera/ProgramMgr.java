@@ -7,10 +7,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-
-/**
- * Created by xingdaming on 15/12/28.
- */
 public class ProgramMgr {
 
     private static final String TAG = ProgramMgr.class.getName();
@@ -185,7 +181,7 @@ public class ProgramMgr {
         int error;
         while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
             Log.e(TAG, op + ": glError " + error);
-            throw new GLException(op + ": glError " + error);
+            //            throw new GLException(op + ": glError " + error);
         }
     }
 

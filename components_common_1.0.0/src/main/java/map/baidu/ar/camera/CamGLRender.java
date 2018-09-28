@@ -192,7 +192,6 @@ public class CamGLRender implements GLSurfaceView.Renderer {
 
             for (int i = 0; i < mPoiList.size(); i++) {
                 mPoiList.get(i).drawMultiTex();
-
             }
 
         } catch (Exception e) {
@@ -210,6 +209,10 @@ public class CamGLRender implements GLSurfaceView.Renderer {
 
     public interface BitmapReadyCallbacks {
         void getCameraBitmap(Bitmap data);
+    }
+
+    public ArrayList<GLPOITexture> getmPoiList() {
+        return mPoiList;
     }
 
     protected Bitmap takeCameraShot(int x, int y, int w, int h, GL10 gl) {

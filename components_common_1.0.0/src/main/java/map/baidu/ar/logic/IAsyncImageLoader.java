@@ -4,6 +4,6 @@ import android.graphics.Bitmap;
 
 public interface IAsyncImageLoader {
 
-    public void onImageLoaded(Bitmap bitmap);
+    void onImageLoaded(Bitmap bitmap);
 
 }

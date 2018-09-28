@@ -4,9 +4,6 @@ import android.opengl.GLES20;
 
 import static android.opengl.GLES11Ext.GL_TEXTURE_EXTERNAL_OES;
 
-/**
- * Created by xingdaming on 15/12/29.
- */
 public class GLUtil {
 
     public static int genTextureOES() {

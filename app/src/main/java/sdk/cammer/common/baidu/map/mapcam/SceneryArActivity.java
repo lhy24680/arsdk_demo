@@ -27,11 +27,6 @@ public class SceneryArActivity extends FragmentActivity implements ArPageListene
     SimpleSensor mSensor;
     private ArInfoScenery mInfo;
     private RelativeLayout mArPoiItemRl;
-    private static final int ISINAOISTATE_NULL = -1;
-    private static final int ISINAOISTATE_TRUE = 1;
-    private static final int ISINAOISTATE_FALSE = 0;
-    // 是否在景区里的状态位（-1为没判断过，0为景区，1为非景区）
-    private int isInAoiState = ISINAOISTATE_NULL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

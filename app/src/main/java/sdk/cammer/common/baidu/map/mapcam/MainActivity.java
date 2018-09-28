@@ -3,10 +3,6 @@ package sdk.cammer.common.baidu.map.mapcam;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.Header;
-import org.json.JSONObject;
-
-import com.baidu.location.BDLocation;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.CityInfo;
 import com.baidu.mapapi.search.core.PoiInfo;
@@ -19,35 +15,31 @@ import com.baidu.mapapi.search.poi.PoiNearbySearchOption;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.poi.PoiSortType;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.TextUtils;
-import android.util.Base64;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import map.baidu.ar.http.JsonHttpResponseHandler;
-import map.baidu.ar.http.RequestParams;
-import map.baidu.ar.http.client.ConstantHost;
-import map.baidu.ar.http.client.FFRestClient;
+import map.baidu.ar.init.ArBuildingResponse;
+import map.baidu.ar.init.ArSceneryResponse;
+import map.baidu.ar.init.ArSdkManager;
+import map.baidu.ar.init.OnGetDataResultListener;
 import map.baidu.ar.model.ArInfoScenery;
 import map.baidu.ar.model.ArLatLng;
 import map.baidu.ar.model.ArPoiInfo;
 import map.baidu.ar.model.PoiInfoImpl;
-import sdk.cammer.common.baidu.map.utils.LocSdkClient;
 
 /**
  * ArSdk主页面 Activity
  */
-public class MainActivity extends Activity implements View.OnClickListener, OnGetPoiSearchResultListener {
+public class MainActivity extends Activity implements View.OnClickListener, OnGetDataResultListener,
+        OnGetPoiSearchResultListener {
 
     private Button mArOperation;
     private Button mArExplore;
@@ -57,9 +49,10 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
     private EditText mEtCategory;
     private EditText mEtCustom;
     public static ArInfoScenery arInfoScenery; // 景区
-    public static ArExploreResponse arExploreResponse; // 识楼
+    public static ArBuildingResponse arBuildingResponse; // 识楼
     public static List<PoiInfoImpl> poiInfos; // 探索
     private PoiSearch mPoiSearch = null;
+    private ArSdkManager mArSdkManager = null;
     private LatLng center = new LatLng(40.047854, 116.313459);
     int radius = 500; // 500米半径
     private int loadIndex = 0;
@@ -88,19 +81,25 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
         mArFind.setOnClickListener(this);
         mArCustom.setOnClickListener(this);
         mArMoreCustom.setOnClickListener(this);
-        // 初始化搜索模块，注册搜索事件监听
+        // 如果需要检索，初始化搜索模块，注册搜索事件监听
         mPoiSearch = PoiSearch.newInstance();
         mPoiSearch.setOnGetPoiSearchResultListener(this);
+        // 如果需要Ar景区功能、Ar识楼功能要注册监听
+        mArSdkManager = ArSdkManager.getInstance();
+        mArSdkManager.setOnGetDataResultListener(this);
         // 判断权限
         PermissionsChecker permissionsChecker = new PermissionsChecker(this);
         if (permissionsChecker.lacksPermissions()) {
             Toast.makeText(this, "缺少权限，请开启权限！", Toast.LENGTH_LONG).show();
             openSetting();
         }
-        // 初始化定位SDK
-        LocSdkClient.getInstance(this).getLocationStart();
     }
 
+    /**
+     * 打开设置权限界面
+     *
+     * @param
+     */
     public void openSetting() {
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -112,98 +111,6 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            // 景区功能
-            case R.id.app_operate:
-                BDLocation location =
-                        LocSdkClient.getInstance(this).getLocationStart().getLastKnownLocation();
-                if (location == null) {
-                    Toast.makeText(getBaseContext(), "暂时无法获取您的位置", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                RequestParams params = new RequestParams();
-                params.put("qt", "scope_v2_arguide");
-                params.put("uid", "2a7a25ecf9cf13636d3e1bad"); // 更换不同景区的uid，进入相应景区ar视图
-                params.put("ver", 2);
-                FFRestClient.get(ConstantHost.SCOPE_URL, params, new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        Toast.makeText(MainActivity.this, "success", Toast.LENGTH_SHORT).show();
-                        //                        MProgressDialog.dismiss();
-                        if (response != null) {
-                            ArSceneryResponse arSceneryResponse =
-                                    fromJson(String.valueOf(response), ArSceneryResponse.class);
-                            if (arSceneryResponse != null && arSceneryResponse.getData() != null
-                                    && arSceneryResponse.getData().getSon() != null
-                                    && arSceneryResponse.getData().getSon().size() > 0
-                                    && arSceneryResponse.getData().getAois() != null
-                                    && arSceneryResponse.getData().getAois().size() > 0
-                                    && arSceneryResponse.getData().getAois()
-                                    .get(0) != null && arSceneryResponse.getData().getAois().get(0).length > 0) {
-                                arInfoScenery = arSceneryResponse.getData();
-                                arInfoScenery.init();
-                                Intent intent = new Intent(MainActivity.this, SceneryArActivity.class);
-                                MainActivity.this.startActivity(intent);
-                            } else {
-                                Toast.makeText(getBaseContext(), "数据出错，请稍后再试", Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(getBaseContext(), "数据出错，请稍后再试", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                                          JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Toast.makeText(getBaseContext(), "FFRestClient 请求网络错误 ", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                break;
-            // 识楼功能
-            case R.id.app_explore:
-                BDLocation loc =
-                        LocSdkClient.getInstance(this).getLocationStart()
-                                .getLastKnownLocation();
-                int x;
-                int y;
-                if (loc != null) {
-                    x = (int) loc.getLongitude();
-                    y = (int) loc.getLatitude();
-                } else {
-                    Toast.makeText(getBaseContext(), "暂时无法获取您的位置", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                RequestParams ps = new RequestParams();
-                String locString = x + "," + y;
-                ps.put("loc", Base64.encodeToString(locString.getBytes(), Base64.NO_WRAP));
-                FFRestClient.get(ConstantHost.AR_BUILDING_URL, ps, new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        Toast.makeText(MainActivity.this, "success", Toast.LENGTH_SHORT).show();
-                        if (response != null) {
-                            ArExploreResponse arResponse = fromJson(String.valueOf(response), ArExploreResponse.class);
-                            if (arResponse != null) {
-                                arExploreResponse = arResponse;
-                                Intent intent = new Intent(MainActivity.this, ExploreArActivity.class);
-                                MainActivity.this.startActivity(intent);
-                            } else {
-                                Toast.makeText(getBaseContext(), "数据出错，请稍后再试", Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(getBaseContext(), "数据出错，请稍后再试", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                                          JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Toast.makeText(getBaseContext(), "FFRestClient 请求网络错误 ", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                break;
             // 单点数据展示
             case R.id.app_custom:
                 poiInfos = new ArrayList<PoiInfoImpl>();
@@ -214,7 +121,7 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
                 PoiInfoImpl poiImpl = new PoiInfoImpl();
                 poiImpl.setPoiInfo(poiInfo);
                 poiInfos.add(poiImpl);
-                Intent intent = new Intent(MainActivity.this, FindArActivity.class);
+                Intent intent = new Intent(MainActivity.this, ArActivity.class);
                 MainActivity.this.startActivity(intent);
                 break;
             // 多点数据展示
@@ -230,8 +137,26 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
                     poiImplT.setPoiInfo(pTest);
                     poiInfos.add(poiImplT);
                 }
-                Intent inten = new Intent(MainActivity.this, FindArActivity.class);
+                Intent inten = new Intent(MainActivity.this, ArActivity.class);
                 MainActivity.this.startActivity(inten);
+                break;
+            // 景区功能 传入uid信息
+            case R.id.app_operate:
+                mArSdkManager.searchSceneryInfo("2a7a25ecf9cf13636d3e1bad");
+                break;
+            // 识楼功能
+            case R.id.app_explore:
+                mArSdkManager.searchBuildingInfo();
+                //                Intent i1 = new Intent();
+
+                // 地址解析
+
+                //                i1.setData(Uri.parse
+                // ("baidumap://map/component?comName=scenery&target=scenery_route_guide_page&needLocation=no
+                // &src_from=vivo&param=%7B%22from%22%3A%22vivo%22%2C%22uid%22%3A%22a876075b4a26621917b54be4%22%7D
+                // &src=com.vivo.assistant.scenery.routename:岭南印象园"));
+
+                //                startActivity(i1);
                 break;
             // 探索功能
             case R.id.app_find:
@@ -254,19 +179,6 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
         mPoiSearch.searchNearby(nearbySearchOption);
     }
 
-    public static <T> T fromJson(String json, Class<T> clazz) {
-        if (TextUtils.isEmpty(json)) {
-            return null;
-        }
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        try {
-            return gson.fromJson(json, clazz);
-        } catch (Exception ex) {
-            return null;
-        }
-    }
-
     @Override
     public void onGetPoiResult(PoiResult result) {
         if (result == null || result.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {
@@ -286,7 +198,7 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
                 poiInfos.add(poiImpl);
             }
             Toast.makeText(this, "查询到: " + poiInfos.size() + " ,个POI点", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this, FindArActivity.class);
+            Intent intent = new Intent(MainActivity.this, ArActivity.class);
             MainActivity.this.startActivity(intent);
             return;
         }
@@ -323,5 +235,39 @@ public class MainActivity extends Activity implements View.OnClickListener, OnGe
     @Override
     public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
 
+    }
+
+    @Override
+    public void onGetSceneryResult(ArSceneryResponse arSceneryResponse) {
+        if (arSceneryResponse != null) {
+            if (arSceneryResponse != null && arSceneryResponse.getData() != null
+                    && arSceneryResponse.getData().getSon() != null
+                    && arSceneryResponse.getData().getSon().size() > 0
+                    && arSceneryResponse.getData().getAois() != null
+                    && arSceneryResponse.getData().getAois().size() > 0
+                    && arSceneryResponse.getData().getAois()
+                    .get(0) != null && arSceneryResponse.getData().getAois().get(0).length > 0) {
+                arInfoScenery = arSceneryResponse.getData();
+                arInfoScenery.init();
+                Intent intent = new Intent(MainActivity.this, SceneryArActivity.class);
+                MainActivity.this.startActivity(intent);
+            } else {
+                Toast.makeText(getBaseContext(), "数据出错，请稍后再试", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(getBaseContext(), "数据出错，请稍后再试", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Override
+    public void onGetBuildingResult(ArBuildingResponse arResponse) {
+        if (arResponse != null) {
+            arBuildingResponse = arResponse;
+            Intent intent = new Intent(MainActivity.this, BuildingArActivity.class);
+            MainActivity.this.startActivity(intent);
+        } else {
+            Toast.makeText(getBaseContext(), "数据出错，请稍后再试", Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -15,16 +15,18 @@ import sdk.cammer.common.baidu.map.utils.LocSdkClient;
  * Ar sdk application
  */
 public class DemoApplication extends Application {
+
     private static DemoApplication mInstance = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        // AR模块 在使用 SDK 各组间之前初始化 context 信息，传入 ApplicationContext
-        super.onCreate();
         mInstance = this;
-        ArSdkManager.initApplication(this, new MyGeneralListener());
-        // 检索模块 在使用 SDK 各组间之前初始化 context 信息，传入 ApplicationContext
+        // ArSDK模块初始化
+        ArSdkManager.getInstance().initApplication(this, new MyGeneralListener());
+        // 若用百度定位sdk,需要在此初始化定位SDK
+        LocSdkClient.getInstance(this).getLocationStart();
+        // 若用探索功能需要再这集成检索模块 在使用 SDK 各组间之前初始化 context 信息，传入 ApplicationContext
         SDKInitializer.initialize(this);
         // 检索模块 自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
         // 包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
@@ -35,8 +37,9 @@ public class DemoApplication extends Application {
         return mInstance;
     }
 
-    // 常用事件监听，用来处理通常的网络错误，授权验证错误等
+
     static class MyGeneralListener implements MKGeneralListener {
+        // 事件监听，用来处理通常的网络错误，授权验证错误等
         @Override
         public void onGetPermissionState(int iError) {
             // 非零值表示key验证未通过
@@ -51,15 +54,17 @@ public class DemoApplication extends Application {
             }
         }
 
+        // 回调给ArSDK获取坐标（demo调用百度定位sdk）
         @Override
         public ArBDLocation onGetBDLocation() {
             BDLocation location =
                     LocSdkClient.getInstance(ArSdkManager.getInstance().getAppContext()).getLocationStart()
                             .getLastKnownLocation();
-            ArBDLocation arBDLocation = new ArBDLocation();
             if (location == null) {
                 return null;
             }
+            ArBDLocation arBDLocation = new ArBDLocation();
+            // 设置经纬度信息
             arBDLocation.setLongitude(location.getLongitude());
             arBDLocation.setLatitude(location.getLatitude());
             return arBDLocation;

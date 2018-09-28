@@ -15,19 +15,6 @@
             android:textColor="#FFFFFFFF"
             android:textSize="16sp"/>
 
-    <Button
-            android:id="@+id/app_operate"
-            android:text="@string/app_operate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    <Button
-            android:id="@+id/app_explore"
-            android:text="@string/app_explore"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-    />
-
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="horizontal">
@@ -47,6 +34,19 @@
     <Button
             android:id="@+id/app_more_custompoint"
             android:text="@string/app_custom_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+
+    <Button
+            android:id="@+id/app_operate"
+            android:text="@string/app_operate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:id="@+id/app_explore"
+            android:text="@string/app_explore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
     />

@@ -1,4 +1,9 @@
-package sdk.cammer.common.baidu.map.mapcam;
+/*
+ * Copyright (C) 2018 Baidu, Inc. All Rights Reserved.
+ */
+package map.baidu.ar.init;
+
+import com.google.gson.annotations.SerializedName;
 
 import map.baidu.ar.model.ArInfoScenery;
 import map.baidu.ar.utils.INoProGuard;
@@ -8,27 +13,30 @@ import map.baidu.ar.utils.INoProGuard;
  */
 public class ArSceneryResponse implements INoProGuard {
     // 错误提示语
-    private String err_msg;
+    @SerializedName("err_msg")
+    private String errMsg;
     // 错误号
-    private int err_no;
+    @SerializedName("err_no")
+    private int errNo;
     // 返回数据
     private ArInfoScenery data;
     // 父点名称
     private String ext;
-    public String getErr_msg() {
-        return err_msg;
+
+    public String getErrMsg() {
+        return errMsg;
     }
 
-    public void setErr_msg(String err_msg) {
-        this.err_msg = err_msg;
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
     }
 
-    public int getErr_no() {
-        return err_no;
+    public int getErrNo() {
+        return errNo;
     }
 
-    public void setErr_no(int err_no) {
-        this.err_no = err_no;
+    public void setErrNo(int errNo) {
+        this.errNo = errNo;
     }
 
     public ArInfoScenery getData() {

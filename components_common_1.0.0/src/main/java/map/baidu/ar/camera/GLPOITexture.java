@@ -5,9 +5,6 @@ import android.opengl.Matrix;
 import map.baidu.ar.model.ArInfo;
 import map.baidu.ar.model.ArPoi;
 
-/**
- * Created by xingdaming on 16/1/26.
- */
 public abstract class GLPOITexture {
     protected final float[] mQuadPositonCoord = {
             // X, Y, Z, U, V
@@ -38,7 +35,9 @@ public abstract class GLPOITexture {
     // 屏幕上下偏移的坐标
     protected float mAzimuthX;
     protected float[] pointXY = new float[2];
-    protected long x, y, z;
+    protected long x;
+    protected long y;
+    protected long z;
     protected ArInfo arInfo;
 
     protected ArPoi arPoi;
@@ -60,8 +59,6 @@ public abstract class GLPOITexture {
         this.width = width;
         this.height = height;
     }
-
-
 
     public void setLoc(long x, long y, long z) {
         this.x = x;
@@ -146,8 +143,8 @@ public abstract class GLPOITexture {
         // 屏幕大小投射的参数
         float[] unitMatrix = new float[] {0, 0, mSurfaceWidth, mSurfaceHeight};
         // 算出屏幕坐标
-        pointXY = BGLProjectf(0, 0, -2, modelview, mPMatrix, unitMatrix);
-//                Log.e("pointXY", "  x = " + pointXY[0] + " y = " + pointXY[1]);
+        pointXY = bGLProjectf(0, 0, -2, modelview, mPMatrix, unitMatrix);
+        //                Log.e("pointXY", "  x = " + pointXY[0] + " y = " + pointXY[1]);
     }
 
     /**
@@ -177,7 +174,8 @@ public abstract class GLPOITexture {
         mRotationX = (float) Math.toDegrees(x);
         mRotationY = (float) Math.toDegrees(y);
         mRotationZ = (float) Math.toDegrees(z);
-//        Log.e("mRotation", "  mRotationX = " + mRotationX + " mRotationY = " + mRotationY+ " mRotationZ = " + mRotationZ);
+        //        Log.e("mRotation", "  mRotationX = " + mRotationX + " mRotationY = " + mRotationY+ " mRotationZ = "
+        // + mRotationZ);
     }
 
     public float[] getPointXY() {
@@ -196,8 +194,8 @@ public abstract class GLPOITexture {
      *
      * @return
      */
-    public abstract float[] BGLProjectf(float objx, float objy, float objz, float[] modelview, float[] projection,
-                               float[] viewport) ;
+    public abstract float[] bGLProjectf(float objx, float objy, float objz, float[] modelview, float[] projection,
+                                        float[] viewport);
 
     public void setmAzimuthX(float mAzimuthX) {
         this.mAzimuthX = mAzimuthX;
@@ -206,15 +204,16 @@ public abstract class GLPOITexture {
     public ArInfo getArInfo() {
         return arInfo;
     }
+
     public void setArInfo(ArInfo arInfo) {
         this.arInfo = arInfo;
     }
 
-    public ArPoi getArPoi(){
+    public ArPoi getArPoi() {
         return arPoi;
     }
 
-    public void setArPoi(ArPoi arPoi){
+    public void setArPoi(ArPoi arPoi) {
         this.arPoi = arPoi;
     }
 

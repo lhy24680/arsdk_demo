@@ -7,9 +7,6 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.Stack;
 
-/**
- * Created by xingdaming on 16/1/26.
- */
 public class MatrixState {
     // 4x4矩阵 投影用
     private static float[] mProjMatrix = new float[16];
@@ -50,20 +47,7 @@ public class MatrixState {
             // 摄像机UP向量Z分量
             float upz
     ) {
-        Matrix.setLookAtM
-                (
-                        mVMatrix,
-                        0,
-                        cx,
-                        cy,
-                        cz,
-                        tx,
-                        ty,
-                        tz,
-                        upx,
-                        upy,
-                        upz
-                );
+        Matrix.setLookAtM(mVMatrix, 0, cx, cy, cz, tx, ty, tz, upx, upy, upz);
         // 摄像机位置
         float[] cameraLocation = new float[3];
         cameraLocation[0] = cx;

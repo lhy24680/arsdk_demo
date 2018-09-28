@@ -35,9 +35,6 @@ import map.baidu.ar.utils.DistanceByMcUtils;
 import map.baidu.ar.utils.Point;
 import map.baidu.ar.utils.ResourceUtil;
 
-/**
- * Created by xingdaming on 15/12/22.
- */
 public class FindArCamGLRender extends CamGLRender implements GLSurfaceView.Renderer {
 
     private static final String TAG = FindArCamGLRender.class.getName();

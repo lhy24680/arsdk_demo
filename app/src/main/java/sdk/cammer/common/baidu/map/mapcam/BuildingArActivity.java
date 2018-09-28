@@ -1,7 +1,5 @@
 package sdk.cammer.common.baidu.map.mapcam;
 
-import java.util.ArrayList;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -9,38 +7,42 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import map.baidu.ar.ArPageListener;
 import map.baidu.ar.camera.SimpleSensor;
-import map.baidu.ar.camera.find.FindArCamGLView;
-import map.baidu.ar.model.PoiInfoImpl;
+import map.baidu.ar.camera.explore.BaseArCamGLView;
+import map.baidu.ar.init.ArBuildingResponse;
+import map.baidu.ar.model.ArInfo;
 import map.baidu.ar.utils.TypeUtils;
 
 /**
- * Ar探索 Activity
+ * Ar识楼 Activity
  */
-public class FindArActivity extends FragmentActivity implements ArPageListener {
+public class BuildingArActivity extends FragmentActivity implements ArPageListener {
 
     private RelativeLayout camRl;
-    private FindArCamGLView mCamGLView;
-    public static ArrayList<PoiInfoImpl> poiInfos;
+    private BaseArCamGLView mCamGLView;
+    public static ArBuildingResponse arBuildingResponse;
     private RelativeLayout mArPoiItemRl;
     private SimpleSensor mSensor;
+    private TextView mMessageTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_find_ar);
-        poiInfos = (ArrayList<PoiInfoImpl>) MainActivity.poiInfos;
+        setContentView(R.layout.activity_explore_ar);
+        arBuildingResponse = MainActivity.arBuildingResponse;
         mArPoiItemRl = (RelativeLayout) findViewById(R.id.ar_poi_item_rl);
         mArPoiItemRl.setVisibility(View.VISIBLE);
         initView();
     }
 
     private void initView() {
+        mMessageTv = (TextView) findViewById(R.id.ar_page_message);
         camRl = (RelativeLayout) findViewById(R.id.cam_rl);
-        mCamGLView = (FindArCamGLView) LayoutInflater.from(this).inflate(R.layout.layout_find_cam_view, null);
+        mCamGLView = (BaseArCamGLView) LayoutInflater.from(this).inflate(R.layout.layout_explore_cam_view, null);
         mCamGLView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
 
             @Override
@@ -67,6 +69,8 @@ public class FindArActivity extends FragmentActivity implements ArPageListener {
     @Override
     public void onPause() {
         super.onPause();
+        //        finishCamInternal();
+
     }
 
     private void initSensor() {
@@ -76,16 +80,21 @@ public class FindArActivity extends FragmentActivity implements ArPageListener {
         mSensor.startSensor();
     }
 
+    /**
+     * 传感器位置监听类
+     */
     private class HoldPositionListenerImp implements SimpleSensor.OnHoldPositionListener {
         @Override
         public void onOrientationWithRemap(float[] remapValue) {
-            if (mCamGLView != null && mArPoiItemRl != null) {
-                if (poiInfos.size() <= 0) {
+            if (mCamGLView != null && mArPoiItemRl != null && arBuildingResponse != null) {
+                if (arBuildingResponse.getBuildings() == null) {
                     mArPoiItemRl.setVisibility(View.GONE);
-                    Toast.makeText(FindArActivity.this,"附近没有可识别的类别",Toast.LENGTH_LONG).show();
+                    //                    mMessageTv.setText("附近没有可识别的楼宇");
                 } else {
-                    mCamGLView.setFindArSensorState(remapValue, getLayoutInflater(),
-                            mArPoiItemRl, FindArActivity.this, poiInfos, FindArActivity.this);
+                    // 在景区则传入子点集合
+                    mCamGLView.setBaseArSensorState(remapValue, getLayoutInflater(), mMessageTv,
+                            mArPoiItemRl, BuildingArActivity.this, arBuildingResponse.getBuildings(),
+                            BuildingArActivity.this);
                     mArPoiItemRl.setVisibility(View.VISIBLE);
                 }
             }
@@ -99,6 +108,10 @@ public class FindArActivity extends FragmentActivity implements ArPageListener {
             mCamGLView = null;
 
         }
+
+        if (mMessageTv != null) {
+            mMessageTv.setVisibility(View.GONE);
+        }
         if (mArPoiItemRl != null) {
             mArPoiItemRl.removeAllViews();
         }
@@ -106,23 +119,23 @@ public class FindArActivity extends FragmentActivity implements ArPageListener {
             mSensor.stopSensor();
         }
         // 恢复屏幕自动锁屏
-        FindArActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        BuildingArActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     public LayoutInflater getLayoutInflater() {
-        return LayoutInflater.from(FindArActivity.this).cloneInContext(FindArActivity.this);
-    }
 
-    @Override
-    public void noPoiInScreen(boolean isNoPoiInScreen) {
+        return LayoutInflater.from(BuildingArActivity.this).cloneInContext(BuildingArActivity.this);
     }
 
     @Override
     public void selectItem(Object iMapPoiItem) {
-        if (iMapPoiItem instanceof PoiInfoImpl) {
-            Toast.makeText(this, "点击poi: " + ((PoiInfoImpl) iMapPoiItem).getPoiInfo().name, Toast
-                    .LENGTH_SHORT).show();
+        if (iMapPoiItem instanceof ArInfo) {
+            Toast.makeText(this, "点击楼块: " + ((ArInfo) iMapPoiItem).getName(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void noPoiInScreen(boolean isNoPoiInScreen) {
     }
 
     @Override

@@ -15,14 +15,15 @@ public interface MKGeneralListener {
 
     /**
      * 返回授权验证错误
-     * 
+     *
      * @param iError 授权验证码，iError为 300时表示验证失败。
      */
-    public void onGetPermissionState(int iError);
+    void onGetPermissionState(int iError);
 
     /**
      * 获取本地坐标
+     *
      * @return ArBDLocation
      */
-    public ArBDLocation onGetBDLocation();
+    ArBDLocation onGetBDLocation();
 }
